@@ -60,7 +60,7 @@ jobs: # a collection of steps
           root: backend
           paths: 
            # https://golang.org/pkg/path/filepath/#Match
-            - code-snippet-*
+            - guided-development-*
       - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test-results.xml
   

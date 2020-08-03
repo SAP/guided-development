@@ -1,19 +1,19 @@
 {
-	"name": "vscode-snippet-contrib",
-	"displayName": "vscode-snippet-contrib",
+	"name": "vscode-guided-dev-contrib",
+	"displayName": "vscode-guided-dev-contrib",
 	"description": "",
-	"version": "0.0.3",
+	"version": "0.0.1",
 	"publisher": "SAPOSS",
 	"engines": {
 		"vscode": "^1.44.2"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/SAP/code-snippet",
-		"directory": "vscode-snippet-contrib"
+		"url": "https://github.com/SAP/guided-development",
+		"directory": "vscode-guided-dev-contrib"
 	},
 	"extensionDependencies": [
-		"saposs.code-snippet"
+		"saposs.guided-development"
 	],
 	"categories": [
 		"Other"
@@ -47,8 +47,10 @@
 		"test": "node ./out/test/runTest.js",
 		"package": "vsce package ."
 	},
+	"dependencies.TODO": {
+		"@sap-devx/guided-development-types": "0.0.1"
+	},
 	"dependencies": {
-		"@sap-devx/code-snippet-types": "0.0.2",
 		"lodash": "^4.17.15",
 		"comment-json": "2.1.0",
 		"fs-extra": "7.0.1"

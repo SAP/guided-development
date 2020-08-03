@@ -1,4 +1,5 @@
-import { ISnippet } from '@sap-devx/code-snippet-types';
+// import { IGuidedDev } from '@sap-devx/guided-development-types';
+import { ISnippet } from './types/Snippet';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import { ConfigHelper } from "./configHelper";
@@ -8,7 +9,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	let disposable = vscode.commands.registerCommand('extension.showCodeSnippetContrib', (uri: vscode.Uri) => {
 		try {
-			vscode.commands.executeCommand("loadCodeSnippet", {contributorName: "vscode-snippet-contrib", snippetName: "snippet_1", context: {uri: uri}});
+			vscode.commands.executeCommand("loadCodeSnippet", {contributorName: "vscode-guided-dev-contrib", snippetName: "snippet_1", context: {uri: uri}});
 		  } catch (error) {
 			vscode.window.showInformationMessage(error);
 		}

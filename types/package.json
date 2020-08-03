@@ -1,14 +1,14 @@
 {
-  "name": "@sap-devx/code-snippet-types",
-  "displayName": "code-snippet-types",
-  "description": "code-snippet types",
-  "version": "0.0.2",
+  "name": "@sap-devx/guided-development-types",
+  "displayName": "guided-development-types",
+  "description": "guided-development types",
+  "version": "0.0.1",
   "author": "SAP SE",
   "publisher": "SAP",
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/SAP/code-snippet.git"
+    "url": "https://github.com/SAP/guided-development.git"
   },
   "main": "out/src/Snippet.js",
   "types": "",

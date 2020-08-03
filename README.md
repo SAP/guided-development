@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/SAP/code-snippet.svg?style=svg)](https://circleci.com/gh/SAP/code-snippet)
+[![CircleCI](https://circleci.com/gh/SAP/guided-development.svg?style=svg)](https://circleci.com/gh/SAP/guided-development)
 ![GitHub license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)
 
 # Code Snippet
@@ -54,7 +54,7 @@ To develop and contribute you can build and install each package separately. Ins
 * [Build & install the backend](backend/README.md)
 
 ## How to obtain support
-To get more help, support, and information please open a github [issue](https://github.com/SAP/code-snippet/issues).
+To get more help, support, and information please open a github [issue](https://github.com/SAP/guided-development/issues).
 
 ## Contributing
 Contributing information can be found in the [CONTRIBUTING.md](CONTRIBUTING.md) file.

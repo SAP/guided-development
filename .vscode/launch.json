@@ -42,11 +42,11 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-snippet-contrib"
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-guided-dev-contrib"
     ],
       "outFiles": [
         "${workspaceFolder}/backend/dist/**/*.js",
-        "${workspaceFolder/vscode-snippet-contrib/out/**/*.js"
+        "${workspaceFolder/vscode-guided-dev-contrib/out/**/*.js"
       ],
       "preLaunchTask": "watch backend (webpack)"
     },
