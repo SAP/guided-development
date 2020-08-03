@@ -1,4 +1,4 @@
-# Code Snippet Frontend
+# Guided Development Frontend
 
 ## Project setup
 ```

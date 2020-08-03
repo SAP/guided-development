@@ -5,17 +5,17 @@ import * as fsextra from "fs-extra";
 import { expect } from "chai";
 import * as _ from "lodash";
 import * as path from "path";
-import {CodeSnippet} from "../src/guided-development";
+import {GuidedDevelopment} from "./guided-development";
 import * as yeomanEnv from "yeoman-environment";
-import { AppLog } from "../src/app-log";
-import { AppEvents } from '../src/app-events';
+import { AppLog } from "./app-log";
+import { AppEvents } from './app-events';
 import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import * as os from "os";
 import { fail } from "assert";
 import Environment = require("yeoman-environment");
 
-describe('codeSnippet unit test', () => {
+describe('guidedDevelopment unit test', () => {
     let sandbox: any;
     let yeomanEnvMock: any;
     let fsExtraMock: any;
@@ -27,7 +27,7 @@ describe('codeSnippet unit test', () => {
     const PACKAGE_JSON = "package.json";
 
     const choiceMessage = 
-        "Some quick example text of the codeSnippet description. This is a long text so that the example will look good.";
+        "Some quick example text of the guidedDevelopment description. This is a long text so that the example will look good.";
     class TestEvents implements AppEvents {
         public async doApply(we: any): Promise<any> {
             return;
@@ -104,7 +104,7 @@ describe('codeSnippet unit test', () => {
     const outputChannel = new TestOutputChannel();
     const appEvents = new TestEvents();
     const uiOptions = {messages: {title: "snippet title"}};
-    const codeSnippet: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, uiOptions);
+    const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, uiOptions);
 
     before(() => {
         sandbox = sinon.createSandbox();
@@ -134,7 +134,7 @@ describe('codeSnippet unit test', () => {
 
     it("constructor", () => {
         try {
-            new CodeSnippet(undefined, undefined, undefined, undefined, undefined);
+            new GuidedDevelopment(undefined, undefined, undefined, undefined, undefined);
             fail("contructor should throw an exception");
         } catch (error) {
             expect(error.message).to.be.equal("rpc must be set");
@@ -142,7 +142,7 @@ describe('codeSnippet unit test', () => {
     });
 
     it("getState", async () => {
-        const state = await codeSnippet["getState"]();
+        const state = await guidedDevelopment["getState"]();
         expect(state).to.deep.equal(uiOptions);
     });
 
@@ -153,52 +153,52 @@ describe('codeSnippet unit test', () => {
                 {actionTemplate: "OData action"},
                 {actionType: "Create entity"});
             appEventsMock.expects("doApply");
-            await codeSnippet["receiveIsWebviewReady"]();
+            await guidedDevelopment["receiveIsWebviewReady"]();
         });
 
         it("no prompt ---> an error is thrown", async () => {
             loggerMock.expects("error");
             appEventsMock.expects("doApply").never();
-            await codeSnippet["receiveIsWebviewReady"]();
+            await guidedDevelopment["receiveIsWebviewReady"]();
         });
 
         it("prompt throws exception ---> an error is thrown", async () => {
             rpcMock.expects("invoke").withArgs("showPrompt").rejects(new Error());
             loggerMock.expects("error");
             appEventsMock.expects("doApply").never();
-            await codeSnippet["receiveIsWebviewReady"]();
+            await guidedDevelopment["receiveIsWebviewReady"]();
         });
     });
 
     describe("showPrompt", () => {
         it("prompt without questions", async () => {
-            const answers = await codeSnippet.showPrompt([]);
+            const answers = await guidedDevelopment.showPrompt([]);
             expect(answers).to.be.empty;
         });
     });
 
     describe("funcReplacer", () => {
         it("with function", () => {
-            const res = CodeSnippet["funcReplacer"]("key", () => { return; });
+            const res = GuidedDevelopment["funcReplacer"]("key", () => { return; });
             expect(res).to.be.equal("__Function");
         });
 
         it("without function", () => {
-            const res = CodeSnippet["funcReplacer"]("key", "value");
+            const res = GuidedDevelopment["funcReplacer"]("key", "value");
             expect(res).to.be.equal("value");
         });
     });
 
     it("toggleOutput", () => {
-        const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
-        const res = codeSnippetInstance["toggleOutput"]();
+        const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
+        const res = guidedDevelopmentInstance["toggleOutput"]();
         expect(res).to.be.false;
     });
 
     it("getErrorInfo", () => {
-        const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
+        const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
         const errorInfo = "Error Info";
-        const res = codeSnippetInstance["getErrorInfo"](errorInfo);
+        const res = guidedDevelopmentInstance["getErrorInfo"](errorInfo);
         expect(res).to.be.equal(errorInfo);
     });
 
@@ -239,9 +239,9 @@ describe('codeSnippet unit test', () => {
                     lastName: "doe"
                 };
             };
-            const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
+            const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
             const questions = [{name: "q1"}];
-            const response = await codeSnippetInstance.showPrompt(questions);
+            const response = await guidedDevelopmentInstance.showPrompt(questions);
             expect (response.firstName).to.equal(firstName);
         });
 
@@ -259,12 +259,12 @@ describe('codeSnippet unit test', () => {
         });
 
         it("onSuccess", () => {
-            codeSnippet["onSuccess"]("testSnippetName");
+            guidedDevelopment["onSuccess"]("testSnippetName");
             expect(doSnippeDoneSpy.calledWith(true, "'testSnippetName' snippet has been created.")).to.be.true;
         });
 
         it("onFailure", async () => {
-            await codeSnippet["onFailure"]("testSnippetName", "testError");
+            await guidedDevelopment["onFailure"]("testSnippetName", "testError");
             expect(doSnippeDoneSpy.calledWith(false, "testSnippetName snippet failed.\ntestError")).to.be.true;
         });
     });
@@ -280,13 +280,13 @@ describe('codeSnippet unit test', () => {
                     guiType: "questionType"
                 }
             ];
-            const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
+            const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
 
-            codeSnippetInstance["addCustomQuestionEventHandlers"](questions);
+            guidedDevelopmentInstance["addCustomQuestionEventHandlers"](questions);
             expect(questions[0]).to.not.have.property("testEvent");
 
-            codeSnippetInstance.registerCustomQuestionEventHandler("questionType", "testEvent", testEventFunction);
-            codeSnippetInstance["addCustomQuestionEventHandlers"](questions);
+            guidedDevelopmentInstance.registerCustomQuestionEventHandler("questionType", "testEvent", testEventFunction);
+            guidedDevelopmentInstance["addCustomQuestionEventHandlers"](questions);
             expect(questions[0]).to.have.property("testEvent");
             expect((questions[0] as any)["testEvent"]).to.equal(testEventFunction);
         });
@@ -297,46 +297,46 @@ describe('codeSnippet unit test', () => {
             const testEventFunction = () => {
                 return true;
             };
-            const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
-            codeSnippetInstance.registerCustomQuestionEventHandler("questionType", "testEvent", testEventFunction);
-            codeSnippetInstance["currentQuestions"] = [{name:"question1", guiType: "questionType"}];
-            const response = await codeSnippetInstance["evaluateMethod"](null, "question1", "testEvent");
+            const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
+            guidedDevelopmentInstance.registerCustomQuestionEventHandler("questionType", "testEvent", testEventFunction);
+            guidedDevelopmentInstance["currentQuestions"] = [{name:"question1", guiType: "questionType"}];
+            const response = await guidedDevelopmentInstance["evaluateMethod"](null, "question1", "testEvent");
             expect(response).to.be.true;
         });
 
         it("question method is called", async () => {
-            const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
-            codeSnippetInstance["currentQuestions"] = [{name:"question1", method1:()=>{
+            const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
+            guidedDevelopmentInstance["currentQuestions"] = [{name:"question1", method1:()=>{
                 return true;
             }}];
-            const response = await codeSnippetInstance["evaluateMethod"](null, "question1", "method1");
+            const response = await guidedDevelopmentInstance["evaluateMethod"](null, "question1", "method1");
             expect(response).to.be.true;
         });
 
         it("no relevant question", async () => {
-            const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
-            codeSnippetInstance["currentQuestions"] = [{name:"question1", method1:()=>{
+            const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
+            guidedDevelopmentInstance["currentQuestions"] = [{name:"question1", method1:()=>{
                 return true;
             }}];
-            const response = await codeSnippetInstance["evaluateMethod"](null, "question2", "method2");
+            const response = await guidedDevelopmentInstance["evaluateMethod"](null, "question2", "method2");
             expect(response).to.be.undefined;
         });
 
         it("no questions", async () => {
-            const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
-            const response = await codeSnippetInstance["evaluateMethod"](null, "question1", "method1");
+            const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
+            const response = await guidedDevelopmentInstance["evaluateMethod"](null, "question1", "method1");
             expect(response).to.be.undefined;
         });
 
         it("method throws exception", async () => {
-            const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
-            codeSnippetInstance["gen"] = Object.create({});
-            codeSnippetInstance["gen"].options = {};
-            codeSnippetInstance["currentQuestions"] = [{name:"question1", method1:()=>{
+            const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
+            guidedDevelopmentInstance["gen"] = Object.create({});
+            guidedDevelopmentInstance["gen"].options = {};
+            guidedDevelopmentInstance["currentQuestions"] = [{name:"question1", method1:()=>{
                 throw new Error("Error");
             }}];
             try {
-                await codeSnippetInstance["evaluateMethod"](null, "question1", "method1");
+                await guidedDevelopmentInstance["evaluateMethod"](null, "question1", "method1");
             } catch(e) {
                 expect(e.toString()).to.contain("method1");
             }
@@ -345,31 +345,31 @@ describe('codeSnippet unit test', () => {
 
     describe("applyCode", () => {
         const title = "snippet title";
-        let codeSnippetInstanceMock: any;
-        let codeSnippetInstance: CodeSnippet;
+        let guidedDevelopmentInstanceMock: any;
+        let guidedDevelopmentInstance: GuidedDevelopment;
 
         beforeEach(() => {
-            codeSnippetInstance = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {messages: {title: title}});
-            codeSnippetInstanceMock = sandbox.mock(codeSnippetInstance);
+            guidedDevelopmentInstance = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {messages: {title: title}});
+            guidedDevelopmentInstanceMock = sandbox.mock(guidedDevelopmentInstance);
         });
 
         afterEach(() => {
-            codeSnippetInstanceMock.verify();
+            guidedDevelopmentInstanceMock.verify();
         });
 
-        it("createCodeSnippetWorkspaceEdit succeeds ---> onSuccess is called", async () => {
-            const onSuccessSpy = sandbox.spy(codeSnippetInstance, "onSuccess");
-            codeSnippetInstanceMock.expects("createCodeSnippetWorkspaceEdit").resolves();
-            await codeSnippetInstance["applyCode"]({});
+        it("createGuidedDevelopmentWorkspaceEdit succeeds ---> onSuccess is called", async () => {
+            const onSuccessSpy = sandbox.spy(guidedDevelopmentInstance, "onSuccess");
+            guidedDevelopmentInstanceMock.expects("createGuidedDevelopmentWorkspaceEdit").resolves();
+            await guidedDevelopmentInstance["applyCode"]({});
             expect(onSuccessSpy.calledWith(title)).to.be.true;
             onSuccessSpy.restore();
         });
 
-        it("createCodeSnippetWorkspaceEdit fails ---> onFailure is called", async () => {
-            const onFailureSpy = sandbox.spy(codeSnippetInstance, "onFailure");
+        it("createGuidedDevelopmentWorkspaceEdit fails ---> onFailure is called", async () => {
+            const onFailureSpy = sandbox.spy(guidedDevelopmentInstance, "onFailure");
             const error = new Error("error");
-            codeSnippetInstanceMock.expects("createCodeSnippetWorkspaceEdit").rejects(error);
-            await codeSnippetInstance["applyCode"]({});
+            guidedDevelopmentInstanceMock.expects("createGuidedDevelopmentWorkspaceEdit").rejects(error);
+            await guidedDevelopmentInstance["applyCode"]({});
             expect(onFailureSpy.calledWith(title, error)).to.be.true;
             onFailureSpy.restore();
         });
@@ -380,26 +380,26 @@ describe('codeSnippet unit test', () => {
             return "getMessages";
         },
         getQuestions() {
-            return "createCodeSnippetQuestions";
+            return "createGuidedDevelopmentQuestions";
         },
         async getWorkspaceEdit(answers: any, context: any) {
             return "getWorkspaceEdit";
         }
     };
 
-    describe("createCodeSnippetWorkspaceEdit", () => {
+    describe("createGuidedDevelopmentWorkspaceEdit", () => {
         it("snippet has getWorkspaceEdit ---> call getWorkspaceEdit", async () => {
-            const myCodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {snippet: snippet});
-            const we = await myCodeSnippet["createCodeSnippetWorkspaceEdit"]({});
+            const myGuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {snippet: snippet});
+            const we = await myGuidedDevelopment["createGuidedDevelopmentWorkspaceEdit"]({});
             expect(we).to.be.equal("getWorkspaceEdit");
         });
     });
 
-    describe("createCodeSnippetQuestions", () => {
+    describe("createGuidedDevelopmentQuestions", () => {
         it("snippet has getQuestions ---> call getQuestions", async () => {
-            const myCodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {snippet: snippet});
-            const we = await myCodeSnippet["createCodeSnippetQuestions"]();
-            expect(we).to.be.equal("createCodeSnippetQuestions");
+            const myGuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {snippet: snippet});
+            const we = await myGuidedDevelopment["createGuidedDevelopmentQuestions"]();
+            expect(we).to.be.equal("createGuidedDevelopmentQuestions");
         });
     });
 
@@ -408,13 +408,13 @@ describe('codeSnippet unit test', () => {
             const testEventFunction = () => {
                 return true;
             };
-            const codeSnippetInstance: CodeSnippet = new CodeSnippet(rpc, appEvents, outputChannel, testLogger, {});
+            const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
 
-            codeSnippetInstance.registerCustomQuestionEventHandler("questionType", "testEvent1", testEventFunction);
-            expect(codeSnippetInstance["customQuestionEventHandlers"].size).to.be.equal(1);
+            guidedDevelopmentInstance.registerCustomQuestionEventHandler("questionType", "testEvent1", testEventFunction);
+            expect(guidedDevelopmentInstance["customQuestionEventHandlers"].size).to.be.equal(1);
 
-            codeSnippetInstance.registerCustomQuestionEventHandler("questionType", "testEvent2", testEventFunction);  
-            expect(codeSnippetInstance["customQuestionEventHandlers"].size).to.be.equal(1);
+            guidedDevelopmentInstance.registerCustomQuestionEventHandler("questionType", "testEvent2", testEventFunction);  
+            expect(guidedDevelopmentInstance["customQuestionEventHandlers"].size).to.be.equal(1);
 
         });
     });

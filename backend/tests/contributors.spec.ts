@@ -42,8 +42,8 @@ describe('Contributors unit test', () => {
         });
     });
 
-    describe('getSnippet', () => {
-        function createCodeSnippetQuestions(): any[] {
+    describe('getGuidedDev', () => {
+        function createGuidedDevelopmentQuestions(): any[] {
             const questions: any[] = [];
         
             questions.push(
@@ -65,13 +65,13 @@ describe('Contributors unit test', () => {
           
             return questions;
         }
-        function getSnippet(context: any): any {
+        function getGuidedDev(context: any): any {
             return {
                 getMessages() {
                     return messageValue;
                 },
                 getQuestions() {
-                    return createCodeSnippetQuestions();
+                    return createGuidedDevelopmentQuestions();
                 },
                 async getWorkspaceEdit(answers: any) {
                 }
@@ -82,9 +82,9 @@ describe('Contributors unit test', () => {
 
         const snippetName = "snippet_1";
         const api = {
-            geCodeSnippets(context: any) {
+            getGuidedDevelopments(context: any) {
                 const snippets = new Map<string, any>();
-                const snippet: any = getSnippet(context);
+                const snippet: any = getGuidedDev(context);
                 snippets.set(snippetName, snippet);
                 return snippets;
             },
@@ -97,13 +97,13 @@ describe('Contributors unit test', () => {
                 "contributorName": extensionName,
                 "snippetName": snippetName
               };
-              const snippet = Contributors.getSnippet(uiOptions);
+              const snippet = Contributors.getGuidedDev(uiOptions);
               expect(snippet.getMessages()).to.deep.equal(messageValue);
         });
 
         it("receives no contributorName and no snippetName ---> returns undefined snippet", () => {
             const uiOptions = {};
-            const snippet = Contributors.getSnippet(uiOptions);
+            const snippet = Contributors.getGuidedDev(uiOptions);
                 expect(snippet).to.be.undefined;
         });
     });

@@ -4,14 +4,14 @@ import * as _ from 'lodash';
 export class Contributors {
     private static readonly apiMap = new Map<string, any>();
 
-    public static getSnippet(uiOptions: any) {
+    public static getGuidedDev(uiOptions: any) {
 		let snippet  = undefined;
 		const contributorName = _.get(uiOptions, "contributorName");
 		const snippetName = _.get(uiOptions, "snippetName");
 		const snippetContext = _.get(uiOptions, "context");
 		if (contributorName && snippetName) {
 			const api = Contributors.apiMap.get(contributorName);
-			const snippets = api.geCodeSnippets(snippetContext);
+			const snippets = api.getGuidedDevelopments(snippetContext);
 			snippet  = snippets.get(snippetName);
 		}
 		return snippet;
@@ -42,8 +42,8 @@ export class Contributors {
             const currentPackageJSON: any = _.get(extension, "packageJSON");
             const extensionDependencies: string[] = _.get(currentPackageJSON, "extensionDependencies");
             if (!_.isEmpty(extensionDependencies)) {
-                const codeSnippetDependancy: boolean = _.includes (extensionDependencies,"saposs.guided-development");
-                if (codeSnippetDependancy) {
+                const guidedDevelopmentDependancy: boolean = _.includes (extensionDependencies,"saposs.guided-development");
+                if (guidedDevelopmentDependancy) {
                     const extensionName: string =  _.get(currentPackageJSON, "name");
                     const api = await Contributors.getApi(extension, extensionName);
                     Contributors.add(extensionName, api);
