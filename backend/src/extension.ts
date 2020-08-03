@@ -2,11 +2,11 @@ import * as _ from 'lodash';
 import * as vscode from 'vscode';
 import { createExtensionLoggerAndSubscribeToLogSettingsChanges } from "./logger/logger-wrapper";
 import { Contributors } from './contributors';
-import { CodeSnippetPanel } from './panels/CodeSnippetPanel';
+import { GuidedDevelopmentPanel } from './panels/GuidedDevelopmentPanel';
 import { AbstractWebviewPanel } from './panels/AbstractWebviewPanel';
 
 let extContext: vscode.ExtensionContext;
-let codeSnippetPanel: CodeSnippetPanel;
+let guidedDevelopmentPanel: GuidedDevelopmentPanel;
 
 export function activate(context: vscode.ExtensionContext) {
 	extContext = context;
@@ -20,10 +20,10 @@ export function activate(context: vscode.ExtensionContext) {
 
 	Contributors.init();
 
-	codeSnippetPanel = new CodeSnippetPanel(extContext);
-	registerAndSubscribeCommand("loadCodeSnippet", codeSnippetPanel.loadWebviewPanel.bind(codeSnippetPanel));
-	registerAndSubscribeCommand("codeSnippet.toggleOutput", codeSnippetPanel.toggleOutput.bind(codeSnippetPanel));
-	registerWebviewPanelSerializer(codeSnippetPanel);
+	guidedDevelopmentPanel = new GuidedDevelopmentPanel(extContext);
+	registerAndSubscribeCommand("loadGuidedDevelopment", guidedDevelopmentPanel.loadWebviewPanel.bind(guidedDevelopmentPanel));
+	registerAndSubscribeCommand("guidedDevelopment.toggleOutput", guidedDevelopmentPanel.toggleOutput.bind(guidedDevelopmentPanel));
+	registerWebviewPanelSerializer(guidedDevelopmentPanel);
 }
 
 function registerAndSubscribeCommand(cId: string, cAction: any) {
@@ -39,5 +39,5 @@ function registerWebviewPanelSerializer(abstractPanel: AbstractWebviewPanel) {
 }
 
 export function deactivate() {
-	codeSnippetPanel = null;
+	guidedDevelopmentPanel = null;
 }

@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as os from "os";
 import * as vscode from 'vscode';
-import { CodeSnippet } from "../guided-development";
+import { GuidedDevelopment } from "../guided-development";
 import { RpcExtension } from '@sap-devx/webview-rpc/out.ext/rpc-extension';
 import { AppLog } from "../app-log";
 import backendMessages from "../messages";
@@ -13,8 +13,8 @@ import { AbstractWebviewPanel } from './AbstractWebviewPanel';
 import { Contributors } from "../contributors";
 
 
-export class CodeSnippetPanel extends AbstractWebviewPanel {
-	public static CODE_SNIPPET = "Code Snippet";
+export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
+	public static GUIDED_DEVELOPMENT = "Guided Development";
 
 	private static channel: vscode.OutputChannel;
 
@@ -25,7 +25,7 @@ export class CodeSnippetPanel extends AbstractWebviewPanel {
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
 
-		this.snippet = Contributors.getSnippet(uiOptions);
+		this.snippet = Contributors.getGuidedDev(uiOptions);
 		if (_.isNil(this.snippet)) {
 			return vscode.window.showErrorMessage("Can not find snippet.");
 		}
@@ -34,35 +34,35 @@ export class CodeSnippetPanel extends AbstractWebviewPanel {
 		const rpc = new RpcExtension(this.webViewPanel.webview);
 		this.outputChannel = new OutputChannelLog(this.messages.channelName);
 		const vscodeEvents: AppEvents = new VSCodeEvents(rpc, this.webViewPanel);
-		this.codeSnippet = new CodeSnippet(rpc, 
+		this.guidedDevelopment = new GuidedDevelopment(rpc, 
 			vscodeEvents, 
 			this.outputChannel, 
 			this.logger, 
 			{messages: this.messages, snippet: this.snippet});
-		this.codeSnippet.registerCustomQuestionEventHandler("file-browser", "getFilePath", this.showOpenFileDialog.bind(this));
-		this.codeSnippet.registerCustomQuestionEventHandler("folder-browser", "getPath", this.showOpenFolderDialog.bind(this));
+		this.guidedDevelopment.registerCustomQuestionEventHandler("file-browser", "getFilePath", this.showOpenFileDialog.bind(this));
+		this.guidedDevelopment.registerCustomQuestionEventHandler("folder-browser", "getPath", this.showOpenFolderDialog.bind(this));
 
 		this.initWebviewPanel();
 	}
 
 	public static getOutputChannel(channelName: string): vscode.OutputChannel {
 		if (!this.channel) {
-			this.channel = vscode.window.createOutputChannel(`${CodeSnippetPanel.CODE_SNIPPET}.${channelName}`);
+			this.channel = vscode.window.createOutputChannel(`${GuidedDevelopmentPanel.GUIDED_DEVELOPMENT}.${channelName}`);
 		}
 
 		return this.channel;
 	}
 
-	private codeSnippet: CodeSnippet;
+	private guidedDevelopment: GuidedDevelopment;
 	private snippet: any;
 	private messages: any;
 	private outputChannel: AppLog;
 
 	public constructor(context: vscode.ExtensionContext) {
 		super(context);
-		this.viewType = "codeSnippet";
-		this.viewTitle = CodeSnippetPanel.CODE_SNIPPET;
-		this.focusedKey = "codeSnippet.Focused";
+		this.viewType = "guidedDevelopment";
+		this.viewTitle = GuidedDevelopmentPanel.GUIDED_DEVELOPMENT;
+		this.focusedKey = "guidedDevelopment.Focused";
 	}
 
 	private async showOpenFileDialog(currentPath: string): Promise<string> {
@@ -97,7 +97,7 @@ export class CodeSnippetPanel extends AbstractWebviewPanel {
 
 	public disposeWebviewPanel() {
 		super.disposeWebviewPanel();
-		this.codeSnippet = null;
+		this.guidedDevelopment = null;
 	}
 
 	public initWebviewPanel() {

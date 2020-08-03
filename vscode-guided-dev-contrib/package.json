@@ -19,20 +19,20 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.showCodeSnippetContrib"
+		"onCommand:extension.showGuidedDevelopmentContrib"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.showCodeSnippetContrib",
+				"command": "extension.showGuidedDevelopmentContrib",
 				"title": "Create Launch Configuration"
 			}
 		],
 		"menus": {
 			"explorer/context": [
 				{
-					"command": "extension.showCodeSnippetContrib",
+					"command": "extension.showGuidedDevelopmentContrib",
 					"group": "navigation@1",
 					"when": "resourceFilename == launch.json"
 				}

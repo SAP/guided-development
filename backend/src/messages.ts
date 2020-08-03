@@ -1,6 +1,6 @@
 export default {
-    channelName: "Snippets",
-    title: "Code Snippet",
+    channelName: "GuidedDev",
+    title: "Guided Development",
     description: `guided-development description.`,
     applyButton: "Apply",
     noResponse: "No response received.",

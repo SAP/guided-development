@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import { RpcExtensionWebSockets } from '@sap-devx/webview-rpc/out.ext/rpc-extension-ws';
-import { CodeSnippet } from '../guided-development';
+import { GuidedDevelopment } from '../guided-development';
 import { AppLog } from "../app-log";
 import { ServerLog } from './server-log';
 import { ServerEvents } from './server-events';
@@ -8,9 +8,9 @@ import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
 
-class CodeSnippetWebSocketServer {
+class GuidedDevelopmentWebSocketServer {
   private rpc: RpcExtensionWebSockets | undefined;
-  private codeSnippet: CodeSnippet | undefined;
+  private guidedDevelopment: GuidedDevelopment | undefined;
   private async mockFolderDialog() {
     return "mock path";
   }
@@ -39,16 +39,16 @@ class CodeSnippetWebSocketServer {
       const appEvents: AppEvents = new ServerEvents(this.rpc);
       const snippet = {
 				getQuestions() {
-					return createCodeSnippetQuestions();
+					return createGuidedDevelopmentQuestions();
 				}
       };
-      this.codeSnippet = new CodeSnippet(this.rpc, appEvents, logger, childLogger as IChildLogger, {messages: backendMessages, snippet: snippet});
-      this.codeSnippet.registerCustomQuestionEventHandler("folder-browser", "getPath", this.mockFolderDialog.bind(this));
+      this.guidedDevelopment = new GuidedDevelopment(this.rpc, appEvents, logger, childLogger as IChildLogger, {messages: backendMessages, snippet: snippet});
+      this.guidedDevelopment.registerCustomQuestionEventHandler("folder-browser", "getPath", this.mockFolderDialog.bind(this));
     });
   }
 }
 
-function createCodeSnippetQuestions(): any[] {
+function createGuidedDevelopmentQuestions(): any[] {
 	const questions: any[] = [];
 
     questions.push(
@@ -95,5 +95,5 @@ function createCodeSnippetQuestions(): any[] {
     return questions;
 }
 
-const wsServer = new CodeSnippetWebSocketServer();
+const wsServer = new GuidedDevelopmentWebSocketServer();
 wsServer.init();

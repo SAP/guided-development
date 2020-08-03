@@ -1,10 +1,10 @@
 {
   "name": "guided-development-frontend",
-  "displayName": "Code Snippet Frontend",
+  "displayName": "Guided Development Frontend",
   "version": "0.0.1",
   "publisher": "SAP",
   "license": "Apache 2.0",
-  "description": "Frontend for the Code Snippet framework",
+  "description": "Frontend for the Guided Development framework",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",

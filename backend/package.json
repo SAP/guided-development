@@ -1,13 +1,13 @@
 {
 	"name": "guided-development",
 	"version": "0.0.1",
-	"displayName": "Code Snippet",
+	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
 		"name": "SAP SE"
 	},
 	"license": "Apache 2.0",
-	"description": "A VSCode extension that provides a simple way to add code snippets.",
+	"description": "A VSCode extension that provides a simple way to guide a developer.",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SAP/guided-development.git"
@@ -31,18 +31,18 @@
 	],
 	"activationEvents": [
 		"*",
-		"onCommand:loadCodeSnippet",
-		"onWebviewPanel:codeSnippet"
+		"onCommand:loadGuidedDevelopment",
+		"onWebviewPanel:GuidedDevelopment"
 	],
 	"main": "./dist/extension",
 	"contributes": {
 		"commands": [
 			{
-				"command": "loadCodeSnippet",
-				"title": "Code Snippet"
+				"command": "loadGuidedDevelopment",
+				"title": "Guided Development"
 			},
 			{
-				"command": "codeSnippet.toggleOutput",
+				"command": "guidedDevelopment.toggleOutput",
 				"title": "Show Output",
 				"icon": {
 					"light": "./resources/images/icons/console_light.svg",
@@ -53,27 +53,27 @@
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "loadCodeSnippet",
+					"command": "loadGuidedDevelopment",
 					"when": "false"
 				},
 				{
-					"command": "codeSnippet.toggleOutput",
+					"command": "guidedDevelopment.toggleOutput",
 					"when": "false"
 				}
 			],
 			"editor/title": [
 				{
-					"command": "codeSnippet.toggleOutput",
+					"command": "guidedDevelopment.toggleOutput",
 					"group": "navigation",
-					"when": "codeSnippet.Focused"
+					"when": "guidedDevelopment.Focused"
 				}
 			]
 		},
 		"configuration": {
 			"type": "object",
-			"title": "Code Snippet",
+			"title": "Guided Development",
 			"properties": {
-				"Code Snippet.loggingLevel": {
+				"Guided Development.loggingLevel": {
 					"type": "string",
 					"enum": [
 						"off",
@@ -88,7 +88,7 @@
 					"description": "The verbosity of logging according to the following order: trace > debug > info > warn > error > fatal > off.",
 					"scope": "resource"
 				},
-				"Code Snippet.sourceLocationTracking": {
+				"Guided Development.sourceLocationTracking": {
 					"type": "boolean",
 					"default": false,
 					"description": "If chosen, the location of the source code is added to log entries. Warning – this action may slow your extension. We recommend you use it only for debugging.",

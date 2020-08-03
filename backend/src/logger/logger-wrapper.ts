@@ -5,8 +5,8 @@ import { listenToLogSettingsChanges, logLoggerDetails } from "./settings-changes
 import { getLoggingLevelSetting, getSourceLocationTrackingSetting} from "./settings";
 
 // const PACKAGE_JSON = "package.json";
-const CODE_SNIPPET_LOGGER_NAME = "codeSnippet";
-const CODE_SNIPPET = "Code Snippet";
+const GUIDED_DEVELOPMENT_LOGGER_NAME = "guidedDevelopment";
+const GUIDED_DEVELOPMENT = "Guided Development";
 
 /**
  * A Simple Wrapper to hold the state of our "singleton" (per extension) IVSCodeExtLogger
@@ -41,8 +41,8 @@ export function getClassLogger(className: string): IChildLogger {
 	return getLogger().getChildLogger({label:className});
 }
 
-export function getCodeSnippetLibraryLogger(): IChildLogger {
-	return getLibraryLogger(CODE_SNIPPET_LOGGER_NAME);
+export function getGuidedDevelopmentLibraryLogger(): IChildLogger {
+	return getLibraryLogger(GUIDED_DEVELOPMENT_LOGGER_NAME);
 }
 
 function getLibraryLogger(libraryName: string): IChildLogger {
@@ -67,11 +67,11 @@ function createExtensionLogger(context: vscode.ExtensionContext) {
 	const contextLogPath = context.logPath;
 	const logLevelSetting: LogLevel = getLoggingLevelSetting();
 	const sourceLocationTrackingSettings: boolean = getSourceLocationTrackingSetting();
-	const logOutputChannel = vscode.window.createOutputChannel(CODE_SNIPPET);
+	const logOutputChannel = vscode.window.createOutputChannel(GUIDED_DEVELOPMENT);
 
 	//TODO:  const meta = require(resolve(context.extensionPath, PACKAGE_JSON));
 	const extensionLoggerOpts: getExtensionLoggerOpts = {
-		extName: CODE_SNIPPET,
+		extName: GUIDED_DEVELOPMENT,
 		level: logLevelSetting,
 		logPath: contextLogPath,
 		logOutputChannel: logOutputChannel,
@@ -89,6 +89,6 @@ module.exports = {
   getLogger,
   createExtensionLoggerAndSubscribeToLogSettingsChanges,
   getClassLogger,
-  getCodeSnippetLibraryLogger,
+  getGuidedDevelopmentLibraryLogger,
   ERROR_LOGGER_NOT_INITIALIZED
 }; 

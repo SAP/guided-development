@@ -1,4 +1,4 @@
-# VSCcode Snippet Contributor
+# VSCode GuidedDev Contributor
 
 ## Project setup
 ```

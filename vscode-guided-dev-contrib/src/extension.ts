@@ -7,9 +7,9 @@ import { ConfigHelper } from "./configHelper";
 export function activate(context: vscode.ExtensionContext) {
 	console.log('Congratulations, your extension "snippet1" is now active!');
 
-	let disposable = vscode.commands.registerCommand('extension.showCodeSnippetContrib', (uri: vscode.Uri) => {
+	let disposable = vscode.commands.registerCommand('extension.showGuidedDevelopmentContrib', (uri: vscode.Uri) => {
 		try {
-			vscode.commands.executeCommand("loadCodeSnippet", {contributorName: "vscode-guided-dev-contrib", snippetName: "snippet_1", context: {uri: uri}});
+			vscode.commands.executeCommand("loadGuidedDevelopment", {contributorName: "vscode-guided-dev-contrib", snippetName: "snippet_1", context: {uri: uri}});
 		  } catch (error) {
 			vscode.window.showInformationMessage(error);
 		}
@@ -18,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(disposable);
 
 	const api = {
-		geCodeSnippets(context: any) {
+		getGuidedDevelopments(context: any) {
 			const snippets = new Map<string, ISnippet>();
 			let snippet: ISnippet = {
 				getMessages() {
@@ -29,7 +29,7 @@ export function activate(context: vscode.ExtensionContext) {
 					};
 				},
 				getQuestions() {
-					return createCodeSnippetQuestions(context);
+					return createGuidedDevelopmentQuestions(context);
 				},
 				async getWorkspaceEdit(answers: any) {
 					let outputFile: string;
@@ -74,7 +74,7 @@ export function activate(context: vscode.ExtensionContext) {
 	return api;
 }
 
-function createCodeSnippetQuestions(context: any) : any[] {
+function createGuidedDevelopmentQuestions(context: any) : any[] {
 	const questions: any[] = [];
 
     questions.push(

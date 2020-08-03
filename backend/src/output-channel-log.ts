@@ -1,5 +1,5 @@
 import { AppLog } from "./app-log";
-import { CodeSnippetPanel } from "./panels/CodeSnippetPanel";
+import { GuidedDevelopmentPanel } from "./panels/GuidedDevelopmentPanel";
 import stripAnsi = require("strip-ansi");
 
 export class OutputChannelLog implements AppLog {
@@ -33,11 +33,11 @@ export class OutputChannelLog implements AppLog {
         this.appendLine(value);
     }
     public showOutput(): boolean {
-        CodeSnippetPanel.getOutputChannel(this.channelName).show();
+        GuidedDevelopmentPanel.getOutputChannel(this.channelName).show();
         return true;
     }
 
     private appendLine(value: string) {
-        CodeSnippetPanel.getOutputChannel(this.channelName).appendLine(stripAnsi(value));
+        GuidedDevelopmentPanel.getOutputChannel(this.channelName).appendLine(stripAnsi(value));
     }
 }

@@ -8,7 +8,7 @@ import Generator = require("yeoman-generator");
 import { IChildLogger } from "@vscode-logging/logger";
 import {IPrompt} from "@sap-devx/yeoman-ui-types";
 
-export class CodeSnippet {
+export class GuidedDevelopment {
 
   private static funcReplacer(key: any, value: any) {
     return _.isFunction(value) ? "__Function" : value;
@@ -75,7 +75,7 @@ export class CodeSnippet {
   private async applyCode(answers: any) {
     this.snippetName = this.uiOptions.messages.title;
     try {
-      const we: any = await this.createCodeSnippetWorkspaceEdit(answers);
+      const we: any = await this.createGuidedDevelopmentWorkspaceEdit(answers);
       await this.appEvents.doApply(we);
       this.onSuccess(this.snippetName);
     } catch (error) {
@@ -111,7 +111,7 @@ export class CodeSnippet {
 
   private async receiveIsWebviewReady() {
     try {
-      const questions: any[] = await this.createCodeSnippetQuestions();
+      const questions: any[] = await this.createGuidedDevelopmentQuestions();
       this.currentQuestions = questions;
       const normalizedQuestions = this.normalizeFunctions(questions);
       const response: any = await this.rpc.invoke("showPrompt", [normalizedQuestions]);
@@ -180,7 +180,7 @@ export class CodeSnippet {
     return `name: ${name}\n message: ${message}\n stack: ${stack}\n string: ${error.toString()}\n`;
   }
   
-  private async createCodeSnippetQuestions(): Promise<any[]> {
+  private async createGuidedDevelopmentQuestions(): Promise<any[]> {
     const snippet = this.uiOptions.snippet;
     // if (_.isNil(snippet)) {
     //   throw new Error(this.uiOptions.snippetMustExist);
@@ -195,7 +195,7 @@ export class CodeSnippet {
     return questions;
   }
 
-  private async createCodeSnippetWorkspaceEdit(answers: any): Promise<any[]> {
+  private async createGuidedDevelopmentWorkspaceEdit(answers: any): Promise<any[]> {
     const snippet = this.uiOptions.snippet;
     // if (_.isNil(snippet)) {
     //   throw new Error(this.uiOptions.snippetMustExist);
@@ -221,7 +221,7 @@ export class CodeSnippet {
    */
   private normalizeFunctions(questions: Environment.Adapter.Questions<any>): Environment.Adapter.Questions<any> {
     this.addCustomQuestionEventHandlers(questions);
-    return JSON.parse(JSON.stringify(questions, CodeSnippet.funcReplacer));
+    return JSON.parse(JSON.stringify(questions, GuidedDevelopment.funcReplacer));
   }
 
   private addCustomQuestionEventHandlers(questions: Environment.Adapter.Questions<any>): void {
