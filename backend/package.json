@@ -7,7 +7,7 @@
 		"name": "SAP SE"
 	},
 	"license": "Apache 2.0",
-	"description": "A VSCode extension that shows the developer how to execute common development tasks for specific SAP scenarios.",
+	"description": "A VSCode extension that provides a simple way to guide a developer.",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SAP/guided-development.git"
