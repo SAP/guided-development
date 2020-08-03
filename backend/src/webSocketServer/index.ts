@@ -1,6 +1,6 @@
 import * as WebSocket from 'ws';
 import { RpcExtensionWebSockets } from '@sap-devx/webview-rpc/out.ext/rpc-extension-ws';
-import { CodeSnippet } from '../code-snippet';
+import { CodeSnippet } from '../guided-development';
 import { AppLog } from "../app-log";
 import { ServerLog } from './server-log';
 import { ServerEvents } from './server-events';

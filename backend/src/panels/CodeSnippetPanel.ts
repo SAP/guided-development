@@ -2,7 +2,7 @@ import * as _ from 'lodash';
 import * as path from 'path';
 import * as os from "os";
 import * as vscode from 'vscode';
-import { CodeSnippet } from "../code-snippet";
+import { CodeSnippet } from "../guided-development";
 import { RpcExtension } from '@sap-devx/webview-rpc/out.ext/rpc-extension';
 import { AppLog } from "../app-log";
 import backendMessages from "../messages";

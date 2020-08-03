@@ -1,6 +1,6 @@
 {
-	"name": "code-snippet",
-	"version": "0.0.8",
+	"name": "guided-development",
+	"version": "0.0.1",
 	"displayName": "Code Snippet",
 	"publisher": "SAPOSS",
 	"author": {
@@ -10,10 +10,10 @@
 	"description": "A VSCode extension that provides a simple way to add code snippets.",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/SAP/code-snippet.git"
+		"url": "https://github.com/SAP/guided-development.git"
 	},
 	"bugs": {
-		"url": "https://github.com/SAP/code-snippet/issues"
+		"url": "https://github.com/SAP/guided-development/issues"
 	},
 	"icon": "Wizard_logo.png",
 	"engines": {

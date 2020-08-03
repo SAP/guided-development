@@ -157,7 +157,7 @@ export class CodeSnippet {
 
   private onSuccess(snippetName: string) {
     const message = `'${snippetName}' snippet has been created.`;
-    this.logger.debug("done running code-snippet! " + message);
+    this.logger.debug("done running guided-development! " + message);
     this.appEvents.doSnippeDone(true, message);
   }
 

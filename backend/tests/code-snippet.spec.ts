@@ -5,7 +5,7 @@ import * as fsextra from "fs-extra";
 import { expect } from "chai";
 import * as _ from "lodash";
 import * as path from "path";
-import {CodeSnippet} from "../src/code-snippet";
+import {CodeSnippet} from "../src/guided-development";
 import * as yeomanEnv from "yeoman-environment";
 import { AppLog } from "../src/app-log";
 import { AppEvents } from '../src/app-events';

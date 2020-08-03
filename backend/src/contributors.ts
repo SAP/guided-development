@@ -42,7 +42,7 @@ export class Contributors {
             const currentPackageJSON: any = _.get(extension, "packageJSON");
             const extensionDependencies: string[] = _.get(currentPackageJSON, "extensionDependencies");
             if (!_.isEmpty(extensionDependencies)) {
-                const codeSnippetDependancy: boolean = _.includes (extensionDependencies,"saposs.code-snippet");
+                const codeSnippetDependancy: boolean = _.includes (extensionDependencies,"saposs.guided-development");
                 if (codeSnippetDependancy) {
                     const extensionName: string =  _.get(currentPackageJSON, "name");
                     const api = await Contributors.getApi(extension, extensionName);

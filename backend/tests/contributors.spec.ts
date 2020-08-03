@@ -89,7 +89,7 @@ describe('Contributors unit test', () => {
                 return snippets;
             },
         };
-        const extensionName = "vscode-snippet-contrib";
+        const extensionName = "vscode-guided-dev-contrib";
         Contributors.add(extensionName, api);
         
         it("receives valid contributorName and snippetName ---> returns valid snippet", () => {
