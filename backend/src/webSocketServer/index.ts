@@ -37,12 +37,12 @@ class GuidedDevelopmentWebSocketServer {
       const logger: AppLog = new ServerLog(this.rpc);
       const childLogger = {debug: () => {}, error: () => {}, fatal: () => {}, warn: () => {}, info: () => {}, trace: () => {}, getChildLogger: () => {return {} as IChildLogger;}};
       const appEvents: AppEvents = new ServerEvents(this.rpc);
-      const snippet = {
+      const guidedDev = {
 				getQuestions() {
 					return createGuidedDevelopmentQuestions();
 				}
       };
-      this.guidedDevelopment = new GuidedDevelopment(this.rpc, appEvents, logger, childLogger as IChildLogger, {messages: backendMessages, snippet: snippet});
+      this.guidedDevelopment = new GuidedDevelopment(this.rpc, appEvents, logger, childLogger as IChildLogger, {messages: backendMessages, guidedDev: guidedDev});
       this.guidedDevelopment.registerCustomQuestionEventHandler("folder-browser", "getPath", this.mockFolderDialog.bind(this));
     });
   }

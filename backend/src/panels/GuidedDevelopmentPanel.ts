@@ -25,12 +25,12 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
 
-		this.snippet = Contributors.getGuidedDev(uiOptions);
-		if (_.isNil(this.snippet)) {
-			return vscode.window.showErrorMessage("Can not find snippet.");
+		this.guidedDev = Contributors.getGuidedDev(uiOptions);
+		if (_.isNil(this.guidedDev)) {
+			return vscode.window.showErrorMessage("Can not find guided-development.");
 		}
 
-		this.messages = _.assign({}, backendMessages, this.snippet.getMessages());
+		this.messages = _.assign({}, backendMessages, this.guidedDev.getMessages());
 		const rpc = new RpcExtension(this.webViewPanel.webview);
 		this.outputChannel = new OutputChannelLog(this.messages.channelName);
 		const vscodeEvents: AppEvents = new VSCodeEvents(rpc, this.webViewPanel);
@@ -38,7 +38,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 			vscodeEvents, 
 			this.outputChannel, 
 			this.logger, 
-			{messages: this.messages, snippet: this.snippet});
+			{messages: this.messages, guidedDev: this.guidedDev});
 		this.guidedDevelopment.registerCustomQuestionEventHandler("file-browser", "getFilePath", this.showOpenFileDialog.bind(this));
 		this.guidedDevelopment.registerCustomQuestionEventHandler("folder-browser", "getPath", this.showOpenFolderDialog.bind(this));
 
@@ -54,7 +54,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	}
 
 	private guidedDevelopment: GuidedDevelopment;
-	private snippet: any;
+	private guidedDev: any;
 	private messages: any;
 	private outputChannel: AppLog;
 

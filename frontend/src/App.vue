@@ -250,7 +250,7 @@ export default {
       this.logText += log;
       return true;
     },
-    snippetDone(succeeded, message, targetPath) {
+    guidedDevDone(succeeded, message, targetPath) {
       this.currentPrompt.name = "Summary";
       this.doneMessage = message;
       this.donePath = targetPath;
@@ -280,7 +280,7 @@ export default {
       const functions = [
         "showPrompt",
         "setPromptList",
-        "snippetDone",
+        "guidedDevDone",
         "log"
       ];
       _.forEach(functions, funcName => {
