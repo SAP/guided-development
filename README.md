@@ -10,7 +10,7 @@ This extension allows developers to add generic code pieces to their project and
 The repository contains three main packages:
 * **Frontend** - The Guided Development as a standalone vue.js application.
 * **Backend** - The backend part. Runs as a VSCode extension or node.js application.
-* **VSCode GuidedDev contributor example** - Example snippet contibutor to show usage.
+* **VSCode Guided Development contributor example** - Example guided-development contibutor to show usage.
 
 ## Requirements
 * [node.js](https://www.npmjs.com/package/node) version 10 or higher.

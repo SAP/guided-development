@@ -1,15 +1,15 @@
 // import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ISnippet } from './types/Snippet';
+import { IGuidedDev } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import { ConfigHelper } from "./configHelper";
 
 export function activate(context: vscode.ExtensionContext) {
-	console.log('Congratulations, your extension "snippet1" is now active!');
+	console.log('Congratulations, your extension "guidedDev1" is now active!');
 
 	let disposable = vscode.commands.registerCommand('extension.showGuidedDevelopmentContrib', (uri: vscode.Uri) => {
 		try {
-			vscode.commands.executeCommand("loadGuidedDevelopment", {contributorName: "vscode-guided-dev-contrib", snippetName: "snippet_1", context: {uri: uri}});
+			vscode.commands.executeCommand("loadGuidedDevelopment", {contributorName: "vscode-guided-dev-contrib", guidedDevName: "guidedDev_1", context: {uri: uri}});
 		  } catch (error) {
 			vscode.window.showInformationMessage(error);
 		}
@@ -19,8 +19,8 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const api = {
 		getGuidedDevelopments(context: any) {
-			const snippets = new Map<string, ISnippet>();
-			let snippet: ISnippet = {
+			const guidedDevs = new Map<string, IGuidedDev>();
+			let guidedDev: IGuidedDev = {
 				getMessages() {
 					return {
 						title: "Create Launch Configuration",
@@ -58,7 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
 					const we = new vscode.WorkspaceEdit();
 					we.createFile(docUri, { ignoreIfExists: true });
 
-					const metadata = {needsConfirmation: true, label: "snippet contributor"};
+					const metadata = {needsConfirmation: true, label: "guidedDev contributor"};
 					const newText = ConfigHelper.getString(configurations);
 					const range = await ConfigHelper.getRange(docUri);
 					we.replace(docUri, range, newText, metadata);
@@ -66,8 +66,8 @@ export function activate(context: vscode.ExtensionContext) {
 					return we;
 				}
 			}
-			snippets.set("snippet_1", snippet);
-			return snippets;
+			guidedDevs.set("guidedDev_1", guidedDev);
+			return guidedDevs;
 		},
 	};
 

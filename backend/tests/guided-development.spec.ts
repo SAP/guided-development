@@ -103,7 +103,7 @@ describe('guidedDevelopment unit test', () => {
     const rpc = new TestRpc();
     const outputChannel = new TestOutputChannel();
     const appEvents = new TestEvents();
-    const uiOptions = {messages: {title: "snippet title"}};
+    const uiOptions = {messages: {title: "guidedDev title"}};
     const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, uiOptions);
 
     before(() => {
@@ -259,13 +259,13 @@ describe('guidedDevelopment unit test', () => {
         });
 
         it("onSuccess", () => {
-            guidedDevelopment["onSuccess"]("testSnippetName");
-            expect(doSnippeDoneSpy.calledWith(true, "'testSnippetName' snippet has been created.")).to.be.true;
+            guidedDevelopment["onSuccess"]("testGuidedDevName");
+            expect(doSnippeDoneSpy.calledWith(true, "'testGuidedDevName' guided-development has been created.")).to.be.true;
         });
 
         it("onFailure", async () => {
-            await guidedDevelopment["onFailure"]("testSnippetName", "testError");
-            expect(doSnippeDoneSpy.calledWith(false, "testSnippetName snippet failed.\ntestError")).to.be.true;
+            await guidedDevelopment["onFailure"]("testGuidedDevName", "testError");
+            expect(doSnippeDoneSpy.calledWith(false, "testGuidedDevName guided-development failed.\ntestError")).to.be.true;
         });
     });
 
@@ -344,7 +344,7 @@ describe('guidedDevelopment unit test', () => {
     });
 
     describe("applyCode", () => {
-        const title = "snippet title";
+        const title = "guidedDev title";
         let guidedDevelopmentInstanceMock: any;
         let guidedDevelopmentInstance: GuidedDevelopment;
 
@@ -375,7 +375,7 @@ describe('guidedDevelopment unit test', () => {
         });
     });
     
-    const snippet: any = {
+    const guidedDev: any = {
         getMessages() {
             return "getMessages";
         },
@@ -388,16 +388,16 @@ describe('guidedDevelopment unit test', () => {
     };
 
     describe("createGuidedDevelopmentWorkspaceEdit", () => {
-        it("snippet has getWorkspaceEdit ---> call getWorkspaceEdit", async () => {
-            const myGuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {snippet: snippet});
+        it("guidedDev has getWorkspaceEdit ---> call getWorkspaceEdit", async () => {
+            const myGuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {guidedDev: guidedDev});
             const we = await myGuidedDevelopment["createGuidedDevelopmentWorkspaceEdit"]({});
             expect(we).to.be.equal("getWorkspaceEdit");
         });
     });
 
     describe("createGuidedDevelopmentQuestions", () => {
-        it("snippet has getQuestions ---> call getQuestions", async () => {
-            const myGuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {snippet: snippet});
+        it("guidedDev has getQuestions ---> call getQuestions", async () => {
+            const myGuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {guidedDev: guidedDev});
             const we = await myGuidedDevelopment["createGuidedDevelopmentQuestions"]();
             expect(we).to.be.equal("createGuidedDevelopmentQuestions");
         });

@@ -118,7 +118,7 @@ describe('App.vue', () => {
     
     wrapper.vm.showPrompt = jest.fn()
     wrapper.vm.setPrompts = jest.fn()
-    wrapper.vm.snippetDone = jest.fn()
+    wrapper.vm.guidedDevDone = jest.fn()
     wrapper.vm.log = jest.fn()
 
     const invokeSpy = jest.spyOn(wrapper.vm.rpc, 'invoke')
@@ -126,7 +126,7 @@ describe('App.vue', () => {
     wrapper.vm.initRpc();
     
     expect(registerMethodSpy).toHaveBeenCalledWith({func: wrapper.vm.showPrompt, thisArg: wrapper.vm, name: 'showPrompt'})
-    expect(registerMethodSpy).toHaveBeenCalledWith({func: wrapper.vm.snippetDone, thisArg: wrapper.vm, name: 'snippetDone'})
+    expect(registerMethodSpy).toHaveBeenCalledWith({func: wrapper.vm.guidedDevDone, thisArg: wrapper.vm, name: 'guidedDevDone'})
     expect(registerMethodSpy).toHaveBeenCalledWith({func: wrapper.vm.log, thisArg: wrapper.vm, name: 'log'})
     expect(invokeSpy).toHaveBeenCalledWith("getState")
 
@@ -169,14 +169,14 @@ describe('App.vue', () => {
     })
   })
 
-  describe('snippetDone - method', () => {
+  describe('guidedDevDone - method', () => {
     test('status is pending', () => {
       wrapper = initComponent(App, {donePath: 'testDonePath'})
       wrapper.vm.prompts = [{}, {}]
       wrapper.vm.promptIndex = 1
       wrapper.vm.currentPrompt.status = 'pending'
 
-      wrapper.vm.snippetDone(true, 'testMessage', '/test/path')
+      wrapper.vm.guidedDevDone(true, 'testMessage', '/test/path')
 
       expect(wrapper.vm.doneMessage).toBe('testMessage')
       expect(wrapper.vm.donePath).toBe('/test/path')

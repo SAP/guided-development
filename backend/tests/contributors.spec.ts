@@ -80,31 +80,31 @@ describe('Contributors unit test', () => {
         const messageValue = {title: "Create a new action", 
                               description: "Select the action, target, service and the entity set you want to connect to."};
 
-        const snippetName = "snippet_1";
+        const guidedDevName = "guidedDev_1";
         const api = {
             getGuidedDevelopments(context: any) {
-                const snippets = new Map<string, any>();
-                const snippet: any = getGuidedDev(context);
-                snippets.set(snippetName, snippet);
-                return snippets;
+                const guidedDevs = new Map<string, any>();
+                const guidedDev: any = getGuidedDev(context);
+                guidedDevs.set(guidedDevName, guidedDev);
+                return guidedDevs;
             },
         };
         const extensionName = "vscode-guided-dev-contrib";
         Contributors.add(extensionName, api);
         
-        it("receives valid contributorName and snippetName ---> returns valid snippet", () => {
+        it("receives valid contributorName and guidedDevName ---> returns valid guidedDev", () => {
             const uiOptions = {
                 "contributorName": extensionName,
-                "snippetName": snippetName
+                "guidedDevName": guidedDevName
               };
-              const snippet = Contributors.getGuidedDev(uiOptions);
-              expect(snippet.getMessages()).to.deep.equal(messageValue);
+              const guidedDev = Contributors.getGuidedDev(uiOptions);
+              expect(guidedDev.getMessages()).to.deep.equal(messageValue);
         });
 
-        it("receives no contributorName and no snippetName ---> returns undefined snippet", () => {
+        it("receives no contributorName and no guidedDevName ---> returns undefined guidedDev", () => {
             const uiOptions = {};
-            const snippet = Contributors.getGuidedDev(uiOptions);
-                expect(snippet).to.be.undefined;
+            const guidedDev = Contributors.getGuidedDev(uiOptions);
+                expect(guidedDev).to.be.undefined;
         });
     });
 

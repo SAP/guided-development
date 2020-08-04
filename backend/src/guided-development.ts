@@ -22,7 +22,7 @@ export class GuidedDevelopment {
   private gen: Generator | undefined; // eslint-disable-line @typescript-eslint/prefer-readonly
   private promptCount: number;
   private currentQuestions: Environment.Adapter.Questions<any>;
-  private snippetName: string;
+  private guidedDevName: string;
   private readonly customQuestionEventHandlers: Map<string, Map<string, Function>>;
   private errorThrown = false;
 
@@ -31,7 +31,7 @@ export class GuidedDevelopment {
     if (!this.rpc) {
       throw new Error("rpc must be set");
     }
-    this.snippetName = "";
+    this.guidedDevName = "";
     this.appEvents = appEvents;
     this.outputChannel = outputChannel;
     this.logger = logger;
@@ -73,13 +73,13 @@ export class GuidedDevelopment {
   }
 
   private async applyCode(answers: any) {
-    this.snippetName = this.uiOptions.messages.title;
+    this.guidedDevName = this.uiOptions.messages.title;
     try {
       const we: any = await this.createGuidedDevelopmentWorkspaceEdit(answers);
       await this.appEvents.doApply(we);
-      this.onSuccess(this.snippetName);
+      this.onSuccess(this.guidedDevName);
     } catch (error) {
-      this.onFailure(this.snippetName, error);
+      this.onFailure(this.guidedDevName, error);
     }
   }
 
@@ -105,7 +105,7 @@ export class GuidedDevelopment {
     } catch (error) {
       const questionInfo = `Could not update method '${methodName}' in '${questionName}' question in generator '${this.gen.options.namespace}'`;
       const errorMessage = await this.logError(error, questionInfo);
-      this.onFailure(this.snippetName, errorMessage);
+      this.onFailure(this.guidedDevName, errorMessage);
     } 
   }
 
@@ -155,15 +155,15 @@ export class GuidedDevelopment {
     return (firstQuestionName ? _.startCase(firstQuestionName) : `Step ${this.promptCount}`);
   }
 
-  private onSuccess(snippetName: string) {
-    const message = `'${snippetName}' snippet has been created.`;
+  private onSuccess(guidedDevName: string) {
+    const message = `'${guidedDevName}' guided-development has been created.`;
     this.logger.debug("done running guided-development! " + message);
     this.appEvents.doSnippeDone(true, message);
   }
 
-  private async onFailure(snippetrName: string, error: any) {
+  private async onFailure(guidedDevName: string, error: any) {
     this.errorThrown = true;
-    const messagePrefix = `${snippetrName} snippet failed.`;
+    const messagePrefix = `${guidedDevName} guided-development failed.`;
     const errorMessage: string = await this.logError(error, messagePrefix);
     this.appEvents.doSnippeDone(false, errorMessage);
   }
@@ -181,31 +181,24 @@ export class GuidedDevelopment {
   }
   
   private async createGuidedDevelopmentQuestions(): Promise<any[]> {
-    const snippet = this.uiOptions.snippet;
-    // if (_.isNil(snippet)) {
-    //   throw new Error(this.uiOptions.snippetMustExist);
-    // }
+    const guidedDev = this.uiOptions.guidedDev;
 
     let questions: any[] = [];
 
-    if (snippet && snippet.getQuestions) {
-      questions = snippet.getQuestions();
+    if (guidedDev && guidedDev.getQuestions) {
+      questions = guidedDev.getQuestions();
     }
 
     return questions;
   }
 
   private async createGuidedDevelopmentWorkspaceEdit(answers: any): Promise<any[]> {
-    const snippet = this.uiOptions.snippet;
-    // if (_.isNil(snippet)) {
-    //   throw new Error(this.uiOptions.snippetMustExist);
-    // }
-
+    const guidedDev = this.uiOptions.guidedDev;
 
     let we: any = undefined;
 
-    if (snippet && snippet.getWorkspaceEdit) {
-      we = await snippet.getWorkspaceEdit(answers);
+    if (guidedDev && guidedDev.getWorkspaceEdit) {
+      we = await guidedDev.getWorkspaceEdit(answers);
     }
 
     return we;

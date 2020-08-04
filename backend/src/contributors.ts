@@ -5,16 +5,16 @@ export class Contributors {
     private static readonly apiMap = new Map<string, any>();
 
     public static getGuidedDev(uiOptions: any) {
-		let snippet  = undefined;
+		let guidedDev  = undefined;
 		const contributorName = _.get(uiOptions, "contributorName");
-		const snippetName = _.get(uiOptions, "snippetName");
-		const snippetContext = _.get(uiOptions, "context");
-		if (contributorName && snippetName) {
+		const guidedDevName = _.get(uiOptions, "guidedDevName");
+		const guidedDevContext = _.get(uiOptions, "context");
+		if (contributorName && guidedDevName) {
 			const api = Contributors.apiMap.get(contributorName);
-			const snippets = api.getGuidedDevelopments(snippetContext);
-			snippet  = snippets.get(snippetName);
+			const guidedDevs = api.getGuidedDevelopments(guidedDevContext);
+			guidedDev  = guidedDevs.get(guidedDevName);
 		}
-		return snippet;
+		return guidedDev;
 	}
 
     public static add(extensionName: string, api: any) {

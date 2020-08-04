@@ -17,6 +17,6 @@ export class ServerEvents implements AppEvents {
     }
 
     doSnippeDone(suceeded: boolean, message: string, targetPath = ""): void {
-        this.rpc.invoke("snippetDone", [suceeded, message, targetPath]);
+        this.rpc.invoke("guidedDevDone", [suceeded, message, targetPath]);
     }
 }

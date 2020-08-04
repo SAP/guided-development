@@ -10,7 +10,7 @@
     "type": "git",
     "url": "https://github.com/SAP/guided-development.git"
   },
-  "main": "out/src/Snippet.js",
+  "main": "out/src/GuidedDev.js",
   "types": "",
   "files": [
     "out/src/*"
