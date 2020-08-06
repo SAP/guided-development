@@ -26,7 +26,7 @@
 		"commands": [
 			{
 				"command": "extension.showGuidedDevelopmentContrib",
-				"title": "Create Launch Configuration"
+				"title": "Load Guided Development"
 			}
 		],
 		"menus": {

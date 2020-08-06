@@ -1,3 +1,4 @@
+import * as vscode from 'vscode';
 import * as _ from "lodash";
 import { AppLog } from "./app-log";
 import { AppEvents } from "./app-events";
@@ -30,9 +31,22 @@ export class GuidedDevelopment {
     this.rpc.registerMethod({ func: this.toggleOutput, thisArg: this });
     this.rpc.registerMethod({ func: this.logError, thisArg: this });
     this.rpc.registerMethod({ func: this.getState, thisArg: this });
+    this.rpc.registerMethod({ func: this.runAction, thisArg: this });
 
     this.promptCount = 0;
     this.uiOptions = uiOptions;
+  }
+
+  private async runAction(item: any) {
+    if (item && item.action) {
+      switch (item.action.type) {
+        case 'command':
+          vscode.commands.executeCommand(item.action.command.name, item.action.command.params);
+          break;
+        case 'task':
+          break;
+      }
+    }
   }
 
   private async getState() {

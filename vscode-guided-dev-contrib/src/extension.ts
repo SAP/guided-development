@@ -21,21 +21,31 @@ export function activate(context: vscode.ExtensionContext) {
 			const guidedDevs = new Map<string, IGuidedDev>();
 			let guidedDev_1: IGuidedDev = {
 				messages: {
-					title: "Create Launch Configuration",
-					description: "Provide details for the launch configuration you want to create."
+					title: "Opening Global Settings",
+					description: "It is easy to configure Visual Studio Code to your liking through its various settings."
 				},
 				action: {
-					buttonText: "Create"
+					buttonText: "Open",
+					type: "command",
+					command: {
+						name: "workbench.action.openGlobalSettings",
+						params: []
+					}
 				}
 			}
 			guidedDevs.set("guidedDev_1", guidedDev_1);
 			let guidedDev_2: IGuidedDev = {
 				messages: {
-					title: "Data Monitoring",
-					description: "Add data from a source."
+					title: "Cloning code-snippet repository",
+					description: "A VSCode extension that provides a simple way to add code snippets.."
 				},
 				action: {
-					buttonText: "Add"
+					buttonText: "Clone",
+					type: "command",
+					command: {
+						name: "git.clone",
+						params: "https://github.com/SAP/code-snippet.git"
+					}
 				}
 			}
 			guidedDevs.set("guidedDev_2", guidedDev_2);

@@ -24,6 +24,7 @@
               <Items
                 v-if="guidedDevelopmentItems"
                 :items="guidedDevelopmentItems"
+                @action="onAction"
               />
             </v-slide-x-transition>
           </v-col>
@@ -152,6 +153,9 @@ export default {
       if (this.resolve) {
           this.resolve(this.currentPrompt.answers);
       }
+    },
+    async onAction(item) {
+      await this.rpc.invoke("runAction", [item]);
     },
     onAnswered(answers, issues) {
       this.stepValidated = issues === undefined;

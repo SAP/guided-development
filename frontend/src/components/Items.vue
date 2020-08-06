@@ -14,7 +14,7 @@
                 </v-row>
                 <v-row>
                   <v-col>
-                    <v-btn class="mt-6" @click="onAction">{{item.action.buttonText}}</v-btn>
+                    <v-btn class="mt-6" @click="onAction(item)">{{item.action.buttonText}}</v-btn>
                   </v-col>
                 </v-row>
               </v-expansion-panel-content>
@@ -31,6 +31,13 @@ export default {
   name: "Items",
   props: ["items"],
   computed: {
+  },
+  methods: {
+    async onAction(item) {
+      // fire 'action' event
+      this.$emit("action", item);
+    }
+
   }
 }
 </script>
