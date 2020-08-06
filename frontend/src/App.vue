@@ -14,19 +14,16 @@
       <v-col class="right-col">
         <v-row class="prompts-col">
           <v-col>
-            <Done
-              v-if="isDone"
-              :doneStatus="doneStatus"
-              :doneMessage="doneMessage"
-              :donePath="donePath"
-            />
-
             <PromptInfo v-if="currentPrompt && !isDone" :currentPrompt="currentPrompt" />
             <v-slide-x-transition>
-              <Form
+              <!-- <Form
                 ref="form"
                 :questions="currentPrompt ? currentPrompt.questions : []"
                 @answered="onAnswered"
+              /> -->
+              <Items
+                v-if="guidedDevelopmentItems"
+                :items="guidedDevelopmentItems"
               />
             </v-slide-x-transition>
           </v-col>
@@ -39,7 +36,7 @@
         >
           <v-col class="bottom-buttons-col" style="display:flex;align-items: center;">
             <v-btn id="apply" :disabled="!stepValidated" @click="apply">
-              {{messages.applyButton}}
+              {{messages.actionButton}}
             </v-btn>
           </v-col>
         </v-row>
@@ -60,7 +57,7 @@
 <script>
 import Vue from "vue";
 import Loading from "vue-loading-overlay";
-import Done from "./components/Done.vue";
+import Items from "./components/Items.vue";
 import PromptInfo from "./components/PromptInfo.vue";
 import { RpcBrowser } from "@sap-devx/webview-rpc/out.browser/rpc-browser";
 import { RpcBrowserWebSockets } from "@sap-devx/webview-rpc/out.browser/rpc-browser-ws";
@@ -79,6 +76,7 @@ function initialState() {
     generatorName: "",
     generatorPrettyName: "",
     stepValidated: false,
+    guidedDevelopmentItems: [],
     prompts: [],
     promptIndex: 0,
     rpc: Object,
@@ -106,7 +104,7 @@ function initialState() {
 export default {
   name: "app",
   components: {
-    Done,
+    Items,
     PromptInfo,
     Loading
   },
@@ -221,6 +219,8 @@ export default {
     },
 
     async showPrompt(questions) {
+      this.guidedDevelopmentItems = questions;
+
       this.prepQuestions(questions);
       const prompt = this.createPrompt(questions);
       this.setPrompts([prompt]);

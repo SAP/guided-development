@@ -1,31 +1,21 @@
 import * as _ from "lodash";
-import * as Environment from "yeoman-environment";
-import * as inquirer from "inquirer";
 import { AppLog } from "./app-log";
 import { AppEvents } from "./app-events";
 import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
-import Generator = require("yeoman-generator");
 import { IChildLogger } from "@vscode-logging/logger";
-import {IPrompt} from "@sap-devx/yeoman-ui-types";
 
 export class GuidedDevelopment {
-
-  private static funcReplacer(key: any, value: any) {
-    return _.isFunction(value) ? "__Function" : value;
-  }
 
   private readonly uiOptions: any;
   private readonly rpc: IRpc;
   private readonly appEvents: AppEvents;
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
-  private gen: Generator | undefined; // eslint-disable-line @typescript-eslint/prefer-readonly
   private promptCount: number;
-  private currentQuestions: Environment.Adapter.Questions<any>;
   private guidedDevName: string;
-  private readonly customQuestionEventHandlers: Map<string, Map<string, Function>>;
+  private guidedDevelopmentItems: any[];
   private errorThrown = false;
-
+  
   constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, uiOptions: any) {
     this.rpc = rpc;
     if (!this.rpc) {
@@ -37,29 +27,16 @@ export class GuidedDevelopment {
     this.logger = logger;
     this.rpc.setResponseTimeout(3600000);
     this.rpc.registerMethod({ func: this.receiveIsWebviewReady, thisArg: this });
-    this.rpc.registerMethod({ func: this.applyCode, thisArg: this });
-    this.rpc.registerMethod({ func: this.evaluateMethod, thisArg: this });
     this.rpc.registerMethod({ func: this.toggleOutput, thisArg: this });
     this.rpc.registerMethod({ func: this.logError, thisArg: this });
     this.rpc.registerMethod({ func: this.getState, thisArg: this });
 
     this.promptCount = 0;
-    this.currentQuestions = {};
     this.uiOptions = uiOptions;
-    this.customQuestionEventHandlers = new Map();
   }
 
   private async getState() {
     return this.uiOptions;
-  }
-
-  public registerCustomQuestionEventHandler(questionType: string, methodName: string, handler: Function): void {
-    let entry: Map<string, Function> = this.customQuestionEventHandlers.get(questionType);
-    if (entry === undefined) {
-      this.customQuestionEventHandlers.set(questionType, new Map());
-      entry = this.customQuestionEventHandlers.get(questionType);
-    }
-    entry.set(methodName, handler);
   }
 
   private async logError(error: any, prefixMessage?: string) {
@@ -72,54 +49,11 @@ export class GuidedDevelopment {
     return errorMessage;
   }
 
-  private async applyCode(answers: any) {
-    this.guidedDevName = this.uiOptions.messages.title;
-    try {
-      const we: any = await this.createGuidedDevelopmentWorkspaceEdit(answers);
-      await this.appEvents.doApply(we);
-      this.onSuccess(this.guidedDevName);
-    } catch (error) {
-      this.onFailure(this.guidedDevName, error);
-    }
-  }
-
-  /**
-   * 
-   * @param answers - partial answers for the current prompt -- the input parameter to the method to be evaluated
-   * @param method
-   */
-  private async evaluateMethod(params: any[], questionName: string, methodName: string): Promise<any> {
-    try {
-      if (!_.isEmpty(this.currentQuestions)) {
-        const relevantQuestion: any = _.find(this.currentQuestions, question => {
-          return _.get(question, "name") === questionName;
-        });
-        if (relevantQuestion) {
-          const guiType = _.get(relevantQuestion, "guiOptions.type", relevantQuestion.guiType);
-          const customQuestionEventHandler: Function = this.getCustomQuestionEventHandler(guiType, methodName);
-          return _.isUndefined(customQuestionEventHandler) ? 
-            await relevantQuestion[methodName].apply(this.gen, params) : 
-            await customQuestionEventHandler.apply(this.gen, params);
-        }
-      }
-    } catch (error) {
-      const questionInfo = `Could not update method '${methodName}' in '${questionName}' question in generator '${this.gen.options.namespace}'`;
-      const errorMessage = await this.logError(error, questionInfo);
-      this.onFailure(this.guidedDevName, errorMessage);
-    } 
-  }
-
   private async receiveIsWebviewReady() {
     try {
-      const questions: any[] = await this.createGuidedDevelopmentQuestions();
-      this.currentQuestions = questions;
-      const normalizedQuestions = this.normalizeFunctions(questions);
-      const response: any = await this.rpc.invoke("showPrompt", [normalizedQuestions]);
-      if (_.isEmpty(response)) {
-        this.logError(this.uiOptions.messages.noResponse);
-      } else {
-        await this.applyCode(response);
-      }
+      const guidedDevelopmentItems: any[] = await this.createGuidedDevelopmentItems();
+      this.guidedDevelopmentItems = guidedDevelopmentItems;
+      const response: any = await this.rpc.invoke("showPrompt", [guidedDevelopmentItems]);
     } catch (error) {
       this.logError(error);
     }
@@ -127,32 +61,6 @@ export class GuidedDevelopment {
 
   private toggleOutput(): boolean {
     return this.outputChannel.showOutput();
-  }
-
-  public async showPrompt(questions: Environment.Adapter.Questions<any>): Promise<inquirer.Answers> {
-    this.promptCount++;
-    const promptName = this.getPromptName(questions);
-
-    this.currentQuestions = questions;
-    const mappedQuestions: Environment.Adapter.Questions<any> = this.normalizeFunctions(questions);
-    if (_.isEmpty(mappedQuestions)) {
-      return {};
-    }
-
-    const answers = await this.rpc.invoke("showPrompt", [mappedQuestions]);
-    return answers;
-  }
-
-  private getCustomQuestionEventHandler(questionType: string, methodName: string): Function {
-    const entry: Map<string, Function> = this.customQuestionEventHandlers.get(questionType);
-    if (entry !== undefined) {
-      return entry.get(methodName);
-    }
-  }
-
-  private getPromptName(questions: Environment.Adapter.Questions<any>): string {
-    const firstQuestionName = _.get(questions, "[0].name");
-    return (firstQuestionName ? _.startCase(firstQuestionName) : `Step ${this.promptCount}`);
   }
 
   private onSuccess(guidedDevName: string) {
@@ -180,52 +88,10 @@ export class GuidedDevelopment {
     return `name: ${name}\n message: ${message}\n stack: ${stack}\n string: ${error.toString()}\n`;
   }
   
-  private async createGuidedDevelopmentQuestions(): Promise<any[]> {
-    const guidedDev = this.uiOptions.guidedDev;
+  private async createGuidedDevelopmentItems(): Promise<any[]> {
+    const guidedDevs = this.uiOptions.guidedDevs;
 
-    let questions: any[] = [];
-
-    if (guidedDev && guidedDev.getQuestions) {
-      questions = guidedDev.getQuestions();
-    }
-
-    return questions;
+    return guidedDevs;
   }
 
-  private async createGuidedDevelopmentWorkspaceEdit(answers: any): Promise<any[]> {
-    const guidedDev = this.uiOptions.guidedDev;
-
-    let we: any = undefined;
-
-    if (guidedDev && guidedDev.getWorkspaceEdit) {
-      we = await guidedDev.getWorkspaceEdit(answers);
-    }
-
-    return we;
-  }
-
-  /**
-   * 
-   * @param questions 
-   * returns a deep copy of the original questions, but replaces Function properties with a placeholder
-   * 
-   * Functions are lost when being passed to client (using JSON.Stringify)
-   * Also functions cannot be evaluated on client)
-   */
-  private normalizeFunctions(questions: Environment.Adapter.Questions<any>): Environment.Adapter.Questions<any> {
-    this.addCustomQuestionEventHandlers(questions);
-    return JSON.parse(JSON.stringify(questions, GuidedDevelopment.funcReplacer));
-  }
-
-  private addCustomQuestionEventHandlers(questions: Environment.Adapter.Questions<any>): void {
-    for (const question of (questions as any[])) {
-      const guiType = _.get(question, "guiOptions.type", question.guiType);
-      const questionHandlers = this.customQuestionEventHandlers.get(guiType);
-      if (questionHandlers) {
-        questionHandlers.forEach((handler, methodName) => {
-          (question)[methodName] = handler;
-        });
-      }
-    }
-  }
 }

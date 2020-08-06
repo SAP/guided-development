@@ -37,62 +37,37 @@ class GuidedDevelopmentWebSocketServer {
       const logger: AppLog = new ServerLog(this.rpc);
       const childLogger = {debug: () => {}, error: () => {}, fatal: () => {}, warn: () => {}, info: () => {}, trace: () => {}, getChildLogger: () => {return {} as IChildLogger;}};
       const appEvents: AppEvents = new ServerEvents(this.rpc);
-      const guidedDev = {
-				getQuestions() {
-					return createGuidedDevelopmentQuestions();
-				}
-      };
-      this.guidedDevelopment = new GuidedDevelopment(this.rpc, appEvents, logger, childLogger as IChildLogger, {messages: backendMessages, guidedDev: guidedDev});
-      this.guidedDevelopment.registerCustomQuestionEventHandler("folder-browser", "getPath", this.mockFolderDialog.bind(this));
+      const guidedDev = createGuidedDev();
+      this.guidedDevelopment = new GuidedDevelopment(this.rpc, appEvents, logger, childLogger as IChildLogger, {messages: backendMessages, guidedDevs: guidedDev});
     });
   }
 }
 
-function createGuidedDevelopmentQuestions(): any[] {
-	const questions: any[] = [];
+function createGuidedDev(): any[] {
+	const guidedDev: any[] = [];
 
-    questions.push(
+    guidedDev.push(
 		{
-		  guiOptions: {
-			hint: "hint actionTemplate"
-		  },
-		  type: "list",
-		  name: "actionTemplate",
-		  message: "Action Template",
-		  choices: [
-			'OData action',
-			'Offline action',
-			'Message acion',
-			'Change user password'
-		  ]
+			messages: {
+				title: "Create Launch Configuration",
+				description: "Provide details for the launch configuration you want to create."
+			},
+			action: {
+				buttonText: "Create"
+			}
 		},
 		{
-		  guiOptions: {
-			hint: "hint actionName"
-		  },
-		  type: "input",
-		  name: "actionName",
-		  message: "Action Name",
-		  validate: (value: any, answers: any) => {
-			return (value.length > 1 ? true : "Enter at least 2 characters");
-		  }
-		},
-		{
-		  guiOptions: {
-			hint: "hint actionType"
-		  },
-		  type: "list",
-		  name: "actionType",
-		  message: "Action Type",
-		  choices: [
-			'Create entity',
-			'Log',
-			'Close page'
-		  ]
+			messages: {
+				title: "Data Monitoring",
+				description: "Add data from a source."
+			},
+			action: {
+				buttonText: "Add"
+			}
 		}
 	  );
   
-    return questions;
+    return guidedDev;
 }
 
 const wsServer = new GuidedDevelopmentWebSocketServer();

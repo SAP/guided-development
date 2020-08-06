@@ -4,6 +4,18 @@ import * as _ from 'lodash';
 export class Contributors {
     private static readonly apiMap = new Map<string, any>();
 
+    public static getGuidedDevs(uiOptions: any): any[] {
+        let guidedDevs: any[] = [];
+        const guidedDevContext = _.get(uiOptions, "context");
+        Contributors.apiMap.forEach((value: any, key: any) => {
+            const guidedDevelopments = value.getGuidedDevelopments(guidedDevContext);
+            guidedDevelopments.forEach((value: any, key: any) => {
+                guidedDevs.push(value);
+            });
+        })
+		return guidedDevs;
+	}
+
     public static getGuidedDev(uiOptions: any) {
 		let guidedDev  = undefined;
 		const contributorName = _.get(uiOptions, "contributorName");

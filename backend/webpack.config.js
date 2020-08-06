@@ -40,24 +40,6 @@ const config = {
             loader: 'ts-loader'
           }
         ]
-      },
-      {
-        test: /yeoman-environment[/|\\]lib[/|\\]environment.js/,
-        loader: 'string-replace-loader',
-        options: {
-          search: 'require.resolve[(]([^\'"])',
-          replace: '__non_webpack_require__.resolve($1',
-          flags: 'g'
-        }
-      },
-      {
-        test: /yeoman-environment[/|\\]lib[/|\\]store.js/,
-        loader: 'string-replace-loader',
-        options: {
-          search: 'require[(]([^\'"])',
-          replace: '__non_webpack_require__($1',
-          flags: 'g'
-        }
       }
     ]
   },

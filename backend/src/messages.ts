@@ -1,7 +1,5 @@
 export default {
     channelName: "GuidedDev",
-    title: "Guided Development",
-    description: `guided-development description.`,
-    applyButton: "Apply",
-    noResponse: "No response received.",
+    title: "Guided Development Kit",
+    noResponse: "No response received."
 }; 

@@ -25,12 +25,13 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
 
-		this.guidedDev = Contributors.getGuidedDev(uiOptions);
-		if (_.isNil(this.guidedDev)) {
+		this.guidedDevs = Contributors.getGuidedDevs(uiOptions);
+		if (_.isNil(this.guidedDevs)) {
 			return vscode.window.showErrorMessage("Can not find guided-development.");
 		}
 
-		this.messages = _.assign({}, backendMessages, this.guidedDev.getMessages());
+		this.messages = backendMessages;
+
 		const rpc = new RpcExtension(this.webViewPanel.webview);
 		this.outputChannel = new OutputChannelLog(this.messages.channelName);
 		const vscodeEvents: AppEvents = new VSCodeEvents(rpc, this.webViewPanel);
@@ -38,9 +39,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 			vscodeEvents, 
 			this.outputChannel, 
 			this.logger, 
-			{messages: this.messages, guidedDev: this.guidedDev});
-		this.guidedDevelopment.registerCustomQuestionEventHandler("file-browser", "getFilePath", this.showOpenFileDialog.bind(this));
-		this.guidedDevelopment.registerCustomQuestionEventHandler("folder-browser", "getPath", this.showOpenFolderDialog.bind(this));
+			{messages: this.messages, guidedDevs: this.guidedDevs});
 
 		this.initWebviewPanel();
 	}
@@ -54,7 +53,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	}
 
 	private guidedDevelopment: GuidedDevelopment;
-	private guidedDev: any;
+	private guidedDevs: any;
 	private messages: any;
 	private outputChannel: AppLog;
 
@@ -63,36 +62,6 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 		this.viewType = "guidedDevelopment";
 		this.viewTitle = GuidedDevelopmentPanel.GUIDED_DEVELOPMENT;
 		this.focusedKey = "guidedDevelopment.Focused";
-	}
-
-	private async showOpenFileDialog(currentPath: string): Promise<string> {
-		return await this.showOpenDialog(currentPath, true);
-	}
-
-	private async showOpenFolderDialog(currentPath: string): Promise<string> {
-		return await this.showOpenDialog(currentPath, false);
-	}
-
-	private async showOpenDialog(currentPath: string, canSelectFiles: boolean): Promise<string> {
-		const canSelectFolders = !canSelectFiles;
-
-		let uri;
-		try {
-			uri = vscode.Uri.file(currentPath);
-		} catch (e) {
-			uri = vscode.Uri.file(path.join(os.homedir()));
-		}
-
-		try {
-			const filePath = await vscode.window.showOpenDialog({
-				canSelectFiles,
-				canSelectFolders,
-				defaultUri: uri
-			});
-			return _.get(filePath, "[0].fsPath", currentPath);
-		} catch (error) {
-			return currentPath;
-		}
 	}
 
 	public disposeWebviewPanel() {
