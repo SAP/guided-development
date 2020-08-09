@@ -52,14 +52,11 @@ export class Contributors {
         const allExtensions: readonly vscode.Extension<any>[] = vscode.extensions.all;
         for (const extension of allExtensions) {
             const currentPackageJSON: any = _.get(extension, "packageJSON");
-            const extensionDependencies: string[] = _.get(currentPackageJSON, "extensionDependencies");
-            if (!_.isEmpty(extensionDependencies)) {
-                const guidedDevelopmentDependancy: boolean = _.includes (extensionDependencies,"saposs.guided-development");
-                if (guidedDevelopmentDependancy) {
-                    const extensionName: string =  _.get(currentPackageJSON, "name");
-                    const api = await Contributors.getApi(extension, extensionName);
-                    Contributors.add(extensionName, api);
-                }
+            const guidedDevelopmentContribution: any = _.get(currentPackageJSON, "BASContributes.guided-development");
+            if (!_.isNil(guidedDevelopmentContribution)) {
+                const extensionName: string =  _.get(currentPackageJSON, "name");
+                const api = await Contributors.getApi(extension, extensionName);
+                Contributors.add(extensionName, api);
             }
         }
     }

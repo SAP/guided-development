@@ -12,9 +12,6 @@
 		"url": "https://github.com/SAP/guided-development",
 		"directory": "vscode-guided-dev-contrib"
 	},
-	"extensionDependencies": [
-		"saposs.guided-development"
-	],
 	"categories": [
 		"Other"
 	],
@@ -22,6 +19,9 @@
 		"onCommand:extension.showGuidedDevelopmentContrib"
 	],
 	"main": "./out/extension.js",
+	"BASContributes": {
+		"guided-development": {}
+	},
 	"contributes": {
 		"commands": [
 			{
