@@ -16,14 +16,9 @@
           <v-col>
             <PromptInfo v-if="currentPrompt && !isDone" :currentPrompt="currentPrompt" />
             <v-slide-x-transition>
-              <!-- <Form
-                ref="form"
-                :questions="currentPrompt ? currentPrompt.questions : []"
-                @answered="onAnswered"
-              /> -->
-              <Items
-                v-if="guidedDevelopmentItems"
-                :items="guidedDevelopmentItems"
+              <Collections
+                v-if="guidedDevelopmentCollections"
+                :collections="guidedDevelopmentCollections"
                 @action="onAction"
               />
             </v-slide-x-transition>
@@ -58,7 +53,7 @@
 <script>
 import Vue from "vue";
 import Loading from "vue-loading-overlay";
-import Items from "./components/Items.vue";
+import Collections from "./components/Collections.vue";
 import PromptInfo from "./components/PromptInfo.vue";
 import { RpcBrowser } from "@sap-devx/webview-rpc/out.browser/rpc-browser";
 import { RpcBrowserWebSockets } from "@sap-devx/webview-rpc/out.browser/rpc-browser-ws";
@@ -77,7 +72,7 @@ function initialState() {
     generatorName: "",
     generatorPrettyName: "",
     stepValidated: false,
-    guidedDevelopmentItems: [],
+    guidedDevelopmentCollections: [],
     prompts: [],
     promptIndex: 0,
     rpc: Object,
@@ -105,7 +100,7 @@ function initialState() {
 export default {
   name: "app",
   components: {
-    Items,
+    Collections,
     PromptInfo,
     Loading
   },
@@ -189,12 +184,12 @@ export default {
         this.prompts.splice(startIndex, deleteCount, ...prompts);
       }
     },
-    prepQuestions(questions) {
+    prepQuestions(guidedDevObj) {
       if (this.currentPrompt) {
         this.currentPrompt.status = EVALUATING;
       }
 
-      for (let question of questions) {
+      for (let question of guidedDevObj) {
         for (let prop in question) {
           if (question[prop] === FUNCTION) {
             const that = this;
@@ -222,11 +217,11 @@ export default {
       }
     },
 
-    async showPrompt(questions) {
-      this.guidedDevelopmentItems = questions;
+    async showPrompt(guidedDevObj) {
+      this.guidedDevelopmentCollections = guidedDevObj;
 
-      this.prepQuestions(questions);
-      const prompt = this.createPrompt(questions);
+      this.prepQuestions(guidedDevObj);
+      const prompt = this.createPrompt(guidedDevObj);
       this.setPrompts([prompt]);
 
       const promise = new Promise((resolve, reject) => {
@@ -236,12 +231,12 @@ export default {
 
       return promise;
     },
-    createPrompt(questions) {
+    createPrompt(guidedDevObj) {
       let promptDescription = this.messages.description;
       let promptName = this.messages.title;
 
       const prompt = Vue.observable({
-        questions: questions,
+        guidedDevObj: guidedDevObj,
         name: promptName,
         description: promptDescription,
         answers: {},

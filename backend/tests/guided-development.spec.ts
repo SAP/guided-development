@@ -230,10 +230,10 @@ describe('guidedDevelopment unit test', () => {
         }
     };
 
-    describe("createGuidedDevelopmentItems", () => {
+    describe("createGuidedDevelopmentObj", () => {
         it("guidedDev has getQuestions ---> call getQuestions", async () => {
             const myGuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {guidedDevs: [guidedDev]});
-            const gdi = await myGuidedDevelopment["createGuidedDevelopmentItems"]();
+            const gdi = await myGuidedDevelopment["createGuidedDevelopmentObj"]();
             expect(gdi).to.be.equal([guidedDev]);
         });
     });

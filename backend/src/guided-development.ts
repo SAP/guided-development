@@ -14,7 +14,7 @@ export class GuidedDevelopment {
   private readonly logger: IChildLogger;
   private promptCount: number;
   private guidedDevName: string;
-  private guidedDevelopmentItems: any[];
+  private guidedDevelopmentObj: any[];
   private errorThrown = false;
   
   constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, uiOptions: any) {
@@ -65,9 +65,8 @@ export class GuidedDevelopment {
 
   private async receiveIsWebviewReady() {
     try {
-      const guidedDevelopmentItems: any[] = await this.createGuidedDevelopmentItems();
-      this.guidedDevelopmentItems = guidedDevelopmentItems;
-      const response: any = await this.rpc.invoke("showPrompt", [guidedDevelopmentItems]);
+      this.guidedDevelopmentObj = await this.createGuidedDevelopmentObj();
+      const response: any = await this.rpc.invoke("showPrompt", [this.guidedDevelopmentObj]);
     } catch (error) {
       this.logError(error);
     }
@@ -102,7 +101,7 @@ export class GuidedDevelopment {
     return `name: ${name}\n message: ${message}\n stack: ${stack}\n string: ${error.toString()}\n`;
   }
   
-  private async createGuidedDevelopmentItems(): Promise<any[]> {
+  private async createGuidedDevelopmentObj(): Promise<any[]> {
     const guidedDevs = this.uiOptions.guidedDevs;
 
     return guidedDevs;
