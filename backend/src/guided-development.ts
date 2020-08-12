@@ -15,6 +15,7 @@ export class GuidedDevelopment {
   private promptCount: number;
   private guidedDevName: string;
   private guidedDevelopmentObj: any[];
+  private guidedDevelopmentItems:any[] = [];
   private errorThrown = false;
   
   constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, uiOptions: any) {
@@ -37,11 +38,15 @@ export class GuidedDevelopment {
     this.uiOptions = uiOptions;
   }
 
-  private async runAction(item: any) {
-    if (item && item.action) {
-      switch (item.action.type) {
+  private async runAction(itemId: any) {
+    let action: any = _.result(_.find(this.guidedDevelopmentItems, ['id', itemId]),'data.action');;
+    if (action) {
+      switch (action.type) {
         case 'command':
-          vscode.commands.executeCommand(item.action.command.name, item.action.command.params);
+          vscode.commands.executeCommand(action.command.name, action.command.params);
+          break;
+        case 'execute':
+          action.execute();
           break;
         case 'task':
           break;
@@ -66,6 +71,11 @@ export class GuidedDevelopment {
   private async receiveIsWebviewReady() {
     try {
       this.guidedDevelopmentObj = await this.createGuidedDevelopmentObj();
+      for (let collection of this.guidedDevelopmentObj){
+        for (let item of collection.items){
+          this.guidedDevelopmentItems.push(item);
+        }
+      }
       const response: any = await this.rpc.invoke("showPrompt", [this.guidedDevelopmentObj]);
     } catch (error) {
       this.logError(error);

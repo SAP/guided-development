@@ -92,14 +92,14 @@ describe('Contributors unit test', () => {
         const extensionName = "vscode-guided-dev-contrib";
         Contributors.add(extensionName, api);
         
-        it("receives valid contributorName and guidedDevName ---> returns valid guidedDev", () => {
-            const uiOptions = {
-                "contributorName": extensionName,
-                "guidedDevName": guidedDevName
-              };
-              const guidedDev = Contributors.getGuidedDev(uiOptions);
-              expect(guidedDev.getMessages()).to.deep.equal(messageValue);
-        });
+        // it("receives valid contributorName and guidedDevName ---> returns valid guidedDev", () => {
+        //     const uiOptions = {
+        //         "contributorName": extensionName,
+        //         "guidedDevName": guidedDevName
+        //       };
+        //       const guidedDev = Contributors.getGuidedDev(uiOptions);
+        //       expect(guidedDev.getMessages()).to.deep.equal(messageValue);
+        // });
 
         it("receives no contributorName and no guidedDevName ---> returns undefined guidedDev", () => {
             const uiOptions = {};

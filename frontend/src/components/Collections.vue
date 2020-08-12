@@ -1,6 +1,6 @@
 <template>
   <div id="collections-component">
-    <div v-for="(collection, index) in collections" :key="index">
+    <div v-for="(collection, index) in collections" :key="index"><br>
       <v-card-title class="prompt-title" style="font-size:16px">{{collection.messages.title}}</v-card-title>
       <v-card-subtitle class="prompt-title" style="font-size:14px">{{collection.messages.description}}</v-card-subtitle>
       <Items
@@ -28,11 +28,9 @@ export default {
       // fire 'action' event
       this.$emit("action", collection);
     }
-
   }
 }
 </script>
-
 
 <style>
 </style>

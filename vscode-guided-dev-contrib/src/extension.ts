@@ -35,36 +35,59 @@ export function activate(context: vscode.ExtensionContext) {
 							order: 1
 						}
 					]					
-				}
+				},
+				{
+					id: "collention_2",
+					messages: {
+						title: "collection_2 title",
+						description: "collection_2 description"
+					},
+					items: [
+						{
+							id: "SAPOSS.vscode-guided-dev-contrib.dataModeling",
+							order: 3
+						}
+					]
+				}	
 			]
 			let items: IGuidedDevItem[] = [
                 {
-                    "id": "performX",
-                    "messages": {
-                        "title": "Perform X",
-                        "description": "A VSCode extension that preform X."
+                    id: "performX",
+                    messages: {
+                        title: "Perform X",
+                        description: "A VSCode extension that preform X."
                     },
-                    "action": {
+                    action: {
                         buttonText: "Open",
-                        "type": "command",
-                        "command": {
+                        type: "command",
+                        command: {
                             name: "workbench.action.openGlobalSettings",
                             params: []
                         }
                     }                  
                 },
                 {
-                    "id": "cloneRepo",
-                    "messages": {
-                        "title": "Cloning code-snippet repository",
-                        "description": "A VSCode extension that provides a simple way to add code snippets."
+                    id: "cloneRepo",
+                    messages: {
+                        title: "Cloning code-snippet repository",
+                        description: "A VSCode extension that provides a simple way to add code snippets."
                     },
-                    "action": {
+                    action: {
                         buttonText: "Clone",
-                        "type": "execute",
-                        "execute": () => {
+                        type: "execute",
+                        execute: () => {
 							vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
                         }
+                    }                  
+				},
+                {
+                    id: "dataModeling",
+                    messages: {
+                        title: "Data Modeling",
+                        description: "Add data from evry sorce."
+                    },
+                    action: {
+                        buttonText: "Add"
                     }                  
                 }
 			]

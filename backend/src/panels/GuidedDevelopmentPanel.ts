@@ -25,7 +25,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
 
-		this.guidedDevs = Contributors.getGuidedDevs(uiOptions);
+		this.guidedDevs = Contributors.getGuidedDev(uiOptions);
 		if (_.isNil(this.guidedDevs)) {
 			return vscode.window.showErrorMessage("Can not find guided-development.");
 		}

@@ -7,7 +7,7 @@ export class Contributors {
     private static readonly itemMap = new Map<string, any>(); // TODO: replace any with IGuidedDevItem
     private static readonly collectionMap = new Map<string, any>(); // TODO: replace any with IGuidedDevCollection
 
-    public static getGuidedDevs(uiOptions: any): any[] {
+    public static getGuidedDev(uiOptions: any): any[] {
         let guidedDevs: any[] = [];
         const guidedDevContext = _.get(uiOptions, "context");
         Contributors.collectionMap.forEach((value: any, key: any) => {
