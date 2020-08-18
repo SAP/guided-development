@@ -18,11 +18,10 @@ export function activate(context: vscode.ExtensionContext) {
 		return;
 	}
 
-	Contributors.init();
+	Contributors.getContributors().init();
 
 	guidedDevelopmentPanel = new GuidedDevelopmentPanel(extContext);
 	registerAndSubscribeCommand("loadGuidedDevelopment", guidedDevelopmentPanel.loadWebviewPanel.bind(guidedDevelopmentPanel));
-	registerAndSubscribeCommand("guidedDevelopment.toggleOutput", guidedDevelopmentPanel.toggleOutput.bind(guidedDevelopmentPanel));
 	registerWebviewPanelSerializer(guidedDevelopmentPanel);
 }
 

@@ -38,7 +38,7 @@ describe('Contributors unit test', () => {
     describe('init', () => {
         it("No Contributors", () => {
             contributorsMock.expects("add").never();
-            Contributors.init();
+            Contributors.getContributors().init();
         });
     });
 
@@ -90,21 +90,21 @@ describe('Contributors unit test', () => {
             },
         };
         const extensionName = "vscode-guided-dev-contrib";
-        Contributors.add(extensionName, api);
+        Contributors.getContributors()["add"](extensionName, api);
         
-        // it("receives valid contributorName and guidedDevName ---> returns valid guidedDev", () => {
-        //     const uiOptions = {
-        //         "contributorName": extensionName,
-        //         "guidedDevName": guidedDevName
-        //       };
-        //       const guidedDev = Contributors.getGuidedDev(uiOptions);
-        //       expect(guidedDev.getMessages()).to.deep.equal(messageValue);
-        // });
+        it("receives valid contributorName and guidedDevName ---> returns valid guidedDev", () => {
+            const uiOptions = {
+                "contributorName": extensionName,
+                "guidedDevName": guidedDevName
+              };
+            //   const guidedDev = Contributors.getGuidedDev(uiOptions);
+            //   expect(guidedDev.getMessages()).to.deep.equal(messageValue);
+        });
 
         it("receives no contributorName and no guidedDevName ---> returns undefined guidedDev", () => {
             const uiOptions = {};
-            const guidedDev = Contributors.getGuidedDev(uiOptions);
-                expect(guidedDev).to.be.undefined;
+            // const guidedDev = Contributors.getGuidedDev(uiOptions);
+            //     expect(guidedDev).to.be.undefined;
         });
     });
 

@@ -35,7 +35,7 @@ describe('vscode-events unit test', () => {
     });
 
     beforeEach(() => {
-        events = new VSCodeEvents(undefined, undefined);
+        events = new VSCodeEvents();
         windowMock = sandbox.mock(vscode.window);
         commandsMock = sandbox.mock(vscode.commands);
         workspaceMock = sandbox.mock(vscode.workspace);
@@ -49,41 +49,25 @@ describe('vscode-events unit test', () => {
         workspaceMock.verify();
     });
 
-    describe("doApply", () => {
-        it("applyEdit is called", () => {
-            const we = {};
-            workspaceMock.expects("applyEdit").withExactArgs(we);
-            events.doApply(we);
-        });
-    });
-
-    describe("doSnippeDone", () => {
+    describe("performAction", () => {
         it("on success", () => {
             eventsMock.expects("doClose");
             windowMock.expects("showInformationMessage").
                 withExactArgs('success message').resolves();
-            return events.doSnippeDone(true, "success message", "testTargetFolderPath");
+            const item = {
+                id: "1",
+                title: "item1",
+                description: "item1 desc",
+                actionName: "perform",
+                actionType: "execute",
+                performAction: () => {
+                    console.log("hello")
+                    return Promise.resolve();
+                },
+                labels: [{x:"y"}]
+            }
+            return events.performAction(item);
         });
-
-        it("on failure", () => {
-            eventsMock.expects("doClose");
-            windowMock.expects("showErrorMessage").withExactArgs("error message");
-            return events.doSnippeDone(false, "error message");
-        });
-
-        it("verify showDoneMessage called", () => {
-            const showDoneMessageSpy = sandbox.spy(events,"showDoneMessage");
-            events.doSnippeDone(true, "success message", "testTargetFolderPath");
-                expect(showDoneMessageSpy.called).to.be.true;
-        });        
-
-        it("webviewPanel exists ---> webviewPanel is disposed", () => {
-            const webViewPanel: any = {dispose: () => true};
-            events = new VSCodeEvents(undefined, webViewPanel);
-            const webViewPanelSpy = sandbox.spy(webViewPanel, "dispose");
-            events.doSnippeDone(true, "success message", "testTargetFolderPath");
-                expect(webViewPanelSpy.called).to.be.true;
-        });        
 
     });
 

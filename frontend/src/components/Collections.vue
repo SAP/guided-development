@@ -1,32 +1,116 @@
 <template>
-  <div id="collections-component">
-    <div v-for="(collection, index) in collections" :key="index"><br>
-      <v-card-title class="prompt-title" style="font-size:16px">{{collection.messages.title}}</v-card-title>
-      <v-card-subtitle class="prompt-title" style="font-size:14px">{{collection.messages.description}}</v-card-subtitle>
-      <Items
-        v-if="collection.items"
-        :items="collection.items"
-        @action="onAction"
-      />
-    </div>
-  </div>
+  <v-container id="collections-component">
+    <v-row>
+      <v-col>
+      <h3>Filter</h3>
+      </v-col>
+    </v-row>
+    <v-row
+      style="margin-left:50px;"
+      dense
+      v-for="(label, index) in labels"
+      :key=index
+    >
+      <v-col cols="2">
+        <div>
+        {{label[0]}}
+        </div>
+      </v-col>
+      <v-col cols="4">
+        <v-select
+          single-line
+          dense
+          :value="Array.from(label[1].values())[0]"
+          :items="Array.from(label[1].values())"
+          @change="onFilter"
+        >
+      </v-select>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <div v-for="(collection, index) in collections" :key="index"><br>
+        <v-card-title class="prompt-title" style="font-size:16px">{{collection.title}}</v-card-title>
+        <v-card-subtitle class="prompt-title" style="font-size:14px">{{collection.description}}</v-card-subtitle>
+        <Items
+          v-if="collection.items"
+          :items="collection.items"
+          :collection="collection"
+          :filter="filter"
+          @action="onAction"
+        />
+      </div>
+</v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
 import Items from "./Items.vue";
+
+const FILTER_ALL = "__all";
 
 export default {
   components: {
     Items
   },
   name: "Collections",
+  data() {
+    return {
+      initialValue: {},
+      labels: new Map(),
+      filter: new Map()
+    }
+  },
   props: ["collections"],
-  computed: {
+  watch: {
+    "collections": {
+      handler: function() {
+        this.normalizeLabels();
+      },
+      immediate: true
+    }
   },
   methods: {
-    async onAction(collection) {
+    onAction(collectionId, itemFqid) {
       // fire 'action' event
-      this.$emit("action", collection);
+      this.$emit("action", collectionId, itemFqid);
+    },
+    onFilter(e) {
+      const labelObj = JSON.parse(e);
+      this.filter.set(labelObj.key, labelObj.value);
+      // cloning is required to trigger watch in Items.vue:
+      this.filter = new Map(this.filter);
+    },
+    /**
+     * This method is required for the filter by label feature:
+     *   We want to show the user a list of label-keys. For each key the user can choose a single value.
+     *   The items shown to the user will match that value.
+     *   That list should include a unique list of keys, and per key a unique list of possible values.
+     */
+    normalizeLabels() {
+      this.labels = new Map();
+      if (this.collections) {
+        for (const collection of this.collections) {
+          for (const item of collection.items) {
+            if (item.labels) {
+              for (const labelObj of item.labels) {
+                const key = Object.keys(labelObj)[0];
+                const val = Object.values(labelObj)[0];
+                let label = this.labels.get(key);
+                if (label) {
+                  label.set(val, {text:val, value:JSON.stringify({key:key,value:val})});
+                } else {
+                  label = new Map();
+                  label.set(FILTER_ALL, {text:"<All>", value:JSON.stringify({key:key,value:FILTER_ALL})});
+                  label.set(val, {text:val, value:JSON.stringify({key:key,value:val})});
+                  this.labels.set(key, label);
+                }
+              }
+            }
+          }
+        }
+      }
     }
   }
 }

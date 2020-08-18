@@ -1,22 +1,20 @@
 import { AppEvents } from "../app-events";
-import { RpcCommon } from "@sap-devx/webview-rpc/out.ext/rpc-common";
+import { IItem } from '../types/GuidedDev';
 
 export class ServerEvents implements AppEvents {
-    private readonly rpc: RpcCommon;
-
-    constructor(rpc: RpcCommon) {
-        this.rpc = rpc;        
-    }
-    
-    public async doApply(we: any): Promise<any> {
-        // Apply code
-    }
-
-    selectFolder(): void {
-        this.rpc.invoke("selectOutputFolder");
-    }
-
-    doSnippeDone(suceeded: boolean, message: string, targetPath = ""): void {
-        this.rpc.invoke("guidedDevDone", [suceeded, message, targetPath]);
+    public async performAction(item: IItem): Promise<any> {
+        if (item && item.actionType) {
+            switch (item.actionType) {
+                case 'command':
+                    console.log(`Mock executing command ${item.command.name}`);
+                    return Promise.resolve();
+                    break;
+                case 'execute':
+                    return item.performAction();
+                    break;
+                case 'task':
+                    break;
+            }
+        }
     }
 }

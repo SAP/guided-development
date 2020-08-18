@@ -11,6 +11,7 @@ import { AppEvents } from "../app-events";
 import { VSCodeEvents } from '../vscode-events';
 import { AbstractWebviewPanel } from './AbstractWebviewPanel';
 import { Contributors } from "../contributors";
+import { ICollection } from '../types/GuidedDev';
 
 
 export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
@@ -18,15 +19,11 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 
 	private static channel: vscode.OutputChannel;
 
-	public toggleOutput() {
-		this.outputChannel.showOutput();
-	}
-
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
 
-		this.guidedDevs = Contributors.getGuidedDev(uiOptions);
-		if (_.isNil(this.guidedDevs)) {
+		this.collections = Contributors.getContributors().getCollections();
+		if (_.isNil(this.collections)) {
 			return vscode.window.showErrorMessage("Can not find guided-development.");
 		}
 
@@ -34,12 +31,14 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 
 		const rpc = new RpcExtension(this.webViewPanel.webview);
 		this.outputChannel = new OutputChannelLog(this.messages.channelName);
-		const vscodeEvents: AppEvents = new VSCodeEvents(rpc, this.webViewPanel);
+		const vscodeEvents: AppEvents = new VSCodeEvents();
 		this.guidedDevelopment = new GuidedDevelopment(rpc, 
 			vscodeEvents, 
 			this.outputChannel, 
-			this.logger, 
-			{messages: this.messages, guidedDevs: this.guidedDevs});
+			this.logger,
+			this.messages,
+			this.collections
+		);
 
 		this.initWebviewPanel();
 	}
@@ -53,7 +52,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	}
 
 	private guidedDevelopment: GuidedDevelopment;
-	private guidedDevs: any;
+	private collections: Array<ICollection>;
 	private messages: any;
 	private outputChannel: AppLog;
 

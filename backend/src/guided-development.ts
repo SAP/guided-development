@@ -1,57 +1,57 @@
-import * as vscode from 'vscode';
 import * as _ from "lodash";
 import { AppLog } from "./app-log";
-import { AppEvents } from "./app-events";
 import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
+import { ICollection, IItem } from "./types/GuidedDev";
+import { AppEvents } from "./app-events";
 
 export class GuidedDevelopment {
 
   private readonly uiOptions: any;
   private readonly rpc: IRpc;
-  private readonly appEvents: AppEvents;
+  private appEvents: AppEvents;
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
-  private promptCount: number;
-  private guidedDevName: string;
-  private guidedDevelopmentObj: any[];
-  private guidedDevelopmentItems:any[] = [];
-  private errorThrown = false;
-  
-  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, uiOptions: any) {
+  private collections: Array<ICollection>;
+
+  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: ICollection[]) {
     this.rpc = rpc;
     if (!this.rpc) {
       throw new Error("rpc must be set");
     }
-    this.guidedDevName = "";
     this.appEvents = appEvents;
     this.outputChannel = outputChannel;
     this.logger = logger;
     this.rpc.setResponseTimeout(3600000);
-    this.rpc.registerMethod({ func: this.receiveIsWebviewReady, thisArg: this });
+    this.rpc.registerMethod({ func: this.onFrontendReady, thisArg: this });
     this.rpc.registerMethod({ func: this.toggleOutput, thisArg: this });
     this.rpc.registerMethod({ func: this.logError, thisArg: this });
     this.rpc.registerMethod({ func: this.getState, thisArg: this });
-    this.rpc.registerMethod({ func: this.runAction, thisArg: this });
+    this.rpc.registerMethod({ func: this.performAction, thisArg: this });
 
-    this.promptCount = 0;
-    this.uiOptions = uiOptions;
+    this.collections = collections;
   }
 
-  private async runAction(itemId: any) {
-    let action: any = _.result(_.find(this.guidedDevelopmentItems, ['id', itemId]),'data.action');;
-    if (action) {
-      switch (action.type) {
-        case 'command':
-          vscode.commands.executeCommand(action.command.name, action.command.params);
-          break;
-        case 'execute':
-          action.execute();
-          break;
-        case 'task':
-          break;
-      }
+  private getCollection(id: string): ICollection {
+    const collection = this.collections.find((value) => {
+      return value.id === id;
+    });
+    return collection;
+  }
+
+  private getItem(collectionId: string, itemFqid: string): IItem {
+    const collection: ICollection = this.getCollection(collectionId);
+    if (collection) {
+      const item: IItem = collection.items.find((value) => {
+        return (value.fqid === itemFqid);
+      });
+      return item;
     }
+  }
+
+  private async performAction(collectionId: string, itemFqid: string) {
+    const item: IItem = this.getItem(collectionId, itemFqid);
+    this.appEvents.performAction(item);
   }
 
   private async getState() {
@@ -68,15 +68,9 @@ export class GuidedDevelopment {
     return errorMessage;
   }
 
-  private async receiveIsWebviewReady() {
+  private async onFrontendReady() {
     try {
-      this.guidedDevelopmentObj = await this.createGuidedDevelopmentObj();
-      for (let collection of this.guidedDevelopmentObj){
-        for (let item of collection.items){
-          this.guidedDevelopmentItems.push(item);
-        }
-      }
-      const response: any = await this.rpc.invoke("showPrompt", [this.guidedDevelopmentObj]);
+      const response: any = await this.rpc.invoke("showCollections", [this.collections]);
     } catch (error) {
       this.logError(error);
     }
@@ -86,23 +80,10 @@ export class GuidedDevelopment {
     return this.outputChannel.showOutput();
   }
 
-  private onSuccess(guidedDevName: string) {
-    const message = `'${guidedDevName}' guided-development has been created.`;
-    this.logger.debug("done running guided-development! " + message);
-    this.appEvents.doSnippeDone(true, message);
-  }
-
-  private async onFailure(guidedDevName: string, error: any) {
-    this.errorThrown = true;
-    const messagePrefix = `${guidedDevName} guided-development failed.`;
-    const errorMessage: string = await this.logError(error, messagePrefix);
-    this.appEvents.doSnippeDone(false, errorMessage);
-  }
-
   private getErrorInfo(error: any = "") {
     if (_.isString(error)) {
       return error;
-    } 
+    }
 
     const name = _.get(error, "name", "");
     const message = _.get(error, "message", "");
@@ -110,11 +91,4 @@ export class GuidedDevelopment {
 
     return `name: ${name}\n message: ${message}\n stack: ${stack}\n string: ${error.toString()}\n`;
   }
-  
-  private async createGuidedDevelopmentObj(): Promise<any[]> {
-    const guidedDevs = this.uiOptions.guidedDevs;
-
-    return guidedDevs;
-  }
-
 }

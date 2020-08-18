@@ -6,6 +6,13 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch Chrome",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
       "type": "node",
       "request": "launch",
       "name": "Run websocket server",
@@ -36,17 +43,19 @@
       "protocol": "inspector"
     },
     {
-      "name": "Run Extensions",
+      "name": "Run Extension",
       "type": "extensionHost",
       "request": "launch",
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-guided-dev-contrib"
+        "--extensionDevelopmentPath=${workspaceFolder}/contrib1",
+        "--extensionDevelopmentPath=${workspaceFolder}/contrib2",
     ],
       "outFiles": [
         "${workspaceFolder}/backend/dist/**/*.js",
-        "${workspaceFolder/vscode-guided-dev-contrib/out/**/*.js"
+        "${workspaceFolder/contrib1/out/**/*.js",
+        "${workspaceFolder/contrib2/out/**/*.js"
       ],
       "preLaunchTask": "watch backend (webpack)"
     },
@@ -63,20 +72,6 @@
         "${workspaceFolder}/backend/dist/**/*.js"
       ],
       "preLaunchTask": "watch backend"
-    },
-    {
-      "type": "node",
-      "request": "launch",
-      "name": "Run reference generator (foodq)",
-      "program": "${workspaceFolder}/generator-foodq/node_modules/yo/lib/cli.js",
-      "args": [
-        "foodq"
-      ],
-      "console": "integratedTerminal",
-      "internalConsoleOptions": "neverOpen",
-      "skipFiles": [
-        "<node_internals>/**"
-      ]
     },
     {
       "name": "frontend unit tests",

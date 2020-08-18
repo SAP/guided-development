@@ -1,6 +1,6 @@
 {
-	"name": "vscode-guided-dev-contrib",
-	"displayName": "vscode-guided-dev-contrib",
+	"name": "contrib2",
+	"displayName": "vscode-guided-dev-contrib2",
 	"description": "",
 	"version": "0.0.1",
 	"publisher": "SAPOSS",
@@ -10,34 +10,15 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SAP/guided-development",
-		"directory": "vscode-guided-dev-contrib"
+		"directory": "contrib2"
 	},
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [
-		"onCommand:extension.showGuidedDevelopmentContrib"
-	],
 	"main": "./out/extension.js",
+	"activationEvents": [],
 	"BASContributes": {
 		"guided-development": {}
-	},
-	"contributes": {
-		"commands": [
-			{
-				"command": "extension.showGuidedDevelopmentContrib",
-				"title": "Load Guided Development"
-			}
-		],
-		"menus": {
-			"explorer/context": [
-				{
-					"command": "extension.showGuidedDevelopmentContrib",
-					"group": "navigation@1",
-					"when": "resourceFilename == launch.json"
-				}
-			]
-		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

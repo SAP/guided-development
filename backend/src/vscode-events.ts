@@ -1,39 +1,20 @@
 import * as vscode from 'vscode';
-import * as _ from 'lodash';
 import { AppEvents } from "./app-events";
-import { RpcCommon } from "@sap-devx/webview-rpc/out.ext/rpc-common";
+import { IItem } from './types/GuidedDev';
 
 export class VSCodeEvents implements AppEvents {
-    private webviewPanel: vscode.WebviewPanel;
-    private readonly resolveFunc: any;
-
-    constructor(rpc: RpcCommon, webviewPanel: vscode.WebviewPanel) {
-        this.webviewPanel = webviewPanel;   
-    }
-
-    public async doApply(we: any): Promise<any> {
-        // Apply code
-        await vscode.workspace.applyEdit(we);
-    }
-
-    public doSnippeDone(success: boolean, message: string, targetFolderPath?: string): void {
-        this.doClose();
-        this.showDoneMessage(success, message, targetFolderPath);
-    }
-
-    private doClose(): void {
-        if (this.webviewPanel) {
-            this.webviewPanel.dispose();
-            this.webviewPanel = null;
+    public async performAction(item: IItem): Promise<any> {
+        if (item && item.actionType) {
+          switch (item.actionType) {
+            case 'command':
+              return vscode.commands.executeCommand(item.command.name, item.command.params);
+              break;
+            case 'execute':
+              return item.performAction();
+              break;
+            case 'task':
+              break;
+          }
         }
-    }
-
-    private showDoneMessage(success: boolean, message: string, targetFolderPath?: string): Thenable<any> {
-
-        if (success) {
-            return vscode.window.showInformationMessage(message);
-        }
-
-        return vscode.window.showErrorMessage(message);
     }
 }
