@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import * as _ from 'lodash';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Congratulations, your extension "contrib2" is now active!');
+    console.log('Congratulations, your extension "vscode-contrib2" is now active!');
 
     const api: IContribution = {
         // return items based on workspace folders/projects

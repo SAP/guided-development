@@ -9,7 +9,7 @@ export class GuidedDevelopment {
 
   private readonly uiOptions: any;
   private readonly rpc: IRpc;
-  private appEvents: AppEvents;
+  private readonly appEvents: AppEvents;
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
   private collections: Array<ICollection>;

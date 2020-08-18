@@ -53,13 +53,13 @@ function createCollections(): ICollection[] {
     title: "Demo collection",
     description: "This is a demo collection. It contains a self-contributed item and and items contributed by a different contributor.",
     itemIds: [
-        "SAPOSS.contrib1.open",
-        "SAPOSS.contrib2.clone"
+        "SAPOSS.vscode-contrib1.open",
+        "SAPOSS.vscode-contrib2.clone"
     ],
     items: [
       {
         id: "open",
-        fqid: "SAPOSS.contrib1.open",
+        fqid: "SAPOSS.vscode-contrib1.open",
         title: "Open Global Settings (via execute)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         actionName: "Open",
@@ -76,7 +76,7 @@ function createCollections(): ICollection[] {
       },
       {
         id: "open-command",
-        fqid: "SAPOSS.contrib2.open-command",
+        fqid: "SAPOSS.vscode-contrib2.open-command",
         title: "Open Global Settings (via command)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         actionName: "Open",
@@ -99,12 +99,12 @@ function createCollections(): ICollection[] {
     title: "Another demo collection",
     description: "This is another demo collection.",
     itemIds: [
-        "SAPOSS.contrib2.open"
+        "SAPOSS.vscode-contrib2.open"
     ],
     items: [
       {
         id: "open",
-        fqid: "SAPOSS.contrib2.open",
+        fqid: "SAPOSS.vscode-contrib2.open",
         title: "Open Global Settings (via execute)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         actionName: "Open",

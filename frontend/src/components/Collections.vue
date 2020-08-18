@@ -1,30 +1,16 @@
 <template>
   <v-container id="collections-component">
     <v-row>
-      <v-col>
-      <h3>Filter</h3>
-      </v-col>
-    </v-row>
-    <v-row
-      style="margin-left:50px;"
-      dense
-      v-for="(label, index) in labels"
-      :key=index
-    >
-      <v-col cols="2">
-        <div>
-        {{label[0]}}
-        </div>
-      </v-col>
-      <v-col cols="4">
+      <v-col :cols="4" v-for="(label, index) in labels" :key=index>
         <v-select
-          single-line
-          dense
+          class="guided-development-search"
+          hide-details="auto"
+          outlined
+          :label="label[0]"
           :value="Array.from(label[1].values())[0]"
           :items="Array.from(label[1].values())"
           @change="onFilter"
-        >
-      </v-select>
+        />
       </v-col>
     </v-row>
     <v-row>
@@ -117,4 +103,7 @@ export default {
 </script>
 
 <style>
+.guided-development-search {
+  background-color: var(--vscode-editorWidget-background, #252526);
+}
 </style>

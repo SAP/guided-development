@@ -1,5 +1,5 @@
 {
-	"name": "contrib1",
+	"name": "vscode-contrib1",
 	"displayName": "vscode-guided-dev-contrib1",
 	"description": "",
 	"version": "0.0.1",
@@ -10,7 +10,7 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SAP/guided-development",
-		"directory": "contrib1"
+		"directory": "vscode-contrib1"
 	},
 	"categories": [
 		"Other"

@@ -4,7 +4,7 @@ import * as vscode from 'vscode';
 import * as _ from 'lodash';
 
 export function activate(context: vscode.ExtensionContext) {
-    console.log('Congratulations, your extension "contrib1" is now active!');
+    console.log('Congratulations, your extension "vscode-contrib1" is now active!');
 
     const api: IContribution = {
         // return items based on workspace folders/projects
@@ -15,11 +15,11 @@ export function activate(context: vscode.ExtensionContext) {
                 title: "Demo collection",
                 description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
                 itemIds: [
-                    "SAPOSS.contrib1.open",
-                    "SAPOSS.contrib1.open-command",
-                    "SAPOSS.contrib1.clone",
-                    "SAPOSS.contrib2.cfLogin",
-                    "SAPOSS.contrib1.show-info"
+                    "SAPOSS.vscode-contrib1.open",
+                    "SAPOSS.vscode-contrib1.open-command",
+                    "SAPOSS.vscode-contrib1.clone",
+                    "SAPOSS.vscode-contrib2.cfLogin",
+                    "SAPOSS.vscode-contrib1.show-info"
                 ]
             };
             collections.push(collection);
