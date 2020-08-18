@@ -41,6 +41,14 @@
 			{
 				"command": "loadGuidedDevelopment",
 				"title": "Guided Development"
+			},
+			{
+				"command": "guidedDevelopment.toggleOutput",
+				"title": "Show Output",
+				"icon": {
+					"light": "./resources/images/icons/console_light.svg",
+					"dark": "./resources/images/icons/console_dark.svg"
+				}
 			}
 		],
 		"menus": {
@@ -48,6 +56,17 @@
 				{
 					"command": "loadGuidedDevelopment",
 					"when": "true"
+				},
+				{
+					"command": "guidedDevelopment.toggleOutput",
+					"when": "false"
+				}
+			],
+			"editor/title": [
+				{
+					"command": "guidedDevelopment.toggleOutput",
+					"group": "navigation",
+					"when": "guidedDevelopment.Focused"
 				}
 			]
 		},

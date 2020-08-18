@@ -19,6 +19,10 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 
 	private static channel: vscode.OutputChannel;
 
+	public toggleOutput() {
+		this.outputChannel.showOutput();
+	}
+
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
 
