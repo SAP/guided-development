@@ -9,6 +9,9 @@
       background-color="transparent" 
       loader="spinner"
     ></loading>
+    <div>
+      <v-card-title>{{messages.title}}</v-card-title>
+    </div>
     <Collections
       v-if="collections"
       :collections="collections"
@@ -53,8 +56,8 @@ export default {
   watch: {
   },
   methods: {
-    async onAction(collectionId, itemFqid) {
-      await this.rpc.invoke("performAction", [collectionId, itemFqid]);
+    async onAction(itemFqid) {
+      await this.rpc.invoke("performAction", [itemFqid]);
     },
     async showCollections(collections) {
       this.collections = collections;
@@ -104,11 +107,7 @@ export default {
       this.rpcIsReady();
     },
     async setState() {
-      // const uiOptions = await this.rpc.invoke("getState");
-      // this.messages = uiOptions.messages;
-      // if (this.isInVsCode()) {
-      //   window.vscode.setState(uiOptions);
-      // }
+      this.messages = await this.rpc.invoke("getState");
     }
   },
   created() {
@@ -117,6 +116,7 @@ export default {
 };
 </script>
 <style scoped>
+
 @import "./../node_modules/vue-loading-overlay/dist/vue-loading.css";
 .left-col {
   background-color: var(--vscode-editorWidget-background, #252526);
@@ -137,5 +137,13 @@ export default {
 }
 .bottom-buttons-col > .v-btn:not(:last-child) {
     margin-right: 10px !important;
+}
+.v-card__title {
+  color: var(--vscode-foreground, #cccccc);
+}
+.vld-parent {
+  overflow-y: auto;
+  margin: 0px;
+  height: calc(100% - 4rem);
 }
 </style>

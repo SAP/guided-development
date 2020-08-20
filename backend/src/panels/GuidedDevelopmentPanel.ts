@@ -11,7 +11,7 @@ import { AppEvents } from "../app-events";
 import { VSCodeEvents } from '../vscode-events';
 import { AbstractWebviewPanel } from './AbstractWebviewPanel';
 import { Contributors } from "../contributors";
-import { ICollection } from '../types/GuidedDev';
+import { Item, Collection } from "../Collection";
 
 
 export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
@@ -27,6 +27,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 		super.setWebviewPanel(webViewPanel);
 
 		this.collections = Contributors.getContributors().getCollections();
+		this.items = Contributors.getContributors().getItems();
 		if (_.isNil(this.collections)) {
 			return vscode.window.showErrorMessage("Can not find guided-development.");
 		}
@@ -41,7 +42,8 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 			this.outputChannel, 
 			this.logger,
 			this.messages,
-			this.collections
+			this.collections,
+			this.items
 		);
 
 		this.initWebviewPanel();
@@ -56,7 +58,8 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	}
 
 	private guidedDevelopment: GuidedDevelopment;
-	private collections: Array<ICollection>;
+	private collections: Array<Collection>;
+	private items: Map<String, Item>;
 	private messages: any;
 	private outputChannel: AppLog;
 

@@ -8,20 +8,23 @@ export interface ICollection {
     title: string;
     description: string;
     itemIds: Array<string>;
-    items?: Array<IItem>;
 }
 
 export interface IItem {
     id: string;
-    fqid?: string;
     title: string;
     description: string;
-    actionName: string;
-    actionType: string;
-    performAction?: () => Thenable<any>;
-    command?: ICommand;
+    action?: IAction;
+    itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
+}
+
+export interface IAction {
+    name: string;
+    type: string;
+    performAction?: () => Thenable<any>;
+    command?: ICommand;
 }
 
 export interface ICommand {

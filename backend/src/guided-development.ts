@@ -2,19 +2,21 @@ import * as _ from "lodash";
 import { AppLog } from "./app-log";
 import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
-import { ICollection, IItem } from "./types/GuidedDev";
 import { AppEvents } from "./app-events";
+import { Item, Collection } from "./Collection";
+
 
 export class GuidedDevelopment {
 
-  private readonly uiOptions: any;
+  private readonly messages: any;
   private readonly rpc: IRpc;
   private readonly appEvents: AppEvents;
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
-  private collections: Array<ICollection>;
+  private collections: Array<Collection>;
+  private items: Map<String,Item>;
 
-  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: ICollection[]) {
+  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: Collection[], items: Map<String,Item>) {
     this.rpc = rpc;
     if (!this.rpc) {
       throw new Error("rpc must be set");
@@ -30,32 +32,33 @@ export class GuidedDevelopment {
     this.rpc.registerMethod({ func: this.performAction, thisArg: this });
 
     this.collections = collections;
+    this.items = items;
+    this.messages = messages;
   }
 
-  private getCollection(id: string): ICollection {
+  private getCollection(id: string): Collection {
     const collection = this.collections.find((value) => {
       return value.id === id;
     });
     return collection;
   }
 
-  private getItem(collectionId: string, itemFqid: string): IItem {
-    const collection: ICollection = this.getCollection(collectionId);
-    if (collection) {
-      const item: IItem = collection.items.find((value) => {
-        return (value.fqid === itemFqid);
-      });
+  private getItem(itemFqid: string): Item {
+    const item: Item = this.items.get(itemFqid);
+    if (item) {
       return item;
+    } else {
+      // TODO - console log: item does not exist
     }
   }
 
-  private async performAction(collectionId: string, itemFqid: string) {
-    const item: IItem = this.getItem(collectionId, itemFqid);
+  private async performAction(itemFqid: string) {
+    const item: Item = this.getItem(itemFqid);
     this.appEvents.performAction(item);
   }
 
   private async getState() {
-    return this.uiOptions;
+    return this.messages;
   }
 
   private async logError(error: any, prefixMessage?: string) {

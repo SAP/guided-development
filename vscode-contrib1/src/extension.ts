@@ -12,14 +12,15 @@ export function activate(context: vscode.ExtensionContext) {
             const collections: Array<ICollection> = [];
             let collection: ICollection = {
                 id: "collection1",
-                title: "Demo collection",
+                title: "Demo collection 1",
                 description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
                 itemIds: [
                     "SAPOSS.vscode-contrib1.open",
                     "SAPOSS.vscode-contrib1.open-command",
                     "SAPOSS.vscode-contrib1.clone",
                     "SAPOSS.vscode-contrib2.cfLogin",
-                    "SAPOSS.vscode-contrib1.show-info"
+                    "SAPOSS.vscode-contrib1.show-info",
+                    "SAPOSS.vscode-contrib1.show-items"
                 ]
             };
             collections.push(collection);
@@ -32,10 +33,12 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "open",
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                actionName: "Open",
-                actionType: "execute",
-                performAction: () => {
-                    return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
+                action: {
+                    name: "Open",
+                    type: "execute",
+                    performAction: () => {
+                        return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
+                    },
                 },
                 labels: [
                     {"Project Name": "cap1"},
@@ -49,10 +52,12 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "clone",
                 title: "Cloning code-snippet repository",
                 description: "A VSCode extension that provides a simple way to add code snippets..",
-                actionName: "Clone",
-                actionType: "execute",
-                performAction: () => {
-                    return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
+                action: {
+                    name: "Clone",
+                    type: "execute",
+                    performAction: () => {
+                        return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
+                    },
                 },
                 labels: []
             };
@@ -62,10 +67,12 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "open-command",
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                actionName: "Open",
-                actionType: "command",
-                command: {
-                    name: "workbench.action.openGlobalSettings"
+                action: {
+                    name: "Open",
+                    type: "command",
+                    command: {
+                        name: "workbench.action.openGlobalSettings"
+                    },
                 },
                 labels: [
                     {"Project Name": "cap1"},
@@ -79,11 +86,30 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "show-info",
                 title: "Show info message",
                 description: "Shows a information message",
-                actionName: "Show",
-                actionType: "execute",
-                performAction: () => {
-                    return vscode.window.showInformationMessage("Hello from guided development item");
+                action: {
+                    name: "Show",
+                    type: "execute",
+                    performAction: () => {
+                        return vscode.window.showInformationMessage("Hello from guided development item");
+                    },
                 },
+                labels: [
+                    {"Project Name": "cap2"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap2"}
+                ]
+            };
+            items.push(item);
+
+            item = {
+                id: "show-items",
+                title: "Show items",
+                description: "Shows list of items",
+                itemIds: [
+                    "SAPOSS.vscode-contrib1.clone",
+                    "SAPOSS.vscode-contrib2.cfLogin",
+                    "SAPOSS.vscode-contrib1.show-info"
+                ],
                 labels: [
                     {"Project Name": "cap2"},
                     {"Project Type": "CAP"},
