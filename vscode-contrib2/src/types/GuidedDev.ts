@@ -12,7 +12,6 @@ export interface ICollection {
 
 export interface IItem {
     id: string;
-    fqid?: string;
     title: string;
     description: string;
     action?: IAction;

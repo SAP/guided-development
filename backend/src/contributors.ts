@@ -84,13 +84,13 @@ export class Contributors {
                 const item: Item = this.items.get(itemId);
                 if (item) {
                     collection.items.push(item);
-                    this.initItemsRecursion(item);
+                    this.initItems(item);
                 }
             }
         }
     }
 
-    private initItemsRecursion(item: Item) {
+    private initItems(item: Item) {
         if (!item.itemIds || item.itemIds == []){
             return
         }
@@ -99,7 +99,7 @@ export class Contributors {
             const subitem: Item = this.items.get(itemId);
             if (subitem) {
                 item.items.push(subitem);
-                this.initItemsRecursion(subitem);
+                this.initItems(subitem);
             }
         }
     }

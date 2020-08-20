@@ -14,11 +14,10 @@
             <Items
               v-if="item.items"
               :items="item.items"
-              :item="item"
               :filter="filter"
               @action="onAction"
             />
-            <v-btn class="mt-6" v-if="item.action" @click="onAction(item.fqid)">{{item.action.name}}</v-btn>
+            <v-btn class="mt-6" v-if="item.action && !item.items" @click="onAction(item.fqid)">{{item.action.name}}</v-btn>
           </v-expansion-panel-content>
         </v-expansion-panel>
       </template>
@@ -34,7 +33,7 @@ export default {
       filteredItems: new Set()
     };
   },
-  props: ["item", "items", "filter"],
+  props: ["items", "filter"],
   methods: {
     onAction(itemFqid) {
       // fire 'action' event

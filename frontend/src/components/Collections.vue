@@ -21,7 +21,6 @@
         <Items
           v-if="collection.items"
           :items="collection.items"
-          :collection="collection"
           :filter="filter"
           @action="onAction"
         />
