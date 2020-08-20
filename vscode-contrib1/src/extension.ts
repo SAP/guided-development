@@ -12,7 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
             const collections: Array<ICollection> = [];
             let collection: ICollection = {
                 id: "collection1",
-                title: "Demo collection",
+                title: "Demo collection 1",
                 description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
                 itemIds: [
                     "SAPOSS.vscode-contrib1.open",
