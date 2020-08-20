@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import { ICollection, IItem, IContribution } from "./types/GuidedDev";
-
+import { Item, Collection } from "./Collection";
 
 export class Contributors {
     public static getContributors(): Contributors {
@@ -19,11 +19,15 @@ export class Contributors {
     private static contributors: Contributors;
 
     private readonly apiMap = new Map<string, IContribution>();
-    private collections: Array<ICollection>;
-    private items: Map<string, IItem>;
+    private collections: Array<Collection>;
+    private items: Map<string, Item>;
 
-    public getCollections(): Array<ICollection> {
+    public getCollections(): Array<Collection> {
         return this.collections;
+    }
+
+    public getItems(): Map<string, Item> {
+        return this.items;
     }
 
     private add(extensionId: string, api: any) {
@@ -60,14 +64,14 @@ export class Contributors {
         this.initCollectionItems();
     }
 
-    private addItems(extensionId: string, items: Array<IItem>) {
+    private addItems(extensionId: string, items: Array<Item>) {
         for (const item of items) {
             item.fqid = `${extensionId}.${item.id}`;
             this.items.set(item.fqid, item);
         }
     }
 
-    private addCollections(collections: Array<ICollection>) {
+    private addCollections(collections: Array<Collection>) {
         for (const collection of collections) {
             this.collections.push(collection);
         }
@@ -77,10 +81,25 @@ export class Contributors {
         for (const collection of this.collections) {
             collection.items = [];
             for (const itemId of collection.itemIds) {
-                const item: IItem = this.items.get(itemId);
+                const item: Item = this.items.get(itemId);
                 if (item) {
                     collection.items.push(item);
+                    this.initItemsRecursion(item);
                 }
+            }
+        }
+    }
+
+    private initItemsRecursion(item: Item) {
+        if (!item.itemIds || item.itemIds == []){
+            return
+        }
+        item.items = []
+        for (const itemId of item.itemIds) {
+            const subitem: Item = this.items.get(itemId);
+            if (subitem) {
+                item.items.push(subitem);
+                this.initItemsRecursion(subitem);
             }
         }
     }

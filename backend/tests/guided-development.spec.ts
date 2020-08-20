@@ -100,7 +100,7 @@ describe('guidedDevelopment unit test', () => {
     const outputChannel = new TestOutputChannel();
     const appEvents = new TestEvents();
     const uiOptions = {messages: {title: "guidedDev title"}};
-    const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {}, []);
+    const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {}, [], new Map());
 
     before(() => {
         sandbox = sinon.createSandbox();

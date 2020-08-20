@@ -17,10 +17,12 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "cfLogin",
                 title: "Cloud Foundry Login",
                 description: "Login to Cloud Foundry (cf)",
-                actionName: "Login",
-                actionType: "execute",
-                performAction: () => {
-                    return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
+                action: {
+                    name: "Login",
+                    type: "execute",
+                    performAction: () => {
+                        return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
+                    },
                 },
                 labels: []
             };

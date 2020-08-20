@@ -6,7 +6,7 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
-import { ICollection } from '../types/GuidedDev';
+import { Item, Collection } from "../Collection";
 import { ServerEvents } from './server-events';
 // import * as vscode from 'vscode';
 
@@ -41,14 +41,20 @@ class GuidedDevelopmentWebSocketServer {
       const logger: AppLog = new ServerLog(this.rpc);
       const childLogger = {debug: () => {}, error: () => {}, fatal: () => {}, warn: () => {}, info: () => {}, trace: () => {}, getChildLogger: () => {return {} as IChildLogger;}};
       const collections = createCollections();
-      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections);
+      const items = createItems(collections);
+      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections, items);
     });
   }
 }
 
-function createCollections(): ICollection[] {
-	const collections: ICollection[] = [];
-  let collection: ICollection = {
+function createItems(collections: Collection[]): Map<string, Item> {
+  const items = new Map();
+  return items;
+}
+
+function createCollections(): Collection[] {
+	const collections: Collection[] = [];
+  let collection: Collection = {
     id: "collection1",
     title: "Demo collection",
     description: "This is a demo collection. It contains a self-contributed item and and items contributed by a different contributor.",
@@ -62,11 +68,13 @@ function createCollections(): ICollection[] {
         fqid: "SAPOSS.vscode-contrib1.open",
         title: "Open Global Settings (via execute)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        actionName: "Open",
-        actionType: "execute",
-        performAction: () => {
-            console.log("workbench.action.openGlobalSettings");
-            return Promise.resolve();
+        action: {
+          name: "Open",
+          type: "execute",
+          performAction: () => {
+              console.log("workbench.action.openGlobalSettings");
+              return Promise.resolve();
+          },
         },
         labels: [
             {"Project Name": "cap1"},
@@ -79,17 +87,19 @@ function createCollections(): ICollection[] {
         fqid: "SAPOSS.vscode-contrib2.open-command",
         title: "Open Global Settings (via command)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        actionName: "Open",
-        actionType: "command",
-        command: {
-            name: "workbench.action.openGlobalSettings"
+        action: {
+          name: "Open",
+          type: "command",
+          command: {
+              name: "workbench.action.openGlobalSettings"
+          },
         },
         labels: [
           {"Project Name": "cap2"},
           {"Path": "/home/user/projects/cap2"},
           {"Project Type": "CAP"},
-      ]
-    }
+        ]
+      }
     ]
   };
   collections.push(collection);
@@ -99,20 +109,37 @@ function createCollections(): ICollection[] {
     title: "Another demo collection",
     description: "This is another demo collection.",
     itemIds: [
-        "SAPOSS.vscode-contrib2.open"
+        "SAPOSS.vscode-contrib2.show-items"
     ],
     items: [
       {
-        id: "open",
-        fqid: "SAPOSS.vscode-contrib2.open",
-        title: "Open Global Settings (via execute)",
-        description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        actionName: "Open",
-        actionType: "execute",
-        performAction: () => {
-            console.log("workbench.action.openGlobalSettings");
-            return Promise.resolve();
-        },
+        id: "show-items",
+        title: "Show items",
+        description: "Shows list of items",
+        fqid: "SAPOSS.vscode-contrib2.show-items",
+        itemIds: [
+          "SAPOSS.vscode-contrib2.open-command"
+        ],
+        items: [
+          {
+            id: "open-command",
+            fqid: "SAPOSS.vscode-contrib2.open-command",
+            title: "Open Global Settings (via command)",
+            description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+            action: {
+              name: "Open",
+              type: "command",
+              command: {
+                  name: "workbench.action.openGlobalSettings"
+              },
+            },
+            labels: [
+              {"Project Name": "cap2"},
+              {"Path": "/home/user/projects/cap2"},
+              {"Project Type": "CAP"},
+            ]
+          }
+        ],
         labels: [
             {"Project Name": "cap1"},
             {"Path": "/home/user/projects/cap1"},
