@@ -11,7 +11,7 @@ import { AppEvents } from "../app-events";
 import { VSCodeEvents } from '../vscode-events';
 import { AbstractWebviewPanel } from './AbstractWebviewPanel';
 import { Contributors } from "../contributors";
-import { Item, Collection } from "../Collection";
+import { IInternalItem, IInternalCollection } from "../Collection";
 
 
 export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
@@ -58,8 +58,8 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	}
 
 	private guidedDevelopment: GuidedDevelopment;
-	private collections: Array<Collection>;
-	private items: Map<String, Item>;
+	private collections: Array<IInternalCollection>;
+	private items: Map<String, IInternalItem>;
 	private messages: any;
 	private outputChannel: AppLog;
 

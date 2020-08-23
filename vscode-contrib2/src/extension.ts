@@ -1,14 +1,14 @@
 // import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ICollection, IItem, IContribution } from './types/GuidedDev';
+import { ICollection, IItem, IGuidedDevContribution } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib2" is now active!');
 
-    const api: IContribution = {
+    const guidedDevContribution : IGuidedDevContribution = {
         // return items based on workspace folders/projects
-        getCollections() {
+        getCollections: () => {
             const collections: Array<ICollection> = [];
             let collection: ICollection = {
                 id: "collection2",
@@ -23,7 +23,7 @@ export function activate(context: vscode.ExtensionContext) {
 
             return collections;
         },
-        getItems() {
+        getItems: () => {
             const items: Array<IItem> = [];
             let item: IItem = {
                 id: "cfLogin",
@@ -58,6 +58,10 @@ export function activate(context: vscode.ExtensionContext) {
 
             return items;
         }
+    }
+
+    const api = {
+        guidedDevContribution
     };
 
     return api;

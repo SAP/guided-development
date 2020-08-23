@@ -1,4 +1,4 @@
-export interface IContribution {
+export interface IGuidedDevContribution {
     getCollections: () => Array<ICollection>;
     getItems: () => Array<IItem>;
 }

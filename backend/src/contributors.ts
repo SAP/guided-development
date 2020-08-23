@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import { ICollection, IItem, IContribution } from "./types/GuidedDev";
-import { Item, Collection } from "./Collection";
+import { ICollection, IItem, IGuidedDevContribution } from "./types/GuidedDev";
+import { IInternalItem, IInternalCollection } from "./Collection";
 
 export class Contributors {
     public static getContributors(): Contributors {
@@ -18,26 +18,26 @@ export class Contributors {
 
     private static contributors: Contributors;
 
-    private readonly apiMap = new Map<string, IContribution>();
-    private collections: Array<Collection>;
-    private items: Map<string, Item>;
+    private collections: Array<IInternalCollection>;
+    private items: Map<string, IInternalItem>;
 
-    public getCollections(): Array<Collection> {
+    public getCollections(): Array<IInternalCollection> {
         return this.collections;
     }
 
-    public getItems(): Map<string, Item> {
+    public getItems(): Map<string, IInternalItem> {
         return this.items;
     }
 
     private add(extensionId: string, api: any) {
-        this.addItems(extensionId, api.getItems());
-        this.addCollections(api.getCollections());
-        this.apiMap.set(extensionId, api);
+        if (api.guidedDevContribution) {
+            this.addItems(extensionId, api.guidedDevContribution.getItems());
+            this.addCollections(api.guidedDevContribution.getCollections());
+        }
     }
 
-    private static async getApi(extension: vscode.Extension<any>): Promise<IContribution> {
-        let api: IContribution;
+    private static async getApi(extension: vscode.Extension<any>): Promise<any> {
+        let api;
         if (!extension.isActive) {
             try {
                 api = await extension.activate();
@@ -64,14 +64,14 @@ export class Contributors {
         this.initCollectionItems();
     }
 
-    private addItems(extensionId: string, items: Array<Item>) {
+    private addItems(extensionId: string, items: Array<IInternalItem>) {
         for (const item of items) {
             item.fqid = `${extensionId}.${item.id}`;
             this.items.set(item.fqid, item);
         }
     }
 
-    private addCollections(collections: Array<Collection>) {
+    private addCollections(collections: Array<IInternalCollection>) {
         for (const collection of collections) {
             this.collections.push(collection);
         }
@@ -81,7 +81,7 @@ export class Contributors {
         for (const collection of this.collections) {
             collection.items = [];
             for (const itemId of collection.itemIds) {
-                const item: Item = this.items.get(itemId);
+                const item: IInternalItem = this.items.get(itemId);
                 if (item) {
                     collection.items.push(item);
                     this.initItems(item);
@@ -90,13 +90,13 @@ export class Contributors {
         }
     }
 
-    private initItems(item: Item) {
+    private initItems(item: IInternalItem) {
         if (!item.itemIds || item.itemIds == []){
             return
         }
         item.items = []
         for (const itemId of item.itemIds) {
-            const subitem: Item = this.items.get(itemId);
+            const subitem: IInternalItem = this.items.get(itemId);
             if (subitem) {
                 item.items.push(subitem);
                 this.initItems(subitem);

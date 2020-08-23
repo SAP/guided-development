@@ -3,7 +3,7 @@ import { AppLog } from "./app-log";
 import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
-import { Item, Collection } from "./Collection";
+import { IInternalItem, IInternalCollection } from "./Collection";
 
 
 export class GuidedDevelopment {
@@ -13,10 +13,10 @@ export class GuidedDevelopment {
   private readonly appEvents: AppEvents;
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
-  private collections: Array<Collection>;
-  private items: Map<String,Item>;
+  private collections: Array<IInternalCollection>;
+  private items: Map<String,IInternalItem>;
 
-  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: Collection[], items: Map<String,Item>) {
+  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[], items: Map<String,IInternalItem>) {
     this.rpc = rpc;
     if (!this.rpc) {
       throw new Error("rpc must be set");
@@ -36,15 +36,15 @@ export class GuidedDevelopment {
     this.messages = messages;
   }
 
-  private getCollection(id: string): Collection {
+  private getCollection(id: string): IInternalCollection {
     const collection = this.collections.find((value) => {
       return value.id === id;
     });
     return collection;
   }
 
-  private getItem(itemFqid: string): Item {
-    const item: Item = this.items.get(itemFqid);
+  private getItem(itemFqid: string): IInternalItem {
+    const item: IInternalItem = this.items.get(itemFqid);
     if (item) {
       return item;
     } else {
@@ -53,7 +53,7 @@ export class GuidedDevelopment {
   }
 
   private async performAction(itemFqid: string) {
-    const item: Item = this.getItem(itemFqid);
+    const item: IInternalItem = this.getItem(itemFqid);
     this.appEvents.performAction(item);
   }
 

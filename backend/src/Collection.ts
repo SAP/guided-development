@@ -1,20 +1,10 @@
 import { ICollection, IItem, IAction } from "./types/GuidedDev";
 
-export class Collection implements ICollection {
-    id: string;
-    title: string;
-    description: string;
-    itemIds: string[];
-    items: Item[];
+export interface IInternalCollection extends ICollection {
+    items: IInternalItem[];
 }
 
-export class Item implements IItem {
-    id: string;
+export interface IInternalItem extends IItem {
     fqid?: string;
-    title: string;
-    description: string;
-    action?: IAction;
-    itemIds?: string[];
-    labels: { [key: string]: string; }[];
-    items?: Item[];
+    items?: IInternalItem[];
 }

@@ -6,7 +6,7 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
-import { Item, Collection } from "../Collection";
+import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
 // import * as vscode from 'vscode';
 
@@ -47,14 +47,14 @@ class GuidedDevelopmentWebSocketServer {
   }
 }
 
-function createItems(collections: Collection[]): Map<string, Item> {
+function createItems(collections: IInternalCollection[]): Map<string, IInternalItem> {
   const items = new Map();
   return items;
 }
 
-function createCollections(): Collection[] {
-	const collections: Collection[] = [];
-  let collection: Collection = {
+function createCollections(): IInternalCollection[] {
+	const collections: IInternalCollection[] = [];
+  let collection: IInternalCollection = {
     id: "collection1",
     title: "Demo collection",
     description: "This is a demo collection. It contains a self-contributed item and and items contributed by a different contributor.",
