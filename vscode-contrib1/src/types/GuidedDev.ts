@@ -7,7 +7,14 @@ export interface ICollection {
     id: string;
     title: string;
     description: string;
+    type: CollectionType;
     itemIds: Array<string>;
+}
+
+export enum CollectionType {
+    Platform = "PLATFORM",
+    Scenario = "SCENARIO",
+    Extension = "EXTENSION"
 }
 
 export interface IItem {
@@ -22,9 +29,16 @@ export interface IItem {
 
 export interface IAction {
     name: string;
-    type: string;
+    type: ActionType;
     performAction?: () => Thenable<any>;
     command?: ICommand;
+}
+
+export enum ActionType {
+    Execute = "EXECUTE",
+    Command = "COMMAND",
+    Task = "TASK",
+    OpenFile = "OPENFILE"
 }
 
 export interface ICommand {

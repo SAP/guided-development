@@ -1,6 +1,5 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import { ICollection, IItem, IGuidedDevContribution } from "./types/GuidedDev";
 import { IInternalItem, IInternalCollection } from "./Collection";
 
 export class Contributors {

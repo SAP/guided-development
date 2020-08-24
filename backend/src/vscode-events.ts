@@ -1,18 +1,16 @@
 import * as vscode from 'vscode';
 import { AppEvents } from "./app-events";
-import { IItem } from './types/GuidedDev';
+import { IItem, ActionType } from './types/GuidedDev';
 
 export class VSCodeEvents implements AppEvents {
     public async performAction(item: IItem): Promise<any> {
         if (item && item.action.type) {
           switch (item.action.type) {
-            case 'command':
+            case ActionType.Command:
               return vscode.commands.executeCommand(item.action.command.name, item.action.command.params);
-              break;
-            case 'execute':
+            case ActionType.Execute:
               return item.action.performAction();
-              break;
-            case 'task':
+            case ActionType.Task:
               break;
           }
         }

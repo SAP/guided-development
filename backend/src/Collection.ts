@@ -1,4 +1,4 @@
-import { ICollection, IItem, IAction } from "./types/GuidedDev";
+import { ICollection, IItem } from "./types/GuidedDev";
 
 export interface IInternalCollection extends ICollection {
     items: IInternalItem[];

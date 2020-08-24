@@ -6,6 +6,7 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
+import { ActionType, CollectionType } from "../types/GuidedDev";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
 // import * as vscode from 'vscode';
@@ -58,6 +59,7 @@ function createCollections(): IInternalCollection[] {
     id: "collection1",
     title: "Demo collection",
     description: "This is a demo collection. It contains a self-contributed item and and items contributed by a different contributor.",
+    type: CollectionType.Scenario,
     itemIds: [
         "SAPOSS.vscode-contrib1.open",
         "SAPOSS.vscode-contrib2.clone"
@@ -70,7 +72,7 @@ function createCollections(): IInternalCollection[] {
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         action: {
           name: "Open",
-          type: "execute",
+          type: ActionType.Execute,
           performAction: () => {
               console.log("workbench.action.openGlobalSettings");
               return Promise.resolve();
@@ -89,7 +91,7 @@ function createCollections(): IInternalCollection[] {
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         action: {
           name: "Open",
-          type: "command",
+          type: ActionType.Command,
           command: {
               name: "workbench.action.openGlobalSettings"
           },
@@ -108,6 +110,7 @@ function createCollections(): IInternalCollection[] {
     id: "collection2",
     title: "Another demo collection",
     description: "This is another demo collection.",
+    type: CollectionType.Platform,
     itemIds: [
         "SAPOSS.vscode-contrib2.show-items"
     ],
@@ -128,7 +131,7 @@ function createCollections(): IInternalCollection[] {
             description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
             action: {
               name: "Open",
-              type: "command",
+              type: ActionType.Command,
               command: {
                   name: "workbench.action.openGlobalSettings"
               },

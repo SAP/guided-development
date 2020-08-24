@@ -1,5 +1,5 @@
 // import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ICollection, IItem, IGuidedDevContribution } from './types/GuidedDev';
+import { ICollection, CollectionType, IItem, ActionType, IGuidedDevContribution } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 
@@ -12,8 +12,9 @@ export function activate(context: vscode.ExtensionContext) {
             const collections: Array<ICollection> = [];
             let collection: ICollection = {
                 id: "collection2",
-                title: "Demo collection 2",
+                title: "Demo collection 2 [Platform]",
                 description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
+                type: CollectionType.Platform,
                 itemIds: [
                     "SAPOSS.vscode-contrib2.cfLogin",
                     "SAPOSS.vscode-contrib1.show-items"
@@ -31,7 +32,7 @@ export function activate(context: vscode.ExtensionContext) {
                 description: "Login to Cloud Foundry (cf)",
                 action: {
                     name: "Login",
-                    type: "execute",
+                    type: ActionType.Execute,
                     performAction: () => {
                         return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
                     },

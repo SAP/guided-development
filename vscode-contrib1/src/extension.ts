@@ -1,5 +1,5 @@
 // import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ICollection, IItem, IGuidedDevContribution } from './types/GuidedDev';
+import { ICollection, CollectionType, IItem, ActionType, IGuidedDevContribution } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 
@@ -12,8 +12,9 @@ export function activate(context: vscode.ExtensionContext) {
             const collections: Array<ICollection> = [];
             let collection: ICollection = {
                 id: "collection1",
-                title: "Demo collection 1",
+                title: "Demo collection 1 [Scenario]",
                 description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
+                type: CollectionType.Scenario,
                 itemIds: [
                     "SAPOSS.vscode-contrib1.open",
                     "SAPOSS.vscode-contrib1.open-command",
@@ -35,7 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
                 action: {
                     name: "Open",
-                    type: "execute",
+                    type: ActionType.Execute,
                     performAction: () => {
                         return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
                     },
@@ -54,7 +55,7 @@ export function activate(context: vscode.ExtensionContext) {
                 description: "A VSCode extension that provides a simple way to add code snippets..",
                 action: {
                     name: "Clone",
-                    type: "execute",
+                    type: ActionType.Execute,
                     performAction: () => {
                         return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
                     },
@@ -69,7 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
                 action: {
                     name: "Open",
-                    type: "command",
+                    type: ActionType.Command,
                     command: {
                         name: "workbench.action.openGlobalSettings"
                     },
@@ -88,7 +89,7 @@ export function activate(context: vscode.ExtensionContext) {
                 description: "Shows a information message",
                 action: {
                     name: "Show",
-                    type: "execute",
+                    type: ActionType.Execute,
                     performAction: () => {
                         return vscode.window.showInformationMessage("Hello from guided development item");
                     },
