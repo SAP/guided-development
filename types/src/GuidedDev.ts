@@ -12,9 +12,9 @@ export interface ICollection {
 }
 
 export enum CollectionType {
-    Platform = "PLATFORM",
-    Scenario = "SCENARIO",
-    Extension = "EXTENSION"
+    Platform,
+    Scenario,
+    Extension
 }
 
 export interface IItem {

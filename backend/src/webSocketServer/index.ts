@@ -57,7 +57,7 @@ function createCollections(): IInternalCollection[] {
 	const collections: IInternalCollection[] = [];
   let collection: IInternalCollection = {
     id: "collection1",
-    title: "Demo collection",
+    title: "Demo collection [Scenario]",
     description: "This is a demo collection. It contains a self-contributed item and and items contributed by a different contributor.",
     type: CollectionType.Scenario,
     itemIds: [
@@ -108,7 +108,7 @@ function createCollections(): IInternalCollection[] {
 
   collection = {
     id: "collection2",
-    title: "Another demo collection",
+    title: "Another demo collection [Platform]",
     description: "This is another demo collection.",
     type: CollectionType.Platform,
     itemIds: [

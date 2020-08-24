@@ -60,7 +60,7 @@ export class Contributors {
                 this.add(extension.id, api);
             }
         }
-        this.initCollectionItems();
+        this.initCollections();
     }
 
     private addItems(extensionId: string, items: Array<IInternalItem>) {
@@ -74,6 +74,11 @@ export class Contributors {
         for (const collection of collections) {
             this.collections.push(collection);
         }
+    }
+
+    private initCollections() {
+        this.initCollectionItems();
+        this.collections = _.sortBy(this.collections, ['type']);
     }
 
     private initCollectionItems() {
