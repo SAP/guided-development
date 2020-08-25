@@ -7,6 +7,7 @@
           <v-expansion-panel-content>
             <v-card-text class="pa-0 ma-0" style="font-size:12px">{{item.description}}</v-card-text>
             <v-card-text class="pa-0 ma-0" style="font-size:12px">Item ID: {{item.fqid}}</v-card-text>
+            <v-img v-if="item.image" :src="item.image" aspect-ratio="2" contain></v-img>
             <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="item.labels">Labels:</v-card-text>
             <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in item.labels" :key="index">
               <v-card-text class="pa-0 ma-0" style="font-size:12px;text-indent:40px" v-for="(value, key) in label" :key="key">{{key}}: {{value}}</v-card-text>

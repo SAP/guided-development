@@ -3,6 +3,10 @@ import { ICollection, CollectionType, IItem, ActionType, IGuidedDevContribution 
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 
+const datauri = require("datauri");
+var path = require('path');
+// const DEFAULT_IMAGE = require("../images/defaultImage");
+
 export function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib1" is now active!');
 
@@ -34,6 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "open",
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/steak.jpg")),
                 action: {
                     name: "Open",
                     type: ActionType.Execute,
@@ -128,6 +133,17 @@ export function activate(context: vscode.ExtensionContext) {
 
     return api;
 }
+
+function getImage(imagePath: string) :string {
+    let image;
+    try {
+      image = datauri.sync(imagePath);
+    } catch (error) {
+        // image = DEFAULT_IMAGE;
+    }
+    return image;
+}
+
 
 export function deactivate() {}
 
