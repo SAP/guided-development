@@ -21,6 +21,7 @@ export interface IItem {
     id: string;
     title: string;
     description: string;
+    image?: string;
     action?: IAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
