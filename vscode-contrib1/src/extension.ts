@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "open",
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/settings.png")),
+                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/settings2.png")),
                 action: {
                     name: "Open",
                     type: ActionType.Execute,
