@@ -21,8 +21,8 @@ export function activate(context: vscode.ExtensionContext) {
                 type: CollectionType.Scenario,
                 itemIds: [
                     "SAPOSS.vscode-contrib1.open",
-                    "SAPOSS.vscode-contrib1.open-command",
                     "SAPOSS.vscode-contrib1.clone",
+                    "SAPOSS.vscode-contrib1.open-command",
                     "SAPOSS.vscode-contrib2.cfLogin",
                     "SAPOSS.vscode-contrib1.show-info",
                     "SAPOSS.vscode-contrib1.show-items"
@@ -38,7 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "open",
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/steak.jpg")),
+                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/settings.png")),
                 action: {
                     name: "Open",
                     type: ActionType.Execute,
@@ -71,7 +71,7 @@ export function activate(context: vscode.ExtensionContext) {
 
             item = {
                 id: "open-command",
-                title: "Open Global Settings",
+                title: "Open Command  - Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
                 action: {
                     name: "Open",
@@ -92,6 +92,7 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "show-info",
                 title: "Show info message",
                 description: "Shows a information message",
+                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/info.png")),
                 action: {
                     name: "Show",
                     type: ActionType.Execute,
@@ -111,8 +112,9 @@ export function activate(context: vscode.ExtensionContext) {
                 id: "show-items",
                 title: "Show items",
                 description: "Shows list of items",
+                image: getImage(path.join(context.extensionUri.fsPath, "./src/images/items.png")),
                 itemIds: [
-                    "SAPOSS.vscode-contrib1.clone",
+                    "SAPOSS.vscode-contrib1.open",
                     "SAPOSS.vscode-contrib2.cfLogin",
                     "SAPOSS.vscode-contrib1.show-info"
                 ],
