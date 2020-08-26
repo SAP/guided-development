@@ -22,7 +22,7 @@ export interface IItem {
     title: string;
     description: string;
     image?: string;
-    action?: IAction;
+    action?: IExecuteAction | ICommandAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
@@ -31,15 +31,21 @@ export interface IItem {
 export interface IAction {
     name: string;
     type: ActionType;
-    performAction?: () => Thenable<any>;
-    command?: ICommand;
+}
+
+export interface IExecuteAction extends IAction {
+    performAction: () => Thenable<any>;
+}
+
+export interface ICommandAction extends IAction {
+    command: ICommand;
 }
 
 export enum ActionType {
     Execute = "EXECUTE",
     Command = "COMMAND",
     Task = "TASK",
-    OpenFile = "OPENFILE"
+    File = "FILE"
 }
 
 export interface ICommand {
