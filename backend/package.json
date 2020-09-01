@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -54,8 +54,7 @@
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "loadGuidedDevelopment",
-					"when": "true"
+					"command": "loadGuidedDevelopment"
 				},
 				{
 					"command": "guidedDevelopment.toggleOutput",
@@ -110,7 +109,7 @@
 		"webpack-prod": "webpack --mode production",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"package": "vsce package .",
+		"package": "npm run webpack && vsce package .",
 		"test": "nyc mocha -p tsconfig.json --opts ./mocha.opts",
 		"ws:run": "node ./out/src/webSocketServer/index.js",
 		"lint": "eslint . --ext .ts,.tsx --cache",
