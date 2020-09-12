@@ -1,0 +1,8 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: guided-development
+Upstream-Contact: Tomer Epstein <tomer.epstein@sap.com>
+Source: https://github.com/SAP/guided-development
+
+Files: *
+Copyright: 2019-2020 SAP SE or an SAP affiliate company and guided-development contributors
+License: Apache-2.0
