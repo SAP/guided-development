@@ -2,7 +2,7 @@
 ![GitHub license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/guided-development)](https://api.reuse.software/info/github.com/SAP/guided-development)
 
-# Guided Development
+# Guided Development 
 
 ![](screenshot.png)
 
