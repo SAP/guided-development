@@ -13,7 +13,7 @@ export class ServerEvents implements AppEvents {
                   return Promise.resolve();
                 case ActionType.Snippet:
                     let snippetAction = (action as ISnippetAction);
-                    console.log(`Mock executing loadCodeSnippet ${snippetAction.snippet.name}`);
+                    console.log(`Mock executing loadCodeSnippet ${snippetAction.snippet.snippetName}`);
                     return Promise.resolve();
                 case ActionType.Execute:
                     let executeAction = (action as IExecuteAction);

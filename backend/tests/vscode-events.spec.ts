@@ -48,8 +48,8 @@ describe('vscode-events unit test', () => {
         workspaceMock.verify();
     });
 
-    describe("performAction", () => {
-        it("on success", () => {
+    describe("performAction - on success", () => {
+        it("Command as ActionType", () => {
             commandsMock.expects("executeCommand").
                 withExactArgs('workbench.action.openGlobalSettings', undefined).resolves();
             const item = {
@@ -71,7 +71,29 @@ describe('vscode-events unit test', () => {
             }
             return events.performAction(item, 1);
         });
-
+        it("Snippet as ActionType", () => {
+            commandsMock.expects("executeCommand").
+                withExactArgs("loadCodeSnippet", {contributorId: "SAPOSS.vscode-snippet-contrib", snippetName: "snippet_1", context: {uri: "uri"}}).resolves();
+            const item = {
+                id: "open-snippet",
+                title: "Open Snippet  - snippet_1",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    type: ActionType.Snippet,
+                    snippet: {
+                        contributorId: "SAPOSS.vscode-snippet-contrib", 
+                        snippetName: "snippet_1", 
+                        context: {uri: "uri"}                    
+                    },
+                },
+                labels: [
+                    {"Project Name": "cap3"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap3"}
+                ]
+            }
+            return events.performAction(item, 1);
+        });
     });
-
 });

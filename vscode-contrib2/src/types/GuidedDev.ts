@@ -61,9 +61,7 @@ export interface ICommand {
 }
 
 export interface ISnippet {
-    contribId: string;
-    name: string;
-    context: {
-        uri: string; 
-    }
+    contributorId: string;
+    snippetName: string;
+    context: any;
 }

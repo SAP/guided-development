@@ -104,6 +104,27 @@ function createCollections(): IInternalCollection[] {
           {"Path": "/home/user/projects/cap2"},
           {"Project Type": "CAP"},
         ]
+      },
+      {
+        id: "open-snippet",
+        fqid: "SAPOSS.vscode-contrib3.open-snippet",
+        title: "Open Snippet (via snippet)",
+        description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+        action1: {
+          name: "Open",
+          title: "Open Snippet (via snippet)",
+          type: ActionType.Snippet,
+          snippet: {
+            contributorId: "SAPOSS.vscode-snippet-contrib", 
+            snippetName: "snippet_1", 
+            context: {uri: "uri"}                    
+          },
+        },
+        labels: [
+          {"Project Name": "cap3"},
+          {"Path": "/home/user/projects/cap3"},
+          {"Project Type": "CAP"},
+        ]
       }
     ]
   };

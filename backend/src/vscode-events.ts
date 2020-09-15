@@ -13,7 +13,7 @@ export class VSCodeEvents implements AppEvents {
               return vscode.commands.executeCommand(commandAction.command.name, commandAction.command.params);
             case ActionType.Snippet:
               let snippetAction = (action as ISnippetAction);
-              return vscode.commands.executeCommand("loadCodeSnippet", {contributorId: snippetAction.snippet.contribId, snippetName: snippetAction.snippet.name, context: snippetAction.snippet.context});
+              return vscode.commands.executeCommand("loadCodeSnippet", {contributorId: snippetAction.snippet.contributorId, snippetName: snippetAction.snippet.snippetName, context: snippetAction.snippet.context});
             case ActionType.Execute:
               let executeAction = (action as IExecuteAction);
               return executeAction.performAction();
