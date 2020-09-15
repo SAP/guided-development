@@ -20,7 +20,8 @@ export function activate(context: vscode.ExtensionContext) {
                 description: "This is a demo collection. It contains self-contributed items and and an item contributed by a different contributor.",
                 type: CollectionType.Scenario,
                 itemIds: [
-                    "saposs.vscode-contrib3.create"
+                    "saposs.vscode-contrib3.create",
+                    "saposs.vscode-contrib3.open-snippet"
                 ]
             };
             collections.push(collection);
@@ -76,6 +77,27 @@ export function activate(context: vscode.ExtensionContext) {
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
                     {"Path": "/home/user/projects/cap1"}
+                ]
+            };
+            items.push(item);
+
+            item = {
+                id: "open-snippet",
+                title: "Open Snippet",
+                description: "Open Snippet Tool",
+                action1: {
+                    name: "Open",
+                    type: ActionType.Snippet,
+                    snippet: {
+                        contributorId: "SAPOSS.vscode-snippet-contrib", 
+                        snippetName: "snippet_1", 
+                        context: {}                    
+                      },
+                },
+                labels: [
+                    {"Project Name": "cap3"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap3"}
                 ]
             };
             items.push(item);

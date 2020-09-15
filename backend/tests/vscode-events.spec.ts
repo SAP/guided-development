@@ -14,6 +14,12 @@ describe('vscode-events unit test', () => {
     let workspaceMock: any;
     let eventsMock: any;
 
+    const executeAction = {
+        performAction: () => {
+            return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
+        },
+    }
+
     before(() => {
         sandbox = sinon.createSandbox();
         _.set(vscode, "ProgressLocation.Notification", 15);
@@ -91,6 +97,28 @@ describe('vscode-events unit test', () => {
                     {"Project Name": "cap3"},
                     {"Project Type": "CAP"},
                     {"Path": "/home/user/projects/cap3"}
+                ]
+            }
+            return events.performAction(item, 1);
+        });
+        it("Execute as ActionType", () => {
+            expect(executeAction.performAction());
+
+            const item = {
+                id: "open-execute",
+                title: "Open Global Settings",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    type: ActionType.Execute,
+                    performAction: () => {
+                        return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
+                    },
+                },
+                labels: [
+                    {"Project Name": "cap1"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap1"}
                 ]
             }
             return events.performAction(item, 1);
