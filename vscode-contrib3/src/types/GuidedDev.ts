@@ -22,8 +22,8 @@ export interface IItem {
     title: string;
     description: string;
     image?: string;
-    action1?: IExecuteAction | ICommandAction;
-    action2?: IExecuteAction | ICommandAction;
+    action1?: IExecuteAction | ICommandAction | ISnippetAction;
+    action2?: IExecuteAction | ICommandAction | ISnippetAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
@@ -43,6 +43,10 @@ export interface ICommandAction extends IAction {
     command: ICommand;
 }
 
+export interface ISnippetAction extends IAction {
+    snippet: ISnippet;
+}
+
 export enum ActionType {
     Execute = "EXECUTE",
     Command = "COMMAND",
@@ -54,4 +58,10 @@ export enum ActionType {
 export interface ICommand {
     name: string;
     params?: any[];
+}
+
+export interface ISnippet {
+    contributorId: string;
+    snippetName: string;
+    context: any;
 }
