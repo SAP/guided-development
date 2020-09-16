@@ -22,7 +22,8 @@ export function activate(context: vscode.ExtensionContext) {
                 itemIds: [
                     "saposs.vscode-contrib3.create",
                     "saposs.vscode-contrib3.open-snippet",
-                    "saposs.vscode-contrib3.open-file"
+                    "saposs.vscode-contrib3.open-readme",
+                    "saposs.vscode-contrib3.open-web-file"
                 ]
             };
             collections.push(collection);
@@ -104,9 +105,28 @@ export function activate(context: vscode.ExtensionContext) {
             items.push(item);
 
             item = {
-                id: "open-file",
-                title: "Open File",
-                description: "Open File",
+                id: "open-readme",
+                title: "Open README File",
+                description: "Open README File",
+                action1: {
+                    name: "Open",
+                    type: ActionType.File,
+                    file: {
+                        uri: getFileFromWorkspace("README.md")
+                    }
+                },
+                labels: [
+                    {"Project Name": "cap3"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap3"}
+                ]
+            };
+            items.push(item);
+
+            item = {
+                id: "open-web-file",
+                title: "Open Web File",
+                description: "Open Web File",
                 action1: {
                     name: "Open",
                     type: ActionType.File,
@@ -312,6 +332,15 @@ function getImage(imagePath: string) :string {
         // image = DEFAULT_IMAGE;
     }
     return image;
+}
+
+function getFileFromWorkspace(fileName: string) : string {
+    let outputFolder = _.get(vscode, "workspace.workspaceFolders[0].uri.path");
+    if (!outputFolder || !outputFolder.length) {
+        vscode.window.showErrorMessage("Cannot find folder");
+        return "";
+    }
+    return outputFolder + '/' + fileName;
 }
 
 
