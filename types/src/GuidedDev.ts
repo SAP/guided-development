@@ -22,8 +22,8 @@ export interface IItem {
     title: string;
     description: string;
     image?: string;
-    action1?: IExecuteAction | ICommandAction | ISnippetAction;
-    action2?: IExecuteAction | ICommandAction | ISnippetAction;
+    action1?: IExecuteAction | ICommandAction | ISnippetAction | IOpenFileAction;
+    action2?: IExecuteAction | ICommandAction | ISnippetAction | IOpenFileAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
@@ -47,6 +47,10 @@ export interface ISnippetAction extends IAction {
     snippet: ISnippet;
 }
 
+export interface IOpenFileAction extends IAction {
+    file: IOpenFile;
+}
+
 export enum ActionType {
     Execute = "EXECUTE",
     Command = "COMMAND",
@@ -64,4 +68,8 @@ export interface ISnippet {
     contributorId: string;
     snippetName: string;
     context: any;
+}
+
+export interface IOpenFile {
+    uri: string;
 }

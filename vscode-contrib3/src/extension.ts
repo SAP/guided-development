@@ -21,7 +21,8 @@ export function activate(context: vscode.ExtensionContext) {
                 type: CollectionType.Scenario,
                 itemIds: [
                     "saposs.vscode-contrib3.create",
-                    "saposs.vscode-contrib3.open-snippet"
+                    "saposs.vscode-contrib3.open-snippet",
+                    "saposs.vscode-contrib3.open-file"
                 ]
             };
             collections.push(collection);
@@ -93,6 +94,25 @@ export function activate(context: vscode.ExtensionContext) {
                         snippetName: "snippet_1", 
                         context: {}                    
                       },
+                },
+                labels: [
+                    {"Project Name": "cap3"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap3"}
+                ]
+            };
+            items.push(item);
+
+            item = {
+                id: "open-file",
+                title: "Open File",
+                description: "Open File",
+                action1: {
+                    name: "Open",
+                    type: ActionType.File,
+                    file: {
+                        uri: "https://chakra-ui.com/alert"
+                    }
                 },
                 labels: [
                     {"Project Name": "cap3"},

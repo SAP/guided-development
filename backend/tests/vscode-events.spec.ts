@@ -13,6 +13,7 @@ describe('vscode-events unit test', () => {
     let commandsMock: any;
     let workspaceMock: any;
     let eventsMock: any;
+    let uriMock: any;
 
     const executeAction = {
         performAction: () => {
@@ -33,6 +34,8 @@ describe('vscode-events unit test', () => {
         _.set(vscode, "window.showErrorMessage", () => {return Promise.resolve("");});
         _.set(vscode, "workspace.workspaceFolders", []);
         _.set(vscode, "workspace.updateWorkspaceFolders", (): any => undefined);
+        _.set(vscode, "Uri.parse", (): any => undefined);
+
     });
 
     after(() => {
@@ -43,6 +46,7 @@ describe('vscode-events unit test', () => {
         events = new VSCodeEvents();
         windowMock = sandbox.mock(vscode.window);
         commandsMock = sandbox.mock(vscode.commands);
+        uriMock = sandbox.mock(vscode.Uri);
         workspaceMock = sandbox.mock(vscode.workspace);
         eventsMock = sandbox.mock(events);
     });
@@ -51,6 +55,7 @@ describe('vscode-events unit test', () => {
         windowMock.verify();
         eventsMock.verify();
         commandsMock.verify();
+        uriMock.verify();
         workspaceMock.verify();
     });
 
@@ -91,6 +96,27 @@ describe('vscode-events unit test', () => {
                         contributorId: "SAPOSS.vscode-snippet-contrib", 
                         snippetName: "snippet_1", 
                         context: {uri: "uri"}                    
+                    },
+                },
+                labels: [
+                    {"Project Name": "cap3"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap3"}
+                ]
+            }
+            return events.performAction(item, 1);
+        });
+        it("File as ActionType", () => { 
+            uriMock.expects("parse").withExactArgs("https://chakra-ui.com/alert").resolves();
+            const item = {
+                id: "open-file",
+                title: "Open File",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    type: ActionType.File,
+                    file: {
+                        uri: "https://chakra-ui.com/alert"                   
                     },
                 },
                 labels: [

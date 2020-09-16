@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { AppEvents } from "./app-events";
-import { IItem, ActionType, IExecuteAction, ICommandAction, ISnippetAction } from './types/GuidedDev';
+import { IItem, ActionType, IExecuteAction, ICommandAction, ISnippetAction, IOpenFileAction } from './types/GuidedDev';
 
 export class VSCodeEvents implements AppEvents {
     public async performAction(item: IItem, index: number): Promise<any> {
@@ -14,6 +14,9 @@ export class VSCodeEvents implements AppEvents {
             case ActionType.Snippet:
               let snippetAction = (action as ISnippetAction);
               return vscode.commands.executeCommand("loadCodeSnippet", {contributorId: snippetAction.snippet.contributorId, snippetName: snippetAction.snippet.snippetName, context: snippetAction.snippet.context});
+            case ActionType.File:
+              let openFileAction = (action as IOpenFileAction);
+              return vscode.commands.executeCommand('vscode.open', vscode.Uri.parse(openFileAction.file.uri));
             case ActionType.Execute:
               let executeAction = (action as IExecuteAction);
               return executeAction.performAction();
