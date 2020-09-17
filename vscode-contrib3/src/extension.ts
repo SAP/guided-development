@@ -22,8 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
                 itemIds: [
                     "saposs.vscode-contrib3.create",
                     "saposs.vscode-contrib3.open-snippet",
-                    "saposs.vscode-contrib3.open-readme",
-                    "saposs.vscode-contrib3.open-web-file"
+                    "saposs.vscode-contrib3.open-readme"
                 ]
             };
             collections.push(collection);
@@ -112,26 +111,7 @@ export function activate(context: vscode.ExtensionContext) {
                     name: "Open",
                     type: ActionType.File,
                     file: {
-                        uri: getFileFromWorkspace("README.md")
-                    }
-                },
-                labels: [
-                    {"Project Name": "cap3"},
-                    {"Project Type": "CAP"},
-                    {"Path": "/home/user/projects/cap3"}
-                ]
-            };
-            items.push(item);
-
-            item = {
-                id: "open-web-file",
-                title: "Open Web File",
-                description: "Open Web File",
-                action1: {
-                    name: "Open",
-                    type: ActionType.File,
-                    file: {
-                        uri: "https://chakra-ui.com/alert"
+                        uri: getFileUriFromWorkspace("README.md")
                     }
                 },
                 labels: [
@@ -334,13 +314,14 @@ function getImage(imagePath: string) :string {
     return image;
 }
 
-function getFileFromWorkspace(fileName: string) : string {
+function getFileUriFromWorkspace(fileName: string) :vscode.Uri {
     let outputFolder = _.get(vscode, "workspace.workspaceFolders[0].uri.path");
     if (!outputFolder || !outputFolder.length) {
         vscode.window.showErrorMessage("Cannot find folder");
-        return "";
+        return vscode.Uri.parse("");;
     }
-    return outputFolder + '/' + fileName;
+    outputFolder = outputFolder + '/' + fileName;
+    return vscode.Uri.parse(outputFolder);
 }
 
 

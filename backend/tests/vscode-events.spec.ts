@@ -106,8 +106,11 @@ describe('vscode-events unit test', () => {
             }
             return events.performAction(item, 1);
         });
-        it("File as ActionType", () => { 
-            uriMock.expects("parse").withExactArgs("https://chakra-ui.com/alert").resolves();
+        it.skip("File as ActionType", () => { 
+            uriMock.expects("parse").withExactArgs("README").resolves();
+
+             let file = uriMock.parse("README");
+
             const item = {
                 id: "open-file",
                 title: "Open File",
@@ -116,7 +119,7 @@ describe('vscode-events unit test', () => {
                     name: "Open",
                     type: ActionType.File,
                     file: {
-                        uri: "https://chakra-ui.com/alert"                   
+                        uri: file                   
                     },
                 },
                 labels: [
@@ -148,6 +151,30 @@ describe('vscode-events unit test', () => {
                 ]
             }
             return events.performAction(item, 1);
+        });
+    });
+    describe("performAction - on failure", () => {
+        it("action or actionType does not exist", () => {
+            commandsMock.expects("executeCommand").never();
+            uriMock.expects("parse").never();
+            const item = {
+                id: "open-command",
+                title: "Open Command  - Global Settings",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    type: ActionType.Command,
+                    command: {
+                        name: "workbench.action.openGlobalSettings"
+                    },
+                },
+                labels: [
+                    {"Project Name": "cap1"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap1"}
+                ]
+            }
+            return events.performAction(undefined, 1);
         });
     });
 });

@@ -1,3 +1,5 @@
+import * as vscode from "vscode";
+
 export interface IGuidedDevContribution {
     getCollections: () => Array<ICollection>;
     getItems: () => Array<IItem>;
@@ -22,8 +24,8 @@ export interface IItem {
     title: string;
     description: string;
     image?: string;
-    action1?: IExecuteAction | ICommandAction | ISnippetAction | IOpenFileAction;
-    action2?: IExecuteAction | ICommandAction | ISnippetAction | IOpenFileAction;
+    action1?: IExecuteAction | ICommandAction | ISnippetAction | IFileAction;
+    action2?: IExecuteAction | ICommandAction | ISnippetAction | IFileAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
@@ -47,8 +49,8 @@ export interface ISnippetAction extends IAction {
     snippet: ISnippet;
 }
 
-export interface IOpenFileAction extends IAction {
-    file: IOpenFile;
+export interface IFileAction extends IAction {
+    file: IFile;
 }
 
 export enum ActionType {
@@ -70,6 +72,6 @@ export interface ISnippet {
     context: any;
 }
 
-export interface IOpenFile {
-    uri: string;
+export interface IFile {
+    uri: vscode.Uri;
 }
