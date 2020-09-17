@@ -51,6 +51,8 @@ export default {
     "collections": {
       handler: function() {
         this.normalizeLabels();
+        // reapply the filter to trigger watch in Items.vue
+        this.filter = new Map(this.filter);
       },
       immediate: true
     }

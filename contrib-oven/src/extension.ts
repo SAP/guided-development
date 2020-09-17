@@ -59,8 +59,10 @@ async function getManagerAPI(): Promise<ManagerAPI> {
     const promise = new Promise<ManagerAPI>((resolve, reject) => {
         let intervalId: NodeJS.Timeout;
         if (!(manager?.isActive)) {
+            console.log(`[Extension ${EXT_ID}] Waiting for activation of guided-development manager`);
             intervalId = setInterval(() => {
                 if (manager?.isActive) {
+                    console.log(`[Extension ${EXT_ID}] Detected activation of guided-development manager`);
                     clearInterval(intervalId);
                     resolve(manager?.exports as ManagerAPI);
                 }
@@ -72,7 +74,7 @@ async function getManagerAPI(): Promise<ManagerAPI> {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-    console.log('Congratulations, your extension "contrib-oven" is now active!');
+    console.log(`[Extension ${EXT_ID}] Activated`);
 
     const managerAPI = await getManagerAPI();
 
