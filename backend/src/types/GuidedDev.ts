@@ -1,8 +1,3 @@
-export interface IGuidedDevContribution {
-    getCollections: () => Array<ICollection>;
-    getItems: () => Array<IItem>;
-}
-
 export interface ICollection {
     id: string;
     title: string;
@@ -22,7 +17,8 @@ export interface IItem {
     title: string;
     description: string;
     image?: string;
-    action?: IExecuteAction | ICommandAction;
+    action1?: IExecuteAction | ICommandAction | ISnippetAction;
+    action2?: IExecuteAction | ICommandAction | ISnippetAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
@@ -30,7 +26,12 @@ export interface IItem {
 
 export interface IAction {
     name: string;
-    type: ActionType;
+    title?: string;
+}
+
+export interface ICommand {
+    name: string;
+    params?: any[];
 }
 
 export interface IExecuteAction extends IAction {
@@ -41,14 +42,20 @@ export interface ICommandAction extends IAction {
     command: ICommand;
 }
 
-export enum ActionType {
-    Execute = "EXECUTE",
-    Command = "COMMAND",
-    Task = "TASK",
-    File = "FILE"
+export interface ISnippetAction extends IAction {
+    snippet: ISnippet;
 }
 
-export interface ICommand {
-    name: string;
-    params?: any[];
+export type ManagerAPI = {
+    setData: (extensionId: string, collections: ICollection[], items: IItem[]) => void;
+    cloneItem: (item: IItem) => IItem;
+    createExecuteAction: (name: string, title: string, performAction: () => Thenable<any>) => IExecuteAction;
+    createCommandAction: (name: string, title: string, command: ICommand) => ICommandAction;
+    createSnippetAction: (name: string, title: string, snippet: ISnippet) => ISnippetAction;
+}
+
+export interface ISnippet {
+    contributorId: string;
+    snippetName: string;
+    context: any;
 }

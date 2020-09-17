@@ -3,7 +3,6 @@
     <v-row>
       <v-col :cols="4" v-for="(label, index) in labels" :key=index>
         <v-select
-          class="guided-development-search"
           hide-details="auto"
           outlined
           :label="label[0]"
@@ -16,16 +15,16 @@
     <v-row>
       <v-col cols="12">
         <div v-for="(collection, index) in collections" :key="index"><br>
-        <v-card-title class="prompt-title" style="font-size:16px">{{collection.title}}</v-card-title>
-        <v-card-subtitle class="prompt-title" style="font-size:14px">{{collection.description}}</v-card-subtitle>
-        <Items
-          v-if="collection.items"
-          :items="collection.items"
-          :filter="filter"
-          @action="onAction"
-        />
-      </div>
-</v-col>
+          <v-card-title class="prompt-title" style="font-size:16px">{{collection.title}}</v-card-title>
+          <v-card-subtitle class="prompt-subtitle" style="font-size:14px">{{collection.description}}</v-card-subtitle>
+          <Items
+            v-if="collection.items"
+            :items="collection.items"
+            :filter="filter"
+            @action="onAction"
+          />
+        </div>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -57,9 +56,9 @@ export default {
     }
   },
   methods: {
-    onAction(itemFqid) {
+    onAction(itemFqid, index) {
       // fire 'action' event
-      this.$emit("action", itemFqid);
+      this.$emit("action", itemFqid, index);
     },
     onFilter(e) {
       const labelObj = JSON.parse(e);
@@ -102,7 +101,4 @@ export default {
 </script>
 
 <style>
-.guided-development-search {
-  background-color: var(--vscode-editorWidget-background, #252526);
-}
 </style>

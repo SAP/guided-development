@@ -5,7 +5,6 @@ import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
 
-
 export class GuidedDevelopment {
 
   private readonly messages: any;
@@ -36,6 +35,29 @@ export class GuidedDevelopment {
     this.messages = messages;
   }
 
+  public setCollections(collections: Array<IInternalCollection>) {
+    this.collections = collections;
+    const response: any = this.rpc.invoke("showCollections", [this.collections]);
+  }
+
+  private getItem(itemFqid: string): IInternalItem {
+    for (const collection of this.collections) {
+      for (const item of collection.items) {
+        if (item.fqid === itemFqid) {
+          return item;
+        }
+        if (item.items) {
+          for (const subItem of item.items) {
+            if (subItem.fqid === itemFqid) {
+              return subItem;
+            }  
+          }
+        }
+      }
+    }
+    // TODO - console log: item does not exist
+  }
+
   private getCollection(id: string): IInternalCollection {
     const collection = this.collections.find((value) => {
       return value.id === id;
@@ -43,18 +65,9 @@ export class GuidedDevelopment {
     return collection;
   }
 
-  private getItem(itemFqid: string): IInternalItem {
-    const item: IInternalItem = this.items.get(itemFqid);
-    if (item) {
-      return item;
-    } else {
-      // TODO - console log: item does not exist
-    }
-  }
-
-  private async performAction(itemFqid: string) {
+  private async performAction(itemFqid: string, index: number) {
     const item: IInternalItem = this.getItem(itemFqid);
-    this.appEvents.performAction(item);
+    this.appEvents.performAction(item, index);
   }
 
   private async getState() {

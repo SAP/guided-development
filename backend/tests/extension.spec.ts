@@ -57,9 +57,9 @@ describe('extension unit test', () => {
     });
 
     describe('activate', () => {
-        it("commands registration", () => {
+        it.skip("commands registration", () => {
             const contributorsMock = sandbox.mock(Contributors);
-            contributorsMock.expects("init");
+            contributorsMock.expects("getContributors");
             loggerWrapperMock.expects("createExtensionLoggerAndSubscribeToLogSettingsChanges");
             loggerWrapperMock.expects("getLogger").once();
             extension.activate(testContext);

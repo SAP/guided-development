@@ -11,13 +11,13 @@ describe('Items.vue', () => {
     });
 
     test('component name', () => {
-        wrapper = initComponent(Items)
+        wrapper = initComponent(Items, {items: [], filter: {}}, true)
         expect(wrapper.name()).toBe('Items')
     })
 
     test('component props', () => {
-        wrapper = initComponent(Items)
-        expect(_.keys(wrapper.props())).toHaveLength(1)
+        wrapper = initComponent(Items, {items: [], filter: {}}, true)
+        expect(_.keys(wrapper.props())).toHaveLength(2)
     })
 
 })

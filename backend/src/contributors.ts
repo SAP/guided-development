@@ -1,9 +1,18 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import { IInternalItem, IInternalCollection } from "./Collection";
+import { IItem, ICollection } from './types/GuidedDev';
 
 export class Contributors {
-    public static getContributors(): Contributors {
+    private onChangedCallback: (collections: Array<IInternalCollection>) => void;
+    private onChangedCallbackThis: Object;
+
+    public registerOnChangedCallback(thisArg: Object, callback: (collections: Array<IInternalCollection>) => void): void {
+        this.onChangedCallback = callback;
+        this.onChangedCallbackThis = thisArg;
+    }
+
+    public static getInstance(): Contributors {
         if (!Contributors.contributors) {
             Contributors.contributors = new Contributors();
         }
@@ -11,99 +20,103 @@ export class Contributors {
     }
 
     private constructor() {
-        this.collections = [];
-        this.items = new Map();
+        this.collectionsMap = new Map();
+        this.itemsMap = new Map();
     }
 
     private static contributors: Contributors;
 
-    private collections: Array<IInternalCollection>;
-    private items: Map<string, IInternalItem>;
+    private collectionsMap: Map<string, Array<IInternalCollection>>;
+    private itemsMap: Map<string, IInternalItem>;
 
     public getCollections(): Array<IInternalCollection> {
-        return this.collections;
+        const collections: Array<IInternalCollection> = [];
+        for (const extensionCollections of this.collectionsMap.values()) {
+            collections.push(...extensionCollections);
+        }
+
+        return _.sortBy(collections, ['type']);
     }
 
     public getItems(): Map<string, IInternalItem> {
-        return this.items;
+        return this.itemsMap;
     }
 
-    private add(extensionId: string, api: any) {
-        if (api.guidedDevContribution) {
-            this.addItems(extensionId, api.guidedDevContribution.getItems());
-            this.addCollections(api.guidedDevContribution.getCollections());
-        }
-    }
-
-    private static async getApi(extension: vscode.Extension<any>): Promise<any> {
-        let api;
+    private static activateExtension(extension: vscode.Extension<any>): void {
         if (!extension.isActive) {
             try {
-                api = await extension.activate();
+                extension.activate();
             } catch (error) {
                 console.error(error);
                 // TODO: Add Logger.error here ("Failed to activate extension", {extensionId: extensionId})
             }
-        } else {
-            api = extension.exports;
         }
-        return api;
     }
 
-    public async init() {
-        const allExtensions: readonly vscode.Extension<any>[] = vscode.extensions.all;
-        for (const extension of allExtensions) {
-            const currentPackageJSON: any = _.get(extension, "packageJSON");
-            const guidedDevelopmentContribution: any = _.get(currentPackageJSON, "BASContributes.guided-development");
-            if (!_.isNil(guidedDevelopmentContribution)) {
-                const api = await Contributors.getApi(extension);
-                this.add(extension.id, api);
+    private removeItems(extensionId: string): void {
+        // remove all items that this extension contributed from itemsMap
+        for (const fqid of this.itemsMap.keys()) {
+            if (fqid.startsWith(extensionId)) {
+                this.itemsMap.delete(fqid);
             }
         }
-        this.initCollections();
+    }
+
+    public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
+        this.addCollections(extensionId, collections as IInternalCollection[]);
+        this.addItems(extensionId, items);
+        this.initCollectionItems();
+        if (this.onChangedCallback) {
+            this.onChangedCallback.call(this.onChangedCallbackThis, this.getCollections());
+        }
+    }
+
+    public init() {
+        const allExtensions: readonly vscode.Extension<any>[] = vscode.extensions.all;
+        for (const extension of allExtensions) {
+            if (extension?.packageJSON?.BASContributes?.["guided-development"]) {
+                Contributors.activateExtension(extension);
+            }
+        }
     }
 
     private addItems(extensionId: string, items: Array<IInternalItem>) {
+        this.removeItems(extensionId);
+
         for (const item of items) {
             item.fqid = `${extensionId}.${item.id}`;
-            this.items.set(item.fqid, item);
+            this.itemsMap.set(item.fqid, item);
         }
     }
 
-    private addCollections(collections: Array<IInternalCollection>) {
-        for (const collection of collections) {
-            this.collections.push(collection);
-        }
-    }
-
-    private initCollections() {
-        this.initCollectionItems();
-        this.collections = _.sortBy(this.collections, ['type']);
+    private addCollections(extensionId: string, collections: Array<IInternalCollection>) {
+        this.collectionsMap.set(extensionId, collections);
     }
 
     private initCollectionItems() {
-        for (const collection of this.collections) {
-            collection.items = [];
-            for (const itemId of collection.itemIds) {
-                const item: IInternalItem = this.items.get(itemId);
-                if (item) {
-                    collection.items.push(item);
-                    this.initItems(item);
+        for (const collections of this.collectionsMap.values()) {
+            for (const collection of collections) {
+                collection.items = [];
+                for (const itemId of collection.itemIds) {
+                    const item: IInternalItem = this.itemsMap.get(itemId.toLocaleLowerCase());
+                    if (item) {
+                        collection.items.push(item);
+                        this.initSubItems(item);
+                    }
                 }
             }
         }
     }
 
-    private initItems(item: IInternalItem) {
-        if (!item.itemIds || item.itemIds == []){
-            return
-        }
-        item.items = []
-        for (const itemId of item.itemIds) {
-            const subitem: IInternalItem = this.items.get(itemId);
-            if (subitem) {
-                item.items.push(subitem);
-                this.initItems(subitem);
+    private initSubItems(item: IInternalItem) {
+        if (item.itemIds) {
+            item.items = [];
+            for (const itemId of item.itemIds) {
+                const subitem: IInternalItem = this.itemsMap.get(itemId.toLowerCase());
+                if (subitem) {
+                    item.items.push(subitem);
+                    this.initSubItems(subitem);
+                }
             }
         }
     }

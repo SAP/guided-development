@@ -36,7 +36,7 @@ function initialState() {
 }
 
 export default {
-  name: "app",
+  name: "App",
   components: {
     Collections,
     Loading
@@ -56,8 +56,8 @@ export default {
   watch: {
   },
   methods: {
-    async onAction(itemFqid) {
-      await this.rpc.invoke("performAction", [itemFqid]);
+    async onAction(itemFqid, index) {
+      await this.rpc.invoke("performAction", [itemFqid, index]);
     },
     async showCollections(collections) {
       this.collections = collections;

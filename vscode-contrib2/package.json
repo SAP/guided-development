@@ -16,7 +16,9 @@
 		"Other"
 	],
 	"main": "./out/extension.js",
-	"activationEvents": [],
+	"activationEvents": [
+		"*"
+	],
 	"BASContributes": {
 		"guided-development": {}
 	},
