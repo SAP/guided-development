@@ -38,7 +38,7 @@ describe('Contributors unit test', () => {
     describe('init', () => {
         it("No Contributors", () => {
             contributorsMock.expects("getApi").never();
-            Contributors.getContributors().init();
+            Contributors.getInstance().init();
         });
     });
 

@@ -12,7 +12,7 @@ import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/
 import { IChildLogger } from "@vscode-logging/logger";
 import * as os from "os";
 import { fail } from "assert";
-import { IItem } from "./types/GuidedDev";
+import { ICollection, IItem } from "./types/GuidedDev";
 
 describe.skip('guidedDevelopment unit test', () => {
     let sandbox: any;
@@ -29,6 +29,9 @@ describe.skip('guidedDevelopment unit test', () => {
     class TestEvents implements AppEvents {
         public performAction(item: IItem, index: number): Promise<any> {
             return;
+        }
+        public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
+            
         }
     }
     class TestRpc implements IRpc {

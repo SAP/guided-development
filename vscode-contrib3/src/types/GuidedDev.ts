@@ -1,8 +1,3 @@
-export interface IGuidedDevContribution {
-    getCollections: () => Array<ICollection>;
-    getItems: () => Array<IItem>;
-}
-
 export interface ICollection {
     id: string;
     title: string;
@@ -32,7 +27,11 @@ export interface IItem {
 export interface IAction {
     name: string;
     title?: string;
-    type: ActionType;
+}
+
+export interface ICommand {
+    name: string;
+    params?: any[];
 }
 
 export interface IExecuteAction extends IAction {
@@ -47,17 +46,12 @@ export interface ISnippetAction extends IAction {
     snippet: ISnippet;
 }
 
-export enum ActionType {
-    Execute = "EXECUTE",
-    Command = "COMMAND",
-    Task = "TASK",
-    File = "FILE",
-    Snippet = "SNIPPET"
-}
-
-export interface ICommand {
-    name: string;
-    params?: any[];
+export type ManagerAPI = {
+    setData: (extensionId: string, collections: ICollection[], items: IItem[]) => void;
+    cloneItem: (item: IItem) => IItem;
+    createExecuteAction: (name: string, title: string, performAction: () => Thenable<any>) => IExecuteAction;
+    createCommandAction: (name: string, title: string, command: ICommand) => ICommandAction;
+    createSnippetAction: (name: string, title: string, snippet: ISnippet) => ISnippetAction;
 }
 
 export interface ISnippet {
