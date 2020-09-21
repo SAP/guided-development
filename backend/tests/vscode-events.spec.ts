@@ -23,7 +23,7 @@ describe('vscode-events unit test', () => {
     before(() => {
         sandbox = sinon.createSandbox();
         _.set(vscode, "ProgressLocation.Notification", 15);
-        _.set(vscode, "Uri.file", (path: string) => {
+        _.set(vscode, "Uri.parse", (path: string) => {
             return {
                 fsPath: path
             };
@@ -101,6 +101,29 @@ describe('vscode-events unit test', () => {
             }
             return events.performAction(item, 1);
         });
+        it("File as ActionType", () => { 
+            const uri = vscode.Uri.parse("README");
+            commandsMock.expects("executeCommand").
+                withExactArgs('vscode.open', uri).resolves();
+            const item = {
+                id: "open-file",
+                title: "Open File",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    type: ActionType.File,
+                    file: {
+                        uri: uri               
+                    },
+                },
+                labels: [
+                    {"Project Name": "cap3"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap3"}
+                ]
+            }
+            return events.performAction(item, 1);
+        });
         it("Execute as ActionType", () => {
             expect(executeAction.performAction());
 
@@ -122,6 +145,29 @@ describe('vscode-events unit test', () => {
                 ]
             }
             return events.performAction(item, 1);
+        });
+    });
+    describe("performAction - on failure", () => {
+        it("action or actionType does not exist", () => {
+            commandsMock.expects("executeCommand").never();
+            const item = {
+                id: "open-command",
+                title: "Open Command  - Global Settings",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    type: ActionType.Command,
+                    command: {
+                        name: "workbench.action.openGlobalSettings"
+                    },
+                },
+                labels: [
+                    {"Project Name": "cap1"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap1"}
+                ]
+            }
+            return events.performAction(undefined, 1);
         });
     });
 });

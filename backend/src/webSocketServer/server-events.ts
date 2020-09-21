@@ -1,5 +1,5 @@
 import { AppEvents } from "../app-events";
-import { IItem, ActionType, IExecuteAction, ICommandAction, ISnippetAction } from '../types/GuidedDev';
+import { IItem, ActionType, IExecuteAction, ICommandAction, ISnippetAction, IFileAction} from '../types/GuidedDev';
 
 export class ServerEvents implements AppEvents {
     public async performAction(item: IItem, index: number): Promise<any> {
@@ -14,6 +14,10 @@ export class ServerEvents implements AppEvents {
                 case ActionType.Snippet:
                     let snippetAction = (action as ISnippetAction);
                     console.log(`Mock executing loadCodeSnippet ${snippetAction.snippet.snippetName}`);
+                    return Promise.resolve();
+                case ActionType.File:
+                    let fileAction = (action as IFileAction);
+                    console.log(`Mock open file: ${fileAction.file.uri}`);
                     return Promise.resolve();
                 case ActionType.Execute:
                     let executeAction = (action as IExecuteAction);
