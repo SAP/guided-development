@@ -13,7 +13,6 @@ describe('vscode-events unit test', () => {
     let commandsMock: any;
     let workspaceMock: any;
     let eventsMock: any;
-    let uriMock: any;
 
     const executeAction = {
         performAction: () => {
@@ -44,7 +43,6 @@ describe('vscode-events unit test', () => {
         events = new VSCodeEvents();
         windowMock = sandbox.mock(vscode.window);
         commandsMock = sandbox.mock(vscode.commands);
-        uriMock = sandbox.mock(vscode.Uri);
         workspaceMock = sandbox.mock(vscode.workspace);
         eventsMock = sandbox.mock(events);
     });
@@ -53,7 +51,6 @@ describe('vscode-events unit test', () => {
         windowMock.verify();
         eventsMock.verify();
         commandsMock.verify();
-        uriMock.verify();
         workspaceMock.verify();
     });
 
@@ -153,7 +150,6 @@ describe('vscode-events unit test', () => {
     describe("performAction - on failure", () => {
         it("action or actionType does not exist", () => {
             commandsMock.expects("executeCommand").never();
-            uriMock.expects("parse").never();
             const item = {
                 id: "open-command",
                 title: "Open Command  - Global Settings",
