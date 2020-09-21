@@ -24,7 +24,7 @@ describe('vscode-events unit test', () => {
     before(() => {
         sandbox = sinon.createSandbox();
         _.set(vscode, "ProgressLocation.Notification", 15);
-        _.set(vscode, "Uri.file", (path: string) => {
+        _.set(vscode, "Uri.parse", (path: string) => {
             return {
                 fsPath: path
             };
@@ -34,8 +34,6 @@ describe('vscode-events unit test', () => {
         _.set(vscode, "window.showErrorMessage", () => {return Promise.resolve("");});
         _.set(vscode, "workspace.workspaceFolders", []);
         _.set(vscode, "workspace.updateWorkspaceFolders", (): any => undefined);
-        _.set(vscode, "Uri.parse", (): any => undefined);
-
     });
 
     after(() => {
@@ -106,11 +104,10 @@ describe('vscode-events unit test', () => {
             }
             return events.performAction(item, 1);
         });
-        it.skip("File as ActionType", () => { 
-            uriMock.expects("parse").withExactArgs("README").resolves();
-
-             let file = uriMock.parse("README");
-
+        it("File as ActionType", () => { 
+            const uri = vscode.Uri.parse("README");
+            commandsMock.expects("executeCommand").
+                withExactArgs('vscode.open', uri).resolves();
             const item = {
                 id: "open-file",
                 title: "Open File",
@@ -119,7 +116,7 @@ describe('vscode-events unit test', () => {
                     name: "Open",
                     type: ActionType.File,
                     file: {
-                        uri: file                   
+                        uri: uri               
                     },
                 },
                 labels: [
