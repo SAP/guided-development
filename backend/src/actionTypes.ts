@@ -1,6 +1,6 @@
-import { IAction, ICommand, ICommandAction, IExecuteAction, ISnippet, ISnippetAction } from "./types/GuidedDev";
+import { IAction, ICommand, ICommandAction, IExecuteAction, IFile, IFileAction, ISnippet, ISnippetAction } from "./types/GuidedDev";
 
-export class Action implements IAction {
+export abstract class Action implements IAction {
     name: string;
     title?: string;
 }
@@ -15,4 +15,8 @@ export class CommandAction extends Action implements ICommandAction {
 
 export class SnippetAction extends Action implements ISnippetAction {
     snippet: ISnippet;
+}
+
+export class FileAction extends Action implements IFileAction {
+    file: IFile;
 }

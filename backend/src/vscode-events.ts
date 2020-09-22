@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
-import { CommandAction, ExecuteAction, SnippetAction } from './actionTypes';
+import { CommandAction, ExecuteAction, FileAction, SnippetAction } from './actionTypes';
 import { AppEvents } from "./app-events";
 import { Contributors } from './contributors';
-import { ICollection, IItem } from './types/GuidedDev';
+import { ICollection, IFileAction, IItem } from './types/GuidedDev';
 
 export class VSCodeEvents implements AppEvents {
   public async performAction(item: IItem, index: number): Promise<any> {
@@ -17,6 +17,9 @@ export class VSCodeEvents implements AppEvents {
           return executeAction.performAction();
         } else if (action instanceof SnippetAction) {
           return vscode.commands.executeCommand("loadCodeSnippet", {contributorId: action.snippet.contributorId, snippetName: action.snippet.snippetName, context: action.snippet.context});
+        } else if (action instanceof FileAction) {
+          let fileAction = (action as IFileAction);
+          return vscode.commands.executeCommand('vscode.open', fileAction.file.uri);
         }
       }
     }

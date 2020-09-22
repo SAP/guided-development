@@ -12,9 +12,10 @@ import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/
 import { IChildLogger } from "@vscode-logging/logger";
 import * as os from "os";
 import { fail } from "assert";
-import { ICollection, IItem } from "./types/GuidedDev";
+import { IItem, ICollection } from "./types/GuidedDev";
+import { IInternalItem } from "./Collection";
 
-describe.skip('guidedDevelopment unit test', () => {
+describe('guidedDevelopment unit test', () => {
     let sandbox: any;
     let fsExtraMock: any;
     let datauriMock: any;
@@ -101,8 +102,10 @@ describe.skip('guidedDevelopment unit test', () => {
     const rpc = new TestRpc();
     const outputChannel = new TestOutputChannel();
     const appEvents = new TestEvents();
-    const uiOptions = {messages: {title: "guidedDev title"}};
     const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {}, [], new Map());
+
+    let itemIds = ["saposs.contrib1.create","saposs.contrib1.open","saposs.contrib2.delete"];
+    let items: Map<String,IInternalItem>;
 
     before(() => {
         sandbox = sinon.createSandbox();
@@ -130,19 +133,22 @@ describe.skip('guidedDevelopment unit test', () => {
 
     it("constructor", () => {
         try {
-            // new GuidedDevelopment(undefined, undefined, undefined, undefined, undefined);
+            new GuidedDevelopment(undefined, appEvents,  outputChannel, testLogger, {}, [], new Map());
             fail("contructor should throw an exception");
         } catch (error) {
             expect(error.message).to.be.equal("rpc must be set");
         }
     });
 
+
+
+
     it("getState", async () => {
         const state = await guidedDevelopment["getState"]();
-        expect(state).to.deep.equal(uiOptions);
+        expect(state).to.deep.equal({});
     });
 
-    describe("receiveIsWebviewReady", () => {
+    describe.skip("onFrontendReady", () => {
         it("flow is successfull", async () => {
             rpcMock.expects("invoke").withArgs("showPrompt").resolves(
                 {actionName: "actionName"},
@@ -153,52 +159,13 @@ describe.skip('guidedDevelopment unit test', () => {
     });
 
     it("toggleOutput", () => {
-        // const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
-        // const res = guidedDevelopmentInstance["toggleOutput"]();
-        // expect(res).to.be.false;
+        const res = guidedDevelopment["toggleOutput"]();
+        expect(res).to.be.false;
     });
 
     it("getErrorInfo", () => {
-        // const guidedDevelopmentInstance: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {});
-        // const errorInfo = "Error Info";
-        // const res = guidedDevelopmentInstance["getErrorInfo"](errorInfo);
-        // expect(res).to.be.equal(errorInfo);
+        const errorInfo = "Error Info";
+        const res = guidedDevelopment["getErrorInfo"](errorInfo);
+        expect(res).to.be.equal(errorInfo);
     });
-
-    describe("onSuccess - onFailure", () => {
-        let doSnippeDoneSpy: any;
-
-        beforeEach(() => {
-            doSnippeDoneSpy = sandbox.spy(appEvents, "doSnippeDone");
-        });
-
-        afterEach(() => {
-            doSnippeDoneSpy.restore();
-        });
-
-        it("onSuccess", () => {
-            // guidedDevelopment["onSuccess"]("testGuidedDevName");
-            expect(doSnippeDoneSpy.calledWith(true, "'testGuidedDevName' guided-development has been created.")).to.be.true;
-        });
-
-        it("onFailure", async () => {
-            // await guidedDevelopment["onFailure"]("testGuidedDevName", "testError");
-            expect(doSnippeDoneSpy.calledWith(false, "testGuidedDevName guided-development failed.\ntestError")).to.be.true;
-        });
-    });
-
-    const guidedDev: any = {
-        getMessages() {
-            return {
-                title: "Create Launch Configuration",
-                description: "Provide details for the launch configuration you want to create."
-            };
-        },
-        getAction() {
-            return {
-                actionButton: "Create"
-            };
-        }
-    };
-
 });

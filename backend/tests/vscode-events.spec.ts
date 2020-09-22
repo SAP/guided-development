@@ -5,6 +5,8 @@ import * as _ from "lodash";
 import * as vscode from "vscode";
 import { VSCodeEvents as VSCodeEvents } from "../src/vscode-events";
 import * as api from "../src/api";
+import { FileAction } from "./actionTypes";
+import { IFileAction } from "./types/GuidedDev";
 
 describe('vscode-events unit test', () => {
     let events: VSCodeEvents;
@@ -23,7 +25,7 @@ describe('vscode-events unit test', () => {
     before(() => {
         sandbox = sinon.createSandbox();
         _.set(vscode, "ProgressLocation.Notification", 15);
-        _.set(vscode, "Uri.file", (path: string) => {
+        _.set(vscode, "Uri.parse", (path: string) => {
             return {
                 fsPath: path
             };
@@ -95,6 +97,24 @@ describe('vscode-events unit test', () => {
             }
             return events.performAction(item, 1);
         });
+        it("File as ActionType", () => { 
+            const uri = vscode.Uri.parse("README");
+            commandsMock.expects("executeCommand").
+                withExactArgs('vscode.open', uri).resolves();
+            const openFileAction: IFileAction = api.default.createFileAction("Open", "", {uri})
+            const item = {
+                id: "open-file",
+                title: "Open File",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: openFileAction,
+                labels: [
+                    {"Project Name": "cap3"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap3"}
+                ]
+            }
+            return events.performAction(item, 1);
+        });
         it("Execute as ActionType", () => {
             expect(executeAction.performAction());
 
@@ -114,6 +134,24 @@ describe('vscode-events unit test', () => {
                 ]
             }
             return events.performAction(item, 1);
+        });
+    });
+    describe("performAction - on failure", () => {
+        it("action or actionType does not exist", () => {
+            commandsMock.expects("executeCommand").never();
+            const commandAction = api.default.createCommandAction("Open", "", {name:"workbench.action.openGlobalSettings"});
+            const item = {
+                id: "open-command",
+                title: "Open Command  - Global Settings",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: commandAction,
+                labels: [
+                    {"Project Name": "cap1"},
+                    {"Project Type": "CAP"},
+                    {"Path": "/home/user/projects/cap1"}
+                ]
+            }
+            return events.performAction(undefined, 1);
         });
     });
 });

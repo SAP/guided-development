@@ -1,5 +1,5 @@
-import { CommandAction, ExecuteAction, SnippetAction } from './actionTypes';
-import { IAction, ICollection, ICommand, ICommandAction, IExecuteAction, IItem, ISnippet, ISnippetAction, ManagerAPI } from './types/GuidedDev';
+import { CommandAction, ExecuteAction, FileAction, SnippetAction } from './actionTypes';
+import { ICollection, ICommand, ICommandAction, IExecuteAction, IFile, IFileAction, IItem, ISnippet, ISnippetAction, ManagerAPI } from './types/GuidedDev';
 
 let _setData: any;
 let _thisArg: any;
@@ -14,11 +14,6 @@ const api: ManagerAPI = {
         if (_setData) {
             _setData.call(_thisArg, extensionId, collections, items);
         }
-    },
-
-    cloneItem: (item: IItem) => {
-        // TODO: implement
-        return JSON.parse(JSON.stringify(item)) as IItem;
     },
 
     createExecuteAction: (name: string, title: string, performAction: () => Thenable<any>): IExecuteAction => {
@@ -43,8 +38,15 @@ const api: ManagerAPI = {
         action.title = title;
         action.snippet = snippet;
         return action;
-    }
+    },
 
+    createFileAction: (name: string, title: string, file: IFile): IFileAction => {
+        const action = new FileAction();
+        action.name = name;
+        action.title = title;
+        action.file = file;
+        return action;
+    }
 }
 
 export default api;

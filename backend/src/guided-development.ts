@@ -86,7 +86,7 @@ export class GuidedDevelopment {
 
   private async onFrontendReady() {
     try {
-      const response: any = await this.rpc.invoke("showCollections", [this.collections]);
+      await this.rpc.invoke("showCollections", [this.collections]);
     } catch (error) {
       this.logError(error);
     }

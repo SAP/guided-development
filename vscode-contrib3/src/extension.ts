@@ -1,5 +1,5 @@
 // import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ICollection, CollectionType, IItem, ManagerAPI, IExecuteAction, ICommandAction, ISnippetAction } from './types/GuidedDev';
+import { ICollection, CollectionType, IItem, ManagerAPI, IExecuteAction, ICommandAction, ISnippetAction, IFileAction } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 
@@ -20,6 +20,7 @@ let cfSelectAction: ICommandAction;
 let cfCreateAction: ICommandAction;
 let cfReloadAction: ICommandAction;
 let cfSetTargetAction: ICommandAction;
+let openReadmeAction: IFileAction;
 
 // const DEFAULT_IMAGE = require("../defaultImage");
 
@@ -32,7 +33,8 @@ function getCollections() {
         type: CollectionType.Scenario,
         itemIds: [
             "saposs.vscode-contrib3.create",
-            "saposs.vscode-contrib3.open-snippet"
+            "saposs.vscode-contrib3.open-snippet",
+            "saposs.vscode-contrib3.open-readme"
         ]
     };
     collections.push(collection);
@@ -92,6 +94,19 @@ function getItems(): Array<IItem> {
         title: "Open Snippet",
         description: "Open Snippet Tool",
         action1: openSnippetAction,
+        labels: [
+            {"Project Name": "cap3"},
+            {"Project Type": "CAP"},
+            {"Path": "/home/user/projects/cap3"}
+        ]
+    };
+    items.push(item);
+
+    item = {
+        id: "open-readme",
+        title: "Open README File",
+        description: "Open README File",
+        action1: openReadmeAction,
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -273,6 +288,10 @@ export async function activate(context: vscode.ExtensionContext) {
 
     cfSetTargetAction = managerAPI.createCommandAction("Set", "", { name: "cf.target.set" });
 
+    openReadmeAction = managerAPI.createFileAction("Open", "", {
+        uri: getFileUriFromWorkspace("README.md")
+    });
+
     managerAPI.setData(EXT_ID, getCollections(), getItems());
 }
 
@@ -284,6 +303,16 @@ function getImage(imagePath: string) :string {
         // image = DEFAULT_IMAGE;
     }
     return image;
+}
+
+function getFileUriFromWorkspace(fileName: string) :vscode.Uri {
+    let outputFolder = _.get(vscode, "workspace.workspaceFolders[0].uri.path");
+    if (!outputFolder || !outputFolder.length) {
+        vscode.window.showErrorMessage("Cannot find folder");
+        return vscode.Uri.parse("");;
+    }
+    outputFolder = outputFolder + '/' + fileName;
+    return vscode.Uri.parse(outputFolder);
 }
 
 
