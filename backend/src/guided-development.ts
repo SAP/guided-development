@@ -58,13 +58,6 @@ export class GuidedDevelopment {
     // TODO - console log: item does not exist
   }
 
-  private getCollection(id: string): IInternalCollection {
-    const collection = this.collections.find((value) => {
-      return value.id === id;
-    });
-    return collection;
-  }
-
   private async performAction(itemFqid: string, index: number) {
     const item: IInternalItem = this.getItem(itemFqid);
     this.appEvents.performAction(item, index);
