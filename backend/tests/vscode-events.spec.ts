@@ -28,6 +28,7 @@ describe('vscode-events unit test', () => {
                 fsPath: path
             };
         });
+        _.set(vscode, "ViewColumn.Two", 2);
         _.set(vscode, "commands.executeCommand", (): any => undefined);
         _.set(vscode, "window.showInformationMessage", () => {return Promise.resolve("");});
         _.set(vscode, "window.showErrorMessage", () => {return Promise.resolve("");});
@@ -104,7 +105,7 @@ describe('vscode-events unit test', () => {
         it("File as ActionType", () => { 
             const uri = vscode.Uri.parse("README");
             commandsMock.expects("executeCommand").
-                withExactArgs('vscode.open', uri).resolves();
+                withExactArgs('vscode.open', uri, vscode.ViewColumn.Two).resolves();
             const item = {
                 id: "open-file",
                 title: "Open File",
