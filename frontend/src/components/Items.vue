@@ -111,6 +111,7 @@ export default {
 .v-application a {
   color:var(--vscode-foreground, #cccccc) !important;
   padding-left: 28px ;
+  padding-bottom: 8px ;
 }
 .v-expansion-panel-content__wrap {
   background-color: var(--vscode-editor-background, #1e1e1e);
