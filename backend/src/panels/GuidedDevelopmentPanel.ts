@@ -13,7 +13,6 @@ import { AbstractWebviewPanel } from './AbstractWebviewPanel';
 import { Contributors } from "../contributors";
 import { IInternalItem, IInternalCollection } from "../Collection";
 
-
 export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public static GUIDED_DEVELOPMENT = "Guided Development";
 
@@ -26,8 +25,8 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
 
-		this.collections = Contributors.getContributors().getCollections();
-		this.items = Contributors.getContributors().getItems();
+		this.collections = Contributors.getInstance().getCollections();
+		this.items = Contributors.getInstance().getItems();
 		if (_.isNil(this.collections)) {
 			return vscode.window.showErrorMessage("Can not find guided-development.");
 		}
@@ -45,6 +44,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 			this.collections,
 			this.items
 		);
+		Contributors.getInstance().registerOnChangedCallback(this.guidedDevelopment, this.guidedDevelopment.setCollections);
 
 		this.initWebviewPanel();
 	}

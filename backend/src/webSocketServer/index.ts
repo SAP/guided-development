@@ -6,10 +6,10 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
-import { ActionType, CollectionType } from "../types/GuidedDev";
+import { CollectionType, ICollection, IItem } from "../types/GuidedDev";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
-// import * as vscode from 'vscode';
+import * as api from "../api";
 
 class GuidedDevelopmentWebSocketServer {
   private rpc: RpcExtensionWebSockets | undefined;
@@ -18,6 +18,7 @@ class GuidedDevelopmentWebSocketServer {
 
   constructor() {
     this.appEvents = new ServerEvents();
+  	api.setSetData(this.appEvents, this.appEvents.setData);
   }
 
   init() {
@@ -40,10 +41,37 @@ class GuidedDevelopmentWebSocketServer {
       this.rpc = new RpcExtensionWebSockets(ws);
       //TODO: Use RPC to send it to the browser log (as a collapsed pannel in Vue)
       const logger: AppLog = new ServerLog(this.rpc);
-      const childLogger = {debug: () => {}, error: () => {}, fatal: () => {}, warn: () => {}, info: () => {}, trace: () => {}, getChildLogger: () => {return {} as IChildLogger;}};
+      const childLogger = { debug: () => { }, error: () => { }, fatal: () => { }, warn: () => { }, info: () => { }, trace: () => { }, getChildLogger: () => { return {} as IChildLogger; } };
       const collections = createCollections();
       const items = createItems(collections);
       this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections, items);
+
+      // demonstrate updating of items (mimics contributors calling the onChange callback)
+      setTimeout(() => {
+        collections[0].itemIds.push("saposs.vscode-contrib1.new");
+
+        const openAction = api.default.createExecuteAction("Open", "", () => {
+          console.log("workbench.action.openGlobalSettings");
+          return Promise.resolve();
+        });
+
+        const item = {
+          id: "new",
+          fqid: "saposs.vscode-contrib1.new",
+          title: "new item",
+          description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+          image: getImage(),
+          action: openAction,
+          labels: [
+            { "Project Name": "cap1" },
+            { "Path": "/home/user/projects/cap1" },
+            { "Project Type": "CAP" },
+          ]
+        };
+
+        (collections[0] as IInternalCollection).items.push(item);
+        this.guidedDevelopment.setCollections(collections);
+      }, 3000);
     });
   }
 }
@@ -54,55 +82,59 @@ function createItems(collections: IInternalCollection[]): Map<string, IInternalI
 }
 
 function createCollections(): IInternalCollection[] {
-	const collections: IInternalCollection[] = [];
+  const openViaExecuteAction = api.default.createExecuteAction("Open", "Open Global Settings (via execute)", () => {
+    console.log("workbench.action.openGlobalSettings");
+    return Promise.resolve();
+  });
+
+  const openViaCommandAction = api.default.createCommandAction("Open", "Open Global Settings (via command)", {
+    name: "workbench.action.openGlobalSettings"
+  });
+
+  const showInfoMessageAction = api.default.createCommandAction("Show", "Show info message", {
+    name: "workbench.action.openGlobalSettings"
+  });
+
+  const snippet1Action = api.default.createSnippetAction("Open", "Open Snippet (via snippet)", {
+    contributorId: "SAPOSS.vscode-snippet-contrib", 
+    snippetName: "snippet_1", 
+    context: {uri: "uri"}                    
+  });
+
+  const collections: IInternalCollection[] = [];
   let collection: IInternalCollection = {
     id: "collection1",
     title: "Demo collection [Scenario]",
     description: "This is a demo collection. It contains a self-contributed item and and items contributed by a different contributor.",
     type: CollectionType.Scenario,
     itemIds: [
-        "SAPOSS.vscode-contrib1.open",
-        "SAPOSS.vscode-contrib2.clone"
+      "saposs.vscode-contrib1.open",
+      "saposs.vscode-contrib2.clone"
     ],
     items: [
       {
         id: "open",
-        fqid: "SAPOSS.vscode-contrib1.open",
+        fqid: "saposs.vscode-contrib1.open",
         title: "Open Global Settings (via execute)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         image: getImage(),
-        action1: {
-          name: "Open",
-          title: "Open Global Settings (via execute)",
-          type: ActionType.Execute,
-          performAction: () => {
-              console.log("workbench.action.openGlobalSettings");
-              return Promise.resolve();
-          },
-        },
+        action1: openViaExecuteAction,
         labels: [
-            {"Project Name": "cap1"},
-            {"Path": "/home/user/projects/cap1"},
-            {"Project Type": "CAP"},
+          { "Project Name": "cap1" },
+          { "Path": "/home/user/projects/cap1" },
+          { "Project Type": "CAP" },
         ]
       },
       {
         id: "open-command",
-        fqid: "SAPOSS.vscode-contrib2.open-command",
+        fqid: "saposs.vscode-contrib2.open-command",
         title: "Open Global Settings (via command)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        action1: {
-          name: "Open",
-          title: "Open Global Settings (via command)",
-          type: ActionType.Command,
-          command: {
-              name: "workbench.action.openGlobalSettings"
-          },
-        },
+        action1: openViaCommandAction,
         labels: [
-          {"Project Name": "cap2"},
-          {"Path": "/home/user/projects/cap2"},
-          {"Project Type": "CAP"},
+          { "Project Name": "cap2" },
+          { "Path": "/home/user/projects/cap2" },
+          { "Project Type": "CAP" },
         ]
       },
       {
@@ -110,16 +142,7 @@ function createCollections(): IInternalCollection[] {
         fqid: "SAPOSS.vscode-contrib3.open-snippet",
         title: "Open Snippet (via snippet)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        action1: {
-          name: "Open",
-          title: "Open Snippet (via snippet)",
-          type: ActionType.Snippet,
-          snippet: {
-            contributorId: "SAPOSS.vscode-snippet-contrib", 
-            snippetName: "snippet_1", 
-            context: {uri: "uri"}                    
-          },
-        },
+        action1: snippet1Action,
         labels: [
           {"Project Name": "cap3"},
           {"Path": "/home/user/projects/cap3"},
@@ -136,50 +159,36 @@ function createCollections(): IInternalCollection[] {
     description: "This is another demo collection.",
     type: CollectionType.Platform,
     itemIds: [
-        "SAPOSS.vscode-contrib2.show-items"
+      "saposs.vscode-contrib2.show-items"
     ],
     items: [
       {
         id: "show-items",
         title: "Show items",
         description: "Shows list of items",
-        fqid: "SAPOSS.vscode-contrib2.show-items",
+        fqid: "saposs.vscode-contrib2.show-items",
         itemIds: [
-          "SAPOSS.vscode-contrib2.open-command"
+          "saposs.vscode-contrib2.open-command"
         ],
         items: [
           {
             id: "open-command",
-            fqid: "SAPOSS.vscode-contrib2.open-command",
+            fqid: "saposs.vscode-contrib2.open-command",
             title: "Open Global Settings (via command)",
             description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-            action1: {
-              name: "Open",
-              title: "Open Global Settings (via command)",
-              type: ActionType.Command,
-              command: {
-                  name: "workbench.action.openGlobalSettings"
-              },
-            },
-            action2: {
-              name: "Show",
-              title: "Show info message",
-              type: ActionType.Command,
-              command: {
-                name: "workbench.action.openGlobalSettings"
-            },
-            },
+            action1: openViaCommandAction,
+            action2: showInfoMessageAction,
             labels: [
-              {"Project Name": "cap2"},
-              {"Path": "/home/user/projects/cap2"},
-              {"Project Type": "CAP"},
+              { "Project Name": "cap2" },
+              { "Path": "/home/user/projects/cap2" },
+              { "Project Type": "CAP" },
             ]
           }
         ],
         labels: [
-            {"Project Name": "cap1"},
-            {"Path": "/home/user/projects/cap1"},
-            {"Project Type": "CAP"},
+          { "Project Name": "cap1" },
+          { "Path": "/home/user/projects/cap1" },
+          { "Project Type": "CAP" },
         ]
       }
     ]
