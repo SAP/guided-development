@@ -5,7 +5,6 @@ import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
 
-
 export class GuidedDevelopment {
 
   private readonly messages: any;
@@ -36,20 +35,27 @@ export class GuidedDevelopment {
     this.messages = messages;
   }
 
-  private getCollection(id: string): IInternalCollection {
-    const collection = this.collections.find((value) => {
-      return value.id === id;
-    });
-    return collection;
+  public setCollections(collections: Array<IInternalCollection>) {
+    this.collections = collections;
+    const response: any = this.rpc.invoke("showCollections", [this.collections]);
   }
 
   private getItem(itemFqid: string): IInternalItem {
-    const item: IInternalItem = this.items.get(itemFqid);
-    if (item) {
-      return item;
-    } else {
-      // TODO - console log: item does not exist
+    for (const collection of this.collections) {
+      for (const item of collection.items) {
+        if (item.fqid === itemFqid) {
+          return item;
+        }
+        if (item.items) {
+          for (const subItem of item.items) {
+            if (subItem.fqid === itemFqid) {
+              return subItem;
+            }  
+          }
+        }
+      }
     }
+    // TODO - console log: item does not exist
   }
 
   private async performAction(itemFqid: string, index: number) {

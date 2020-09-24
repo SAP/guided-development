@@ -4,7 +4,9 @@ import * as sinon from "sinon";
 import * as _ from "lodash";
 import * as vscode from "vscode";
 import { VSCodeEvents as VSCodeEvents } from "../src/vscode-events";
-import { ActionType } from '../src/types/GuidedDev';
+import * as api from "../src/api";
+import { FileAction } from "./actionTypes";
+import { IFileAction } from "./types/GuidedDev";
 
 describe('vscode-events unit test', () => {
     let events: VSCodeEvents;
@@ -58,17 +60,12 @@ describe('vscode-events unit test', () => {
         it("Command as ActionType", () => {
             commandsMock.expects("executeCommand").
                 withExactArgs('workbench.action.openGlobalSettings', undefined).resolves();
+            const commandOpenAction = api.default.createCommandAction("Open", "", {name: "workbench.action.openGlobalSettings"});
             const item = {
                 id: "open-command",
                 title: "Open Command  - Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: {
-                    name: "Open",
-                    type: ActionType.Command,
-                    command: {
-                        name: "workbench.action.openGlobalSettings"
-                    },
-                },
+                action1: commandOpenAction,
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
@@ -80,19 +77,18 @@ describe('vscode-events unit test', () => {
         it("Snippet as ActionType", () => {
             commandsMock.expects("executeCommand").
                 withExactArgs("loadCodeSnippet", {contributorId: "SAPOSS.vscode-snippet-contrib", snippetName: "snippet_1", context: {uri: "uri"}}).resolves();
+
+            const snippetOpenAction = api.default.createSnippetAction("Open", "", {
+                contributorId: "SAPOSS.vscode-snippet-contrib", 
+                snippetName: "snippet_1", 
+                context: {uri: "uri"}                    
+            });
+                
             const item = {
                 id: "open-snippet",
                 title: "Open Snippet  - snippet_1",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: {
-                    name: "Open",
-                    type: ActionType.Snippet,
-                    snippet: {
-                        contributorId: "SAPOSS.vscode-snippet-contrib", 
-                        snippetName: "snippet_1", 
-                        context: {uri: "uri"}                    
-                    },
-                },
+                action1: snippetOpenAction,
                 labels: [
                     {"Project Name": "cap3"},
                     {"Project Type": "CAP"},
@@ -105,17 +101,12 @@ describe('vscode-events unit test', () => {
             const uri = vscode.Uri.parse("README");
             commandsMock.expects("executeCommand").
                 withExactArgs('vscode.open', uri).resolves();
+            const openFileAction: IFileAction = api.default.createFileAction("Open", "", {uri})
             const item = {
                 id: "open-file",
                 title: "Open File",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: {
-                    name: "Open",
-                    type: ActionType.File,
-                    file: {
-                        uri: uri               
-                    },
-                },
+                action1: openFileAction,
                 labels: [
                     {"Project Name": "cap3"},
                     {"Project Type": "CAP"},
@@ -127,17 +118,15 @@ describe('vscode-events unit test', () => {
         it("Execute as ActionType", () => {
             expect(executeAction.performAction());
 
+            const openExecuteAction = api.default.createExecuteAction("Open", "", () => {
+                return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
+            });
+
             const item = {
                 id: "open-execute",
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: {
-                    name: "Open",
-                    type: ActionType.Execute,
-                    performAction: () => {
-                        return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
-                    },
-                },
+                action1: openExecuteAction,
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
@@ -150,17 +139,12 @@ describe('vscode-events unit test', () => {
     describe("performAction - on failure", () => {
         it("action or actionType does not exist", () => {
             commandsMock.expects("executeCommand").never();
+            const commandAction = api.default.createCommandAction("Open", "", {name:"workbench.action.openGlobalSettings"});
             const item = {
                 id: "open-command",
                 title: "Open Command  - Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: {
-                    name: "Open",
-                    type: ActionType.Command,
-                    command: {
-                        name: "workbench.action.openGlobalSettings"
-                    },
-                },
+                action1: commandAction,
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},

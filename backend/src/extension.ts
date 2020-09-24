@@ -4,6 +4,8 @@ import { createExtensionLoggerAndSubscribeToLogSettingsChanges } from "./logger/
 import { Contributors } from './contributors';
 import { GuidedDevelopmentPanel } from './panels/GuidedDevelopmentPanel';
 import { AbstractWebviewPanel } from './panels/AbstractWebviewPanel';
+import { VSCodeEvents } from "./vscode-events";
+import * as api from './api';
 
 let extContext: vscode.ExtensionContext;
 let guidedDevelopmentPanel: GuidedDevelopmentPanel;
@@ -18,12 +20,16 @@ export function activate(context: vscode.ExtensionContext) {
 		return;
 	}
 
-	Contributors.getContributors().init();
+	Contributors.getInstance().init();
 
 	guidedDevelopmentPanel = new GuidedDevelopmentPanel(extContext);
 	registerAndSubscribeCommand("loadGuidedDevelopment", guidedDevelopmentPanel.loadWebviewPanel.bind(guidedDevelopmentPanel));
 	registerAndSubscribeCommand("guidedDevelopment.toggleOutput", guidedDevelopmentPanel.toggleOutput.bind(guidedDevelopmentPanel));
 	registerWebviewPanelSerializer(guidedDevelopmentPanel);
+
+	const vscodeEvents = new VSCodeEvents();
+	api.setSetData(vscodeEvents, vscodeEvents.setData);
+	return api.default;
 }
 
 function registerAndSubscribeCommand(cId: string, cAction: any) {

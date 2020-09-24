@@ -49,12 +49,16 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
+        "--extensionDevelopmentPath=${workspaceFolder}/contrib-cake",
+        "--extensionDevelopmentPath=${workspaceFolder}/contrib-oven",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib1",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib2",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib3",
     ],
       "outFiles": [
-        "${workspaceFolder}/backend/dist/**/*.js",
+        "${workspaceFolder}/backend/out/**/*.js",
+        "${workspaceFolder/contrib-cake/out/**/*.js",
+        "${workspaceFolder/contrib-oven/out/**/*.js",
         "${workspaceFolder/vscode-contrib1/out/**/*.js",
         "${workspaceFolder/vscode-contrib2/out/**/*.js",
         "${workspaceFolder/vscode-contrib3/out/**/*.js"
