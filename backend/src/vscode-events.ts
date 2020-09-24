@@ -19,7 +19,7 @@ export class VSCodeEvents implements AppEvents {
           return vscode.commands.executeCommand("loadCodeSnippet", {contributorId: action.snippet.contributorId, snippetName: action.snippet.snippetName, context: action.snippet.context});
         } else if (action instanceof FileAction) {
           let fileAction = (action as IFileAction);
-          return vscode.commands.executeCommand('vscode.open', fileAction.file.uri);
+          return vscode.commands.executeCommand('vscode.open', fileAction.file.uri, {viewColumn: vscode.ViewColumn.Two});
         }
       }
     }
