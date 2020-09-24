@@ -105,7 +105,7 @@ describe('vscode-events unit test', () => {
         it("File as ActionType", () => { 
             const uri = vscode.Uri.parse("README");
             commandsMock.expects("executeCommand").
-                withExactArgs('vscode.open', uri, vscode.ViewColumn.Two).resolves();
+                withExactArgs('vscode.open', uri, {viewColumn: vscode.ViewColumn.Two}).resolves();
             const item = {
                 id: "open-file",
                 title: "Open File",
