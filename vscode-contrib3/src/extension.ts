@@ -1,5 +1,5 @@
-// import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ICollection, CollectionType, IItem, ManagerAPI, IExecuteAction, ICommandAction, ISnippetAction, IFileAction } from './types/GuidedDev';
+import { ICollection, CollectionType, IItem, ManagerAPI } from './types/GuidedDev';
+import { ICommandAction, IFileAction, ISnippetAction, bas } from "bas-platform";
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 
@@ -235,62 +235,66 @@ function getItems(): Array<IItem> {
     return items;
 }
 
-async function getManagerAPI(): Promise<ManagerAPI> {
-    const manager = vscode.extensions.getExtension('SAPOSS.guided-development');
-    
-    // temporary hack until this is resolved
-    //   https://github.com/eclipse-theia/theia/issues/8463
-    const promise = new Promise<ManagerAPI>((resolve, reject) => {
-        let intervalId: NodeJS.Timeout;
-        if (!(manager?.isActive)) {
-            intervalId = setInterval(() => {
-                if (manager?.isActive) {
-                    clearInterval(intervalId);
-                    resolve(manager?.exports as ManagerAPI);
-                }
-            }, 500);
-        }
-    });
-
-    return promise;
-}
-
 export async function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib3" is now active!');
+    const basAPI: typeof bas = await vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
 
     extensionPath = context.extensionPath;
 
-    const managerAPI = await getManagerAPI();
-
-    createAction = managerAPI.createCommandAction("Create", "", {name: "sapwebide.showProjectTemplates"});
+    createAction = new basAPI.actions.CommandAction();
+    createAction.name = "Create";
+    createAction.command = {name: "sapwebide.showProjectTemplates"};
     
-    openSnippetAction = managerAPI.createSnippetAction("Open", "", {
+    openSnippetAction = new basAPI.actions.SnippetAction();
+    openSnippetAction.name = "Open";
+    openSnippetAction.snippet = {
         contributorId: "SAPOSS.vscode-snippet-contrib", 
         snippetName: "snippet_1", 
         context: {}                    
-    });
+    };
 
-    cfDeleteAction = managerAPI.createCommandAction("Delete", "", { name: "cf.target.delete" });
+    cfDeleteAction = new basAPI.actions.CommandAction();
+    cfDeleteAction.name = "Delete";
+    cfDeleteAction.command = { name: "cf.target.delete" };
 
-    generateAction = managerAPI.createCommandAction("Generate", "", { name: "sapwebide.showProjectTemplates" });
+    generateAction = new basAPI.actions.CommandAction();
+    generateAction.name = "Generate";
+    generateAction.command = { name: "sapwebide.showProjectTemplates" };
     
-    buildAction = managerAPI.createCommandAction("Build", "", { name: "extension.mtaBuildCommand" });
+    buildAction = new basAPI.actions.CommandAction();
+    buildAction.name = "Build";
+    buildAction.command = { name: "extension.mtaBuildCommand" };
 
-    deployAction = managerAPI.createCommandAction("Deploy", "", { name: "extension.mtarDeployCommand" });
+    deployAction = new basAPI.actions.CommandAction();
+    deployAction.name = "Deploy";
+    deployAction.command = { name: "extension.mtarDeployCommand" };
 
-    cfSetAction = managerAPI.createCommandAction("Set", "", { name: "cf.set.orgspace" });
+    cfSetAction = new basAPI.actions.CommandAction();
+    cfSetAction.name = "Set";
+    cfSetAction.command = { name: "cf.set.orgspace" };
 
-    cfSelectAction = managerAPI.createCommandAction("Select", "", { name: "cf.select.space" });
+    cfSelectAction = new basAPI.actions.CommandAction();
+    cfSelectAction.name = "Select";
+    cfSelectAction.command = { name: "cf.select.space" };
 
-    cfCreateAction = managerAPI.createCommandAction("Create", "", { name: "cf.targets.create" });
+    cfCreateAction = new basAPI.actions.CommandAction();
+    cfCreateAction.name = "Create";
+    cfCreateAction.command = { name: "cf.targets.create" };
     
-    cfReloadAction = managerAPI.createCommandAction("Reload", "", { name: "cf.targets.reload" });
+    cfReloadAction = new basAPI.actions.CommandAction();
+    cfReloadAction.name = "Reload";
+    cfReloadAction.command = { name: "cf.targets.reload" };
 
-    cfSetTargetAction = managerAPI.createCommandAction("Set", "", { name: "cf.target.set" });
+    cfSetTargetAction = new basAPI.actions.CommandAction();
+    cfSetTargetAction.name = "Set";
+    cfSetTargetAction.command = { name: "cf.target.set" };
 
-    openReadmeAction = managerAPI.createFileAction("Open", "", {
+    openReadmeAction = new basAPI.actions.FileAction();
+    openReadmeAction.name = "Open";
+    openReadmeAction.file = {
         uri: getFileUriFromWorkspace("README.md")
-    });
+    };
 
     managerAPI.setData(EXT_ID, getCollections(), getItems());
 }

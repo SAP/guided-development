@@ -39,9 +39,12 @@ jobs: # a collection of steps
           path: frontend/coverage
           destination: frontend-coverage
       - run:
+          name: Change Permissions
+          command: sudo chown -R $(whoami) /usr/local
+      - run:
           name: build backend
           working_directory: backend
-          command: npm run backend
+          command: npm run backend-dev
       - run:
           name: prepare frontend artifact
           working_directory: backend

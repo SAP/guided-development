@@ -1,5 +1,5 @@
-// import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { IItem, IAction, ManagerAPI, ICommandAction, IExecuteAction } from './types/GuidedDev';
+import { IItem, ManagerAPI } from './types/GuidedDev';
+import { IExecuteAction } from "bas-platform";
 import * as vscode from 'vscode';
 
 const EXT_ID = "saposs.contrib-oven";
@@ -51,45 +51,26 @@ function getItems(): IItem[] {
     return items;
 }
 
-async function getManagerAPI(): Promise<ManagerAPI> {
-    const manager = vscode.extensions.getExtension('SAPOSS.guided-development');
-    
-    // temporary hack until this is resolved
-    //   https://github.com/eclipse-theia/theia/issues/8463
-    const promise = new Promise<ManagerAPI>((resolve, reject) => {
-        let intervalId: NodeJS.Timeout;
-        if (!(manager?.isActive)) {
-            console.log(`[Extension ${EXT_ID}] Waiting for activation of guided-development manager`);
-            intervalId = setInterval(() => {
-                if (manager?.isActive) {
-                    console.log(`[Extension ${EXT_ID}] Detected activation of guided-development manager`);
-                    clearInterval(intervalId);
-                    resolve(manager?.exports as ManagerAPI);
-                }
-            }, 500);
-        }
-    });
-
-    return promise;
-}
-
 export async function activate(context: vscode.ExtensionContext) {
     console.log(`[Extension ${EXT_ID}] Activated`);
+    const basAPI = await vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
 
-    const managerAPI = await getManagerAPI();
+    bakeAction = new basAPI.actions.ExecuteAction();
+    bakeAction.name = "Bake";
+    bakeAction.performAction = () => vscode.window.showInformationMessage("Baking...");
 
-    bakeAction = managerAPI.createExecuteAction("Bake", "", () => {
-        return vscode.window.showInformationMessage("Baking...");
-    });
-    closeOvenAction = managerAPI.createExecuteAction("Close", "", () => {
-        return vscode.window.showInformationMessage("Oven was closed");
-    });
-    openOvenAction = managerAPI.createExecuteAction("Open", "", () => {
-        return vscode.window.showInformationMessage("Oven is open");
-    });
-    turnOnOvenAction = managerAPI.createExecuteAction("Turn on", "", () => {
-        return vscode.window.showQuickPick(["80°","90°","100°"]);
-    });
+    closeOvenAction = new basAPI.actions.ExecuteAction();
+    closeOvenAction.name = "Close";
+    closeOvenAction.performAction = () => vscode.window.showInformationMessage("Oven was closed");
+
+    openOvenAction = new basAPI.actions.ExecuteAction();
+    openOvenAction.name = "Open";
+    openOvenAction.performAction = () => vscode.window.showInformationMessage("Oven is open");
+
+    turnOnOvenAction = new basAPI.actions.ExecuteAction();
+    turnOnOvenAction.name = "Turn on";
+    turnOnOvenAction.performAction = () => vscode.window.showQuickPick(["80°","90°","100°"]);
 
     items = getItems();
 

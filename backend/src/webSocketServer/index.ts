@@ -6,9 +6,10 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
-import { CollectionType, ICollection, IItem } from "../types/GuidedDev";
+import { CollectionType } from "../types/GuidedDev";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
+import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "bas-platform";
 import * as api from "../api";
 
 class GuidedDevelopmentWebSocketServer {
@@ -50,10 +51,14 @@ class GuidedDevelopmentWebSocketServer {
       setTimeout(() => {
         collections[0].itemIds.push("saposs.vscode-contrib1.new");
 
-        const openAction = api.default.createExecuteAction("Open", "", () => {
-          console.log("workbench.action.openGlobalSettings");
-          return Promise.resolve();
-        });
+        const openAction = {
+          _actionType: "EXECUTE",
+          name: "Open",
+          performAction: () => {
+            console.log("workbench.action.openGlobalSettings");
+            return Promise.resolve();
+          }
+        }
 
         const item = {
           id: "new",
@@ -82,24 +87,44 @@ function createItems(collections: IInternalCollection[]): Map<string, IInternalI
 }
 
 function createCollections(): IInternalCollection[] {
-  const openViaExecuteAction = api.default.createExecuteAction("Open", "Open Global Settings (via execute)", () => {
+  const openViaExecuteAction: IExecuteAction = {
+    _actionType: ActionType.Execute,
+    name: "Open",
+    title: "Open Global Settings (via execute)",
+    performAction: () => {
     console.log("workbench.action.openGlobalSettings");
     return Promise.resolve();
-  });
+  }
+}
 
-  const openViaCommandAction = api.default.createCommandAction("Open", "Open Global Settings (via command)", {
-    name: "workbench.action.openGlobalSettings"
-  });
+  const openViaCommandAction: ICommandAction = {
+    _actionType: ActionType.Command,
+    name: "Open",
+    title: "Open Global Settings (via command)",
+    command: {
+      name: "workbench.action.openGlobalSettings"
+    }
+  };
 
-  const showInfoMessageAction = api.default.createCommandAction("Show", "Show info message", {
-    name: "workbench.action.openGlobalSettings"
-  });
+  const showInfoMessageAction: ICommandAction = {
+    _actionType: ActionType.Command,
+    name: "Show",
+    title: "Show info message",
+    command: {
+      name: "workbench.action.openGlobalSettings"
+    }
+  };
 
-  const snippet1Action = api.default.createSnippetAction("Open", "Open Snippet (via snippet)", {
-    contributorId: "SAPOSS.vscode-snippet-contrib", 
-    snippetName: "snippet_1", 
-    context: {uri: "uri"}                    
-  });
+  const snippet1Action: ISnippetAction = {
+    _actionType: ActionType.Snippet,
+    name: "Open",
+    title: "Open Snippet (via snippet)",
+    snippet: {
+      contributorId: "SAPOSS.vscode-snippet-contrib", 
+      snippetName: "snippet_1", 
+      context: {uri: "uri"}                    
+    }
+  }
 
   const collections: IInternalCollection[] = [];
   let collection: IInternalCollection = {

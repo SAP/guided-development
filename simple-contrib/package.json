@@ -1,0 +1,38 @@
+{
+	"name": "simple-contrib",
+	"displayName": "simple-contrib",
+	"description": "",
+	"version": "0.0.1",
+	"publisher": "SAPOSS",
+	"engines": {
+		"vscode": "^1.44.2"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/SAP/guided-development",
+		"directory": "simple-contrib"
+	},
+	"categories": [
+		"Other"
+	],
+	"main": "./out/extension.js",
+	"activationEvents": [
+		"*"
+	],
+	"BASContributes": {
+		"guided-development": {}
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"watch": "tsc -watch -p ./"
+	},
+	"devDependencies": {
+		"@types/node": "^12.11.7",
+		"@types/vscode": "^1.40.0",
+		"typescript": "^3.9.7"
+	},
+	"extensionDependencies": [
+		"SAPOSS.bas-platform"
+	]
+}

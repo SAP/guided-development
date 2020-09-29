@@ -30,6 +30,20 @@ To test run the framework you only need to build and install the backend package
     npm run backend
     npm run frontend
     ```
+
+#### Temporarily
+In folder `bas-platform`, perform `npm link`.
+
+For each of the following folders, perform `npm link bas-platform`:
+* `backend`
+* `contrib-cake`
+* `contrib-oven`
+* `vscode-contrib1`
+* `vscode-contrib2`
+* `vscode-contrib3`
+* `sample-action-client`
+* `simple-contrib`
+
 ### Usage & Development
 #### Run the dev mode
 Dev mode allows you to run the framework in the browser, using vue cli for fast development cycles, and easy debug tools.
@@ -47,7 +61,7 @@ To run it do the following:
 
 #### Run the VSCode extension
 * Start VSCode on your local machine, and click on open workspace. Select this repo folder.
-* On the debug panel choose "Run Extensions", and click on the "Run" button.
+* On the debug panel choose **Run Guided Development Extensions**, and click on the **Run** button.
 
 #### Advanced scenarios
 To develop and contribute you can build and install each package separately. Instruction on each package in the dedicated readme.md file.

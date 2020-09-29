@@ -97,6 +97,7 @@
 		}
 	},
 	"scripts": {
+		"backend-dev": "cd ../bas-platform && npm i && npm run compile && npm link && cd ../backend && npm i && npm link bas-platform && npm run compile",
 		"backend": "npm i && npm run compile",
 		"types": "cd ../types && npm i && npm run compile",
 		"frontend": "npm run frontend:install && npm run frontend:build && npm run frontend:copy",
@@ -158,5 +159,8 @@
 		"vscode": "^1.1.37",
 		"webpack": "^4.43.0",
 		"webpack-cli": "^3.3.11"
-	}
+	},
+	"extensionDependencies": [
+		"SAPOSS.bas-platform"
+	]
 }

@@ -35,7 +35,7 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 
 		const rpc = new RpcExtension(this.webViewPanel.webview);
 		this.outputChannel = new OutputChannelLog(this.messages.channelName);
-		const vscodeEvents: AppEvents = new VSCodeEvents();
+		const vscodeEvents: AppEvents = VSCodeEvents.getInstance();
 		this.guidedDevelopment = new GuidedDevelopment(rpc, 
 			vscodeEvents, 
 			this.outputChannel, 

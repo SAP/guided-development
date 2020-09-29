@@ -1,7 +1,7 @@
-// import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ICollection, CollectionType, IItem, ManagerAPI, IExecuteAction, ICommandAction } from './types/GuidedDev';
+import { ICollection, CollectionType, IItem, ManagerAPI } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
+import { ICommandAction, IExecuteAction } from 'bas-platform';
 
 const datauri = require("datauri");
 
@@ -111,50 +111,44 @@ function getItems(): Array<IItem> {
     return items;
 }
 
-async function getManagerAPI(): Promise<ManagerAPI> {
-    const manager = vscode.extensions.getExtension('SAPOSS.guided-development');
-    
-    // temporary hack until this is resolved
-    //   https://github.com/eclipse-theia/theia/issues/8463
-    const promise = new Promise<ManagerAPI>((resolve, reject) => {
-        let intervalId: NodeJS.Timeout;
-        if (!(manager?.isActive)) {
-            intervalId = setInterval(() => {
-                if (manager?.isActive) {
-                    clearInterval(intervalId);
-                    resolve(manager?.exports as ManagerAPI);
-                }
-            }, 500);
-        }
-    });
-
-    return promise;
-}
-
 export async function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib1" is now active!');
+    const basAPI = await vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
 
     extensionPath = context.extensionPath;
 
-    const managerAPI = await getManagerAPI();
-
-    openSettingsAction = managerAPI.createExecuteAction("Open", "Open Settings", () => {
+    openSettingsAction = new basAPI.actions.ExecuteAction();
+    openSettingsAction.name = "Open"
+    openSettingsAction.title = "Open Settings";
+    openSettingsAction.performAction = () => {
         return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
-    });
+    };
 
-    showMessageAction = managerAPI.createExecuteAction("Show", "Show Message", () => {
+    showMessageAction = new basAPI.actions.ExecuteAction();
+    showMessageAction.name = "Show";
+    showMessageAction.title = "Show Message";
+    showMessageAction.performAction = () => {
         return vscode.window.showInformationMessage("Hello from Open Global Settings item");
-    });
+    };
 
-    cloneAction = managerAPI.createExecuteAction("Clone", "Cloning Repository", () => {
+    cloneAction = new basAPI.actions.ExecuteAction();
+    cloneAction.name = "Clone"
+    cloneAction.title = "Cloning Repository";
+    cloneAction.performAction = () => {
         return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
-    });
+    };
 
-    openGlobalSettingsAction = managerAPI.createCommandAction("Open", "", {name: "workbench.action.openGlobalSettings"});
+    openGlobalSettingsAction = new basAPI.actions.CommandAction();
+    openGlobalSettingsAction.name = "Open"
+    openGlobalSettingsAction.command = {name: "workbench.action.openGlobalSettings"};
 
-    showInfoMessageAction = managerAPI.createExecuteAction("Show", "Show info message", () => {
+    showInfoMessageAction = new basAPI.actions.ExecuteAction();
+    showInfoMessageAction.name = "Show";
+    showInfoMessageAction.title = "Show info message";
+    showInfoMessageAction.performAction = () => {
         return vscode.window.showInformationMessage("Hello from guided development item");
-    });
+    };
     
     managerAPI.setData(EXT_ID, getCollections(), getItems());
 }
@@ -171,10 +165,3 @@ function getImage(imagePath: string) :string {
 
 
 export function deactivate() {}
-
-// OPEN ISSUES:
-//   Collection that reference items from other contributors:
-//      Are those items necessarily not bound to a specific project?
-//      Does that mean they are static?
-//      No labels?
-//      Constant item IDs?

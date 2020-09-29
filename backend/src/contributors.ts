@@ -63,8 +63,9 @@ export class Contributors {
     }
 
     public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
-        this.addCollections(extensionId, collections as IInternalCollection[]);
-        this.addItems(extensionId, items);
+        const extensionIdLower: string = extensionId.toLocaleLowerCase();
+        this.addCollections(extensionIdLower, collections as IInternalCollection[]);
+        this.addItems(extensionIdLower, items);
         this.initCollectionItems();
         if (this.onChangedCallback) {
             this.onChangedCallback.call(this.onChangedCallbackThis, this.getCollections());
