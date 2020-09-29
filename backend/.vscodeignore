@@ -6,3 +6,4 @@
 !dist/media
 !dist/*.js
 !resources
+!out/src/types/GuidedDev.d.ts

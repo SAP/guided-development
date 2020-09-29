@@ -35,6 +35,7 @@
 		"onWebviewPanel:GuidedDevelopment"
 	],
 	"main": "./dist/extension",
+	"types": "./out/src/types/GuidedDev",
 	"contributes": {
 		"commands": [
 			{
