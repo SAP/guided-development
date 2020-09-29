@@ -60,7 +60,10 @@ class GuidedDevelopmentWebSocketServer {
           fqid: "saposs.vscode-contrib1.new",
           title: "new item",
           description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-          image: getImage(),
+          image: {
+            image: getImage(),
+            note: "image note of new item"
+          },
           action: openAction,
           labels: [
             { "Project Name": "cap1" },
@@ -117,7 +120,10 @@ function createCollections(): IInternalCollection[] {
         fqid: "saposs.vscode-contrib1.open",
         title: "Open Global Settings (via execute)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        image: getImage(),
+        image: {
+          image: getImage(),
+          note: "image note of new item"
+        },
         action1: openViaExecuteAction,
         labels: [
           { "Project Name": "cap1" },

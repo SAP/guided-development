@@ -18,12 +18,17 @@ export interface IItem {
     id: string;
     title: string;
     description: string;
-    image?: string;
+    image?: IImage;
     action1?: IExecuteAction | ICommandAction | ISnippetAction | IFileAction;
     action2?: IExecuteAction | ICommandAction | ISnippetAction | IFileAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
+}
+
+export interface IImage {
+    image: string;
+    note: string;
 }
 
 export interface IAction {
