@@ -5,7 +5,7 @@ import { Contributors } from './contributors';
 import { GuidedDevelopmentPanel } from './panels/GuidedDevelopmentPanel';
 import { AbstractWebviewPanel } from './panels/AbstractWebviewPanel';
 import { VSCodeEvents } from "./vscode-events";
-import { bas } from '@sap-devx/bas-platform';
+import { bas } from 'bas-platform';
 import { setSetData, managerApi } from "./api";
 
 let extContext: vscode.ExtensionContext;
@@ -29,7 +29,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	registerWebviewPanelSerializer(guidedDevelopmentPanel);
 
 	const vscodeEvents = VSCodeEvents.getInstance();
-	const basAPI: typeof bas = await vscode.extensions.getExtension("SAPOSS.@sap-devx/bas-platform")?.exports;
+	const basAPI: typeof bas = await vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
 	vscodeEvents.setBasAPI(basAPI);
 
 	setSetData(vscodeEvents, vscodeEvents.setData);

@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
-import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development';
-import { bas, ICommandAction } from '@sap-devx/bas-platform';
+import { ICollection, CollectionType, IItem, ManagerAPI } from 'guided-development';
+import { bas, ICommandAction } from 'bas-platform';
 
 const EXT_ID = "SAPOSS.simple-contrib";
 
 export async function activate(context: vscode.ExtensionContext) {
     /**
-     * The `@sap-devx/bas-platform` extension provides an API for various platform capabilities, including
+     * The `bas-platform` extension provides an API for various platform capabilities, including
      * the construction of **actions**.
      * 
-     * The `@sap-devx/bas-platform` extension is guaranteed to be activated at this stage if you specify it in the `extensionDependencies`
+     * The `bas-platform` extension is guaranteed to be activated at this stage if you specify it in the `extensionDependencies`
      * section in your `package.json` file.
      * 
      * Also, make sure you include this entry in your `pacakge.json`:
@@ -22,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
      * This indicates to the guided-development manager extension to activate your extension
      * when the user executes the Guided Development command.
      */
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.@sap-devx/bas-platform")?.exports;
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
 
     /**
      * An action of type **command** enables you to specify any vscode command
@@ -61,7 +61,7 @@ export async function activate(context: vscode.ExtensionContext) {
      * We wait for the guided-development manager to get activated before we send it our
      * collections and items.
      */
-    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.@sap-devx/guided-development").then((managerAPI) => {
+    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
         managerAPI.setData(EXT_ID, [myCollection], [myItem]);        
     });
 }

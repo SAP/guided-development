@@ -1,5 +1,5 @@
 {
-	"name": "@sap-devx/guided-development",
+	"name": "guided-development",
 	"version": "0.0.2",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
@@ -98,7 +98,7 @@
 		}
 	},
 	"scripts": {
-		"backend-dev": "cd ../bas-platform && npm i && npm run compile && npm link && cd ../backend && npm i && npm link @sap-devx/bas-platform && npm run compile",
+		"backend-dev": "cd ../bas-platform && npm i && npm run compile && npm link && cd ../backend && npm i && npm link bas-platform && npm run compile",
 		"backend": "npm i && npm run compile",
 		"types": "cd ../types && npm i && npm run compile",
 		"frontend": "npm run frontend:install && npm run frontend:build && npm run frontend:copy",
@@ -162,6 +162,6 @@
 		"webpack-cli": "^3.3.11"
 	},
 	"extensionDependencies": [
-		"SAPOSS.@sap-devx/bas-platform"
+		"SAPOSS.bas-platform"
 	]
 }

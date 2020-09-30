@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development';
-import { bas, ICommandAction } from "@sap-devx/bas-platform";
+import { ICollection, CollectionType, IItem, ManagerAPI } from 'guided-development';
+import { bas, ICommandAction } from "bas-platform";
 
 const EXT_ID = "saposs.vscode-contrib2";
 
@@ -56,14 +56,14 @@ function getItems(): IItem[] {
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib2" is now active!');
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.@sap-devx/bas-platform")?.exports;
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
 
     cfLoginAction = new basAPI.actions.CommandAction();
     cfLoginAction.name = "Login";
     cfLoginAction.title = "Cloud Foundry Login";
     cfLoginAction.command = {name: "cf.login"};
 
-    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.@sap-devx/guided-development").then((managerAPI) => {
+    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
         managerAPI.setData(EXT_ID, getCollections(), getItems());
     });
 

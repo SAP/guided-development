@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development';
-import { ICommandAction, IFileAction, ISnippetAction, bas } from "@sap-devx/bas-platform";
+import { ICollection, CollectionType, IItem, ManagerAPI } from 'guided-development';
+import { ICommandAction, IFileAction, ISnippetAction, bas } from "bas-platform";
 
 const datauri = require("datauri");
 var path = require('path');
@@ -237,7 +237,7 @@ function getItems(): Array<IItem> {
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib3" is now active!');
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.@sap-devx/bas-platform")?.exports;
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
 
     extensionPath = context.extensionPath;
 
@@ -295,7 +295,7 @@ export async function activate(context: vscode.ExtensionContext) {
         uri: getFileUriFromWorkspace("README.md")
     };
 
-    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.@sap-devx/guided-development").then((managerAPI) => {
+    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
         managerAPI.setData(EXT_ID, getCollections(), getItems());
     });
 }

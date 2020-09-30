@@ -5,10 +5,10 @@ import * as _ from "lodash";
 import * as vscode from "vscode";
 import { VSCodeEvents } from "../src/vscode-events";
 import * as api from "../src/api";
-import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction } from "@sap-devx/bas-platform";
+import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction } from "bas-platform";
 import { open } from "fs";
-import { CommandAction, ExecuteAction, FileAction, SnippetAction } from "@sap-devx/bas-platform/out/actions/impl";
-import { performAction } from "@sap-devx/bas-platform/out/actions/client";
+import { CommandAction, ExecuteAction, FileAction, SnippetAction } from "bas-platform/out/actions/impl";
+import { performAction } from "bas-platform/out/actions/client";
 
 const mockBasAPI: typeof bas = {
     getExtensionAPI: <T>(extensionId: string): Promise<T> => {

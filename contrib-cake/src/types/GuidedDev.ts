@@ -1,4 +1,4 @@
-import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform";
+import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "bas-platform";
 
 export interface ICollection {
     id: string;

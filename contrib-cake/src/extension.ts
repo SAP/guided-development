@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as _ from 'lodash';
-import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development';
-import { bas, IExecuteAction } from '@sap-devx/bas-platform';
+import { ICollection, CollectionType, IItem, ManagerAPI } from 'guided-development';
+import { bas, IExecuteAction } from 'bas-platform';
 
 const datauri = require("datauri");
 
@@ -175,8 +175,8 @@ function removeBakeCollection(dirPath: string): void {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.@sap-devx/bas-platform")?.exports;
-    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.@sap-devx/guided-development");
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
 
     extensionPath = context.extensionPath;
     console.log(`[Extension ${EXT_ID}] Activated`);

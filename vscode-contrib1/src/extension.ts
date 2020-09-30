@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development';
-import { bas, ICommandAction, IExecuteAction } from '@sap-devx/bas-platform';
+import { ICollection, CollectionType, IItem, ManagerAPI } from 'guided-development';
+import { bas, ICommandAction, IExecuteAction } from 'bas-platform';
 
 const datauri = require("datauri");
 
@@ -113,7 +113,7 @@ function getItems(): Array<IItem> {
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib1" is now active!');
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.@sap-devx/bas-platform")?.exports;
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
 
     extensionPath = context.extensionPath;
 
@@ -149,7 +149,7 @@ export async function activate(context: vscode.ExtensionContext) {
         return vscode.window.showInformationMessage("Hello from guided development item");
     };
     
-    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.@sap-devx/guided-development").then((managerAPI) => {
+    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
         managerAPI.setData(EXT_ID, getCollections(), getItems());
     });
 }
