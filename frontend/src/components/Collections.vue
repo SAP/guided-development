@@ -15,8 +15,8 @@
     <v-row>
       <v-col cols="12">
         <div v-for="(collection, index) in collections" :key="index"><br>
-          <v-card-title class="prompt-title" style="margin-bottom:8px;font-size:20px">{{collection.title}}</v-card-title>
-          <v-card-subtitle class="prompt-subtitle" style="margin-left:-16px;font-size:14px">{{collection.description}}</v-card-subtitle>
+          <v-card-title class="prompt-title">{{collection.title}}</v-card-title>
+          <v-card-subtitle class="prompt-subtitle">{{collection.description}}</v-card-subtitle>
           <Items
             v-if="collection.items"
             :items="collection.items"
@@ -106,5 +106,13 @@ export default {
 .container {
   margin-right: 0px !important;
   margin-left: 0px !important;
+}
+.v-card__title {
+  margin-bottom:8px;
+  font-size:20px
+}
+.v-card__subtitle {
+  margin-left:-16px;
+  font-size:14px;
 }
 </style>
