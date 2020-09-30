@@ -10,7 +10,7 @@
       loader="spinner"
     ></loading>
     <div>
-      <v-card-title style="margin-bottom:16px;font-size:32px">{{messages.title}}</v-card-title>
+      <v-card-title>{{messages.title}}</v-card-title>
       <v-card-subtitle>{{messages.description}}</v-card-subtitle>
     </div>
     <Collections
@@ -141,6 +141,8 @@ export default {
 }
 .v-card__title {
   color: var(--vscode-foreground, #cccccc);
+  margin-bottom:16px;
+  font-size:32px;
 }
 .vld-parent {
   overflow-y: auto;
