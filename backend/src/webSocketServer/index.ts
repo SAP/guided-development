@@ -9,7 +9,7 @@ import { AppEvents } from '../app-events';
 import { CollectionType } from "../types/GuidedDev";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
-import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "bas-platform";
+import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/bas-platform";
 import * as api from "../api";
 
 class GuidedDevelopmentWebSocketServer {

@@ -1,7 +1,7 @@
 import { AppEvents } from "./app-events";
 import { Contributors } from './contributors';
 import { ICollection, IItem } from './types/GuidedDev';
-import { bas } from "bas-platform"
+import { bas } from "@sap-devx/bas-platform"
 
 export class VSCodeEvents implements AppEvents {
   basAPI: any;

@@ -1,5 +1,4 @@
 import { ICollection, IItem, ManagerAPI } from './types/GuidedDev';
-export * from './types/GuidedDev';
 
 let _setData: any;
 let _thisArg: any;
@@ -14,5 +13,5 @@ export const managerApi: ManagerAPI = {
         if (_setData) {
             _setData.call(_thisArg, extensionId, collections, items);
         }
-    },
+    }
 }

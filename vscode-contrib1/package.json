@@ -53,6 +53,6 @@
 		"vscode-test": "^1.2.2"
 	},
 	"extensionDependencies": [
-		"SAPOSS.bas-platform"
+		"SAPOSS.@sap-devx/bas-platform"
 	]
 }

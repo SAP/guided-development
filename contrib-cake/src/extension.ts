@@ -1,13 +1,8 @@
-// TODO: activation event * (required for theia) means that when this extension is activated, it's 
-// possible that the manager extension is not yet activated. In this case, we need to time sending the data
-// to the manager. Perhaps the solution is to have this extension (and all contributing extensions) activate
-// the manager
-
-import { ICollection, CollectionType, IItem, ManagerAPI } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as _ from 'lodash';
-import { IExecuteAction } from 'bas-platform';
+import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development';
+import { bas, IExecuteAction } from '@sap-devx/bas-platform';
 
 const datauri = require("datauri");
 
@@ -180,8 +175,8 @@ function removeBakeCollection(dirPath: string): void {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-    const basAPI = await vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
-    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.@sap-devx/bas-platform")?.exports;
+    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.@sap-devx/guided-development");
 
     extensionPath = context.extensionPath;
     console.log(`[Extension ${EXT_ID}] Activated`);

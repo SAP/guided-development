@@ -1,7 +1,7 @@
 {
-	"name": "bas-platform",
-	"displayName": "Action Broker",
-	"description": "",
+	"name": "@sap-devx/bas-platform",
+	"displayName": "BAS Platform Extension",
+	"description": "SAP Business Application Studio platform extension",
 	"version": "0.0.1",
 	"publisher": "SAPOSS",
 	"engines": {
@@ -43,5 +43,6 @@
 		"typescript": "^3.9.7",
 		"vsce": "^1.69.0",
 		"vscode-test": "^1.2.2"
-	}
+	},
+	"dependencies": {}
 }

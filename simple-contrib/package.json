@@ -33,6 +33,6 @@
 		"typescript": "^3.9.7"
 	},
 	"extensionDependencies": [
-		"SAPOSS.bas-platform"
+		"SAPOSS.@sap-devx/bas-platform"
 	]
 }

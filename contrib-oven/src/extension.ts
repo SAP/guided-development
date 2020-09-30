@@ -1,6 +1,6 @@
-import { IItem, ManagerAPI } from './types/GuidedDev';
-import { IExecuteAction } from "bas-platform";
 import * as vscode from 'vscode';
+import { IItem, ManagerAPI } from '@sap-devx/guided-development';
+import { bas, IExecuteAction } from "@sap-devx/bas-platform";
 
 const EXT_ID = "saposs.contrib-oven";
 
@@ -53,8 +53,7 @@ function getItems(): IItem[] {
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log(`[Extension ${EXT_ID}] Activated`);
-    const basAPI = await vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
-    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.@sap-devx/bas-platform")?.exports;
 
     bakeAction = new basAPI.actions.ExecuteAction();
     bakeAction.name = "Bake";
@@ -74,7 +73,9 @@ export async function activate(context: vscode.ExtensionContext) {
 
     items = getItems();
 
-    managerAPI.setData(EXT_ID, [], items);
+    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.@sap-devx/guided-development").then((managerAPI) => {
+        managerAPI.setData(EXT_ID, [], items);
+    });
 }
 
 export function deactivate() { }
