@@ -144,6 +144,9 @@ export default {
   margin-bottom:16px;
   font-size:32px;
 }
+.v-card__subtitle {
+  margin-left:4px;
+}
 .vld-parent {
   overflow-y: auto;
   margin: 0px;
