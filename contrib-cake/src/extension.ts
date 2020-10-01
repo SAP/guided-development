@@ -83,7 +83,7 @@ function getItems(): Array<IItem> {
                 clonedItem.labels = [
                     { "Project Name": name },
                     { "Project Type": "Baked Cake" },
-                    { "Path": dirname }
+                    { "Project Path": dirname }
                 ]
         
                 items.push(clonedItem);

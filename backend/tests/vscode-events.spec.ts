@@ -70,7 +70,7 @@ describe('vscode-events unit test', () => {
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
-                    {"Path": "/home/user/projects/cap1"}
+                    {"Project Path": "/home/user/projects/cap1"}
                 ]
             }
             return events.performAction(item, 1);
@@ -93,7 +93,7 @@ describe('vscode-events unit test', () => {
                 labels: [
                     {"Project Name": "cap3"},
                     {"Project Type": "CAP"},
-                    {"Path": "/home/user/projects/cap3"}
+                    {"Project Path": "/home/user/projects/cap3"}
                 ]
             }
             return events.performAction(item, 1);
@@ -111,7 +111,7 @@ describe('vscode-events unit test', () => {
                 labels: [
                     {"Project Name": "cap3"},
                     {"Project Type": "CAP"},
-                    {"Path": "/home/user/projects/cap3"}
+                    {"Project Path": "/home/user/projects/cap3"}
                 ]
             }
             return events.performAction(item, 1);
@@ -131,7 +131,7 @@ describe('vscode-events unit test', () => {
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
-                    {"Path": "/home/user/projects/cap1"}
+                    {"Project Path": "/home/user/projects/cap1"}
                 ]
             }
             return events.performAction(item, 1);
@@ -149,7 +149,7 @@ describe('vscode-events unit test', () => {
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
-                    {"Path": "/home/user/projects/cap1"}
+                    {"Project Path": "/home/user/projects/cap1"}
                 ]
             }
             return events.performAction(undefined, 1);

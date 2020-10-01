@@ -67,7 +67,7 @@ class GuidedDevelopmentWebSocketServer {
           action: openAction,
           labels: [
             { "Project Name": "cap1" },
-            { "Path": "/home/user/projects/cap1" },
+            { "Project Path": "/home/user/projects/cap1" },
             { "Project Type": "CAP" },
           ]
         };
@@ -127,7 +127,7 @@ function createCollections(): IInternalCollection[] {
         action1: openViaExecuteAction,
         labels: [
           { "Project Name": "cap1" },
-          { "Path": "/home/user/projects/cap1" },
+          { "Project Path": "/home/user/projects/cap1" },
           { "Project Type": "CAP" },
         ]
       },
@@ -139,7 +139,7 @@ function createCollections(): IInternalCollection[] {
         action1: openViaCommandAction,
         labels: [
           { "Project Name": "cap2" },
-          { "Path": "/home/user/projects/cap2" },
+          { "Project Path": "/home/user/projects/cap2" },
           { "Project Type": "CAP" },
         ]
       },
@@ -151,7 +151,7 @@ function createCollections(): IInternalCollection[] {
         action1: snippet1Action,
         labels: [
           {"Project Name": "cap3"},
-          {"Path": "/home/user/projects/cap3"},
+          {"Project Path": "/home/user/projects/cap3"},
           {"Project Type": "CAP"},
         ]
       }
@@ -186,14 +186,14 @@ function createCollections(): IInternalCollection[] {
             action2: showInfoMessageAction,
             labels: [
               { "Project Name": "cap2" },
-              { "Path": "/home/user/projects/cap2" },
+              { "Project Path": "/home/user/projects/cap2" },
               { "Project Type": "CAP" },
             ]
           }
         ],
         labels: [
           { "Project Name": "cap1" },
-          { "Path": "/home/user/projects/cap1" },
+          { "Project Path": "/home/user/projects/cap1" },
           { "Project Type": "CAP" },
         ]
       }
