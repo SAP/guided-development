@@ -1,13 +1,13 @@
 <template>
   <div id="items-component">
-    <v-expansion-panels dark>
+    <v-expansion-panels dark focusable>
       <template v-for="(item, index) in items">
         <v-expansion-panel v-if="isFiltered(item.fqid)" :key="index">
           <v-expansion-panel-header class="pa-5"><a style="font-size:14px">{{item.title}}</a></v-expansion-panel-header>
-          <v-expansion-panel-content style="padding-left:20px">
+          <v-expansion-panel-content class="headline">
             <v-container>
               <v-row>
-                <v-col cols="12" sm="6" md="8">
+                <v-col cols="12" sm="6" md="8" style="margin-left:20px">
                   <v-card-text class="pa-0 ma-0" style="font-size:12px">{{item.description}}</v-card-text>
                   <v-card-text class="pa-0 ma-0" style="font-size:12px">Item ID: {{item.fqid}}</v-card-text>
                   <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="item.labels">Labels:</v-card-text>
@@ -15,8 +15,8 @@
                     <v-card-text class="pa-0 ma-0" style="font-size:12px;text-indent:40px" v-for="(value, key) in label" :key="key">{{key}}: {{value}}</v-card-text>
                   </v-card-text>
                 </v-col>
-                <v-col cols="6" md="4"> 
-                  <v-img v-if="item.image" style="cursor:pointer" :src="item.image.image" max-width="50%" @click="imageDialog = true">
+                <v-col cols="6" md="3">
+                  <v-img v-if="item.image" style="cursor:pointer" :src="item.image.image" max-width="80%" @click="imageDialog = true">
                     <v-icon v-if="item.image" style="position:absolute;bottom:0px;right:0px" @click="imageDialog = true">search</v-icon>
                   </v-img>
                   <v-card-text v-if="item.image" align="left" class="mt-4 pb-0" style="font-size:14px;padding-left:0px"><b>Note</b></v-card-text>
@@ -31,7 +31,7 @@
                 </v-col>
               </v-row>
               <v-row>
-                <v-col>
+                <v-col style="margin-left:20px">
                   <Items
                       v-if="item.items"
                       :items="item.items"
@@ -110,13 +110,19 @@ export default {
   background-color: var(--vscode-editor-background, #1e1e1e);
   text-transform: none;
 }
+button.v-expansion-panel-header--active {
+  background-color: var(--vscode-list-hoverBackground,#2a2d2e) !important;
+}
+.v-expansion-panel-header--active:before {
+  opacity: 0 !important;
+}
 .v-application a {
   color:var(--vscode-foreground, #cccccc) !important;
   padding-left: 28px ;
   padding-bottom: 8px ;
 }
 .v-expansion-panel-content__wrap {
-  background-color: var(--vscode-editor-background, #1e1e1e);
+  background-color: var(--vscode-list-hoverBackground,#2a2d2e);
   color: var(--vscode-foreground, #cccccc);
   text-transform: none;
 }
