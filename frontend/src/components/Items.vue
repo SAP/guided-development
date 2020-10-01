@@ -1,6 +1,6 @@
 <template>
   <div id="items-component">
-    <v-expansion-panels dark focusable>
+    <v-expansion-panels dark focusable multiple>
       <template v-for="(item, index) in items">
         <v-expansion-panel v-if="isFiltered(item.fqid)" :key="index">
           <v-expansion-panel-header class="pa-5"><a style="font-size:14px">{{item.title}}</a></v-expansion-panel-header>
