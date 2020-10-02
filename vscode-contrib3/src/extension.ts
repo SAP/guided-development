@@ -79,7 +79,10 @@ function getItems(): Array<IItem> {
         id: "create",
         title: "Create project from template",
         description: "Create new project from template.",
-        image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
+        image: {
+            image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
+            note: "image note of Create project from template"
+        },
         action1: createAction,
         labels: [
             {"Project Name": "cap1"},

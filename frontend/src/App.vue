@@ -10,7 +10,8 @@
       loader="spinner"
     ></loading>
     <div>
-      <v-card-title>{{messages.title}}</v-card-title>
+      <v-card-title style="margin-bottom:16px;font-size:32px">{{messages.title}}</v-card-title>
+      <v-card-subtitle>{{messages.description}}</v-card-subtitle>
     </div>
     <Collections
       v-if="collections"
