@@ -31,25 +31,6 @@ To test run the framework you only need to build and install the backend package
     npm run frontend
     ```
 
-#### Temporarily
-... until `bas-platform` and `guided-development` packages are published to npm:
-
-In folder `bas-platform`, perform `npm link`.
-
-In folder `backend`, perform `npm link`.
-
-For each of the following folders, perform `npm link @sap-devx/bas-platform` and `npm link @sap-devx/guided-development`:
-* `contrib-cake`
-* `contrib-oven`
-* `vscode-contrib1`
-* `vscode-contrib2`
-* `vscode-contrib3`
-* `simple-contrib`
-
-For each of the following folders, perform `npm link @sap-devx/bas-platform`:
-* `backend` 
-* `sample-action-client`
-
 ### Usage & Development
 #### Run the dev mode
 Dev mode allows you to run the framework in the browser, using vue cli for fast development cycles, and easy debug tools.

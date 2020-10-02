@@ -15,7 +15,7 @@
   "scripts": {
     "prep": "cd ../backend && npm i && npm run compile",
     "copy": "ncp ../backend/out out",
-    "zprepublishOnly": "npm run prep && npm run copy"
+    "prepublishOnly": "npm run prep && npm run copy"
   },
   "devDependencies": {
     "ncp": "^2.0.0"
