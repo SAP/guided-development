@@ -76,7 +76,7 @@ function getItems(): Array<IItem> {
                 clonedItem.labels = [
                     { "Project Name": name },
                     { "Project Type": "Baked Cake" },
-                    { "Path": dirname }
+                    { "Project Path": dirname }
                 ]
         
                 items.push(clonedItem);
@@ -94,7 +94,10 @@ function getInitialItems(): Array<IItem> {
         id: "eat-cake",
         title: "Eat Cake",
         description: "Bon appetite",
-        image: getImage(path.join(extensionPath, 'resources', 'cake1.jpg')),
+        image: {
+            image: getImage(path.join(extensionPath, 'resources', 'cake1.jpg')),
+            note: "image note of eat-cake"
+        },
         action1: eatAction,
         labels: [
             { "Project Type": "All Cakes" }
@@ -133,7 +136,10 @@ function getInitialItems(): Array<IItem> {
         id: "pour-mix",
         title: "Pour Mix into Pan",
         description: "Pour the cake mix into the pan",
-        image: getImage(path.join(extensionPath, 'resources', 'info.png')),
+        image: {
+            image: getImage(path.join(extensionPath, 'resources', 'info.png')),
+            note: "image note of pour-mix"
+        },
         action1: pourAction,
         labels: []
     };

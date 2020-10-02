@@ -44,13 +44,16 @@ function getItems(): Array<IItem> {
         id: "open",
         title: "Open Global Settings",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        image: getImage(path.join(extensionPath, 'resources', 'settings2.png')),
+        image: {
+            image: getImage(path.join(extensionPath, 'resources', 'settings2.png')),
+            note: "image note of Open Global Settings"
+        },
         action1: openSettingsAction,
         action2: showMessageAction,
         labels: [
             {"Project Name": "cap1"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap1"}
+            {"Project Path": "/home/user/projects/cap1"}
         ]
     };
     items.push(item);
@@ -72,7 +75,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap1"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap1"}
+            {"Project Path": "/home/user/projects/cap1"}
         ]
     };
     items.push(item);
@@ -81,12 +84,15 @@ function getItems(): Array<IItem> {
         id: "show-info",
         title: "Show info message",
         description: "Shows a information message",
-        image: getImage(path.join(extensionPath, 'resources', 'info.png')),
+        image: {
+            image: getImage(path.join(extensionPath, 'resources', 'info.png')),
+            note: "image note of Show info message"
+        },
         action1: showInfoMessageAction,
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap2"}
+            {"Project Path": "/home/user/projects/cap2"}
         ]
     };
     items.push(item);
@@ -95,7 +101,10 @@ function getItems(): Array<IItem> {
         id: "show-items",
         title: "Show items",
         description: "Shows list of items",
-        image: getImage(path.join(extensionPath, 'resources', 'items.png')),
+        image: {
+            image: getImage(path.join(extensionPath, 'resources', 'items.png')),
+            note: "image note of Shows list of items"
+        },
         itemIds: [
             "saposs.vscode-contrib1.open",
             "saposs.vscode-contrib2.cfLogin",
@@ -104,7 +113,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap2"}
+            {"Project Path": "/home/user/projects/cap2"}
         ]
     };
     items.push(item);

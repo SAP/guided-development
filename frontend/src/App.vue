@@ -11,6 +11,7 @@
     ></loading>
     <div>
       <v-card-title>{{messages.title}}</v-card-title>
+      <v-card-subtitle>{{messages.description}}</v-card-subtitle>
     </div>
     <Collections
       v-if="collections"
@@ -140,6 +141,11 @@ export default {
 }
 .v-card__title {
   color: var(--vscode-foreground, #cccccc);
+  margin-bottom:16px;
+  font-size:32px;
+}
+.v-card__subtitle {
+  margin-left:4px;
 }
 .vld-parent {
   overflow-y: auto;

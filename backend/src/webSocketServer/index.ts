@@ -65,11 +65,14 @@ class GuidedDevelopmentWebSocketServer {
           fqid: "saposs.vscode-contrib1.new",
           title: "new item",
           description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-          image: getImage(),
+          image: {
+            image: getImage(),
+            note: "image note of new item"
+          },
           action: openAction,
           labels: [
             { "Project Name": "cap1" },
-            { "Path": "/home/user/projects/cap1" },
+            { "Project Path": "/home/user/projects/cap1" },
             { "Project Type": "CAP" },
           ]
         };
@@ -142,11 +145,14 @@ function createCollections(): IInternalCollection[] {
         fqid: "saposs.vscode-contrib1.open",
         title: "Open Global Settings (via execute)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        image: getImage(),
+        image: {
+          image: getImage(),
+          note: "image note of new item"
+        },
         action1: openViaExecuteAction,
         labels: [
           { "Project Name": "cap1" },
-          { "Path": "/home/user/projects/cap1" },
+          { "Project Path": "/home/user/projects/cap1" },
           { "Project Type": "CAP" },
         ]
       },
@@ -158,7 +164,7 @@ function createCollections(): IInternalCollection[] {
         action1: openViaCommandAction,
         labels: [
           { "Project Name": "cap2" },
-          { "Path": "/home/user/projects/cap2" },
+          { "Project Path": "/home/user/projects/cap2" },
           { "Project Type": "CAP" },
         ]
       },
@@ -170,7 +176,7 @@ function createCollections(): IInternalCollection[] {
         action1: snippet1Action,
         labels: [
           {"Project Name": "cap3"},
-          {"Path": "/home/user/projects/cap3"},
+          {"Project Path": "/home/user/projects/cap3"},
           {"Project Type": "CAP"},
         ]
       }
@@ -205,14 +211,14 @@ function createCollections(): IInternalCollection[] {
             action2: showInfoMessageAction,
             labels: [
               { "Project Name": "cap2" },
-              { "Path": "/home/user/projects/cap2" },
+              { "Project Path": "/home/user/projects/cap2" },
               { "Project Type": "CAP" },
             ]
           }
         ],
         labels: [
           { "Project Name": "cap1" },
-          { "Path": "/home/user/projects/cap1" },
+          { "Project Path": "/home/user/projects/cap1" },
           { "Project Type": "CAP" },
         ]
       }
