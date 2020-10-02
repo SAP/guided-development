@@ -30,18 +30,17 @@
 		"test": "node ./out/test/runTest.js",
 		"package": "vsce package ."
 	},
-	"dependencies.TODO": {
-		"@sap-devx/guided-development-types": "0.0.1"
-	},
 	"dependencies": {
-		"lodash": "^4.17.15",
-		"comment-json": "2.1.0"
+		"@sap-devx/bas-platform-types": "0.0.6",
+		"@sap-devx/guided-development-types": "0.0.1",
+		"comment-json": "2.1.0",
+		"lodash": "^4.17.15"
 	},
 	"devDependencies": {
-		"@types/lodash": "^4.14.150",
 		"@types/comment-json": "1.1.1",
 		"@types/fs-extra": "5.0.5",
 		"@types/glob": "^7.1.1",
+		"@types/lodash": "^4.14.150",
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
 		"@types/vscode": "^1.40.0",
@@ -50,5 +49,8 @@
 		"typescript": "^3.9.7",
 		"vsce": "^1.69.0",
 		"vscode-test": "^1.2.2"
-	}
+	},
+	"extensionDependencies": [
+		"SAPOSS.bas-platform"
+	]
 }

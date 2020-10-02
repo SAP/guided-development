@@ -5,12 +5,13 @@ import { Contributors } from './contributors';
 import { GuidedDevelopmentPanel } from './panels/GuidedDevelopmentPanel';
 import { AbstractWebviewPanel } from './panels/AbstractWebviewPanel';
 import { VSCodeEvents } from "./vscode-events";
-import * as api from './api';
+import { bas } from '@sap-devx/bas-platform-types';
+import { setSetData, managerApi } from "./api";
 
 let extContext: vscode.ExtensionContext;
 let guidedDevelopmentPanel: GuidedDevelopmentPanel;
 
-export function activate(context: vscode.ExtensionContext) {
+export async function activate(context: vscode.ExtensionContext) {
 	extContext = context;
 
 	try {
@@ -27,9 +28,12 @@ export function activate(context: vscode.ExtensionContext) {
 	registerAndSubscribeCommand("guidedDevelopment.toggleOutput", guidedDevelopmentPanel.toggleOutput.bind(guidedDevelopmentPanel));
 	registerWebviewPanelSerializer(guidedDevelopmentPanel);
 
-	const vscodeEvents = new VSCodeEvents();
-	api.setSetData(vscodeEvents, vscodeEvents.setData);
-	return api.default;
+	const vscodeEvents = VSCodeEvents.getInstance();
+	const basAPI: typeof bas = await vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+	vscodeEvents.setBasAPI(basAPI);
+
+	setSetData(vscodeEvents, vscodeEvents.setData);
+	return managerApi;
 }
 
 function registerAndSubscribeCommand(cId: string, cAction: any) {
@@ -47,3 +51,4 @@ function registerWebviewPanelSerializer(abstractPanel: AbstractWebviewPanel) {
 export function deactivate() {
 	guidedDevelopmentPanel = null;
 }
+

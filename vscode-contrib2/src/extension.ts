@@ -1,7 +1,7 @@
-// import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ICollection, CollectionType, IItem, ManagerAPI, IExecuteAction, ICommandAction } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
+import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development-types';
+import { bas, ICommandAction } from "@sap-devx/bas-platform-types";
 
 const EXT_ID = "saposs.vscode-contrib2";
 
@@ -54,41 +54,19 @@ function getItems(): IItem[] {
     return items;
 }
 
-async function getManagerAPI(): Promise<ManagerAPI> {
-    const manager = vscode.extensions.getExtension('SAPOSS.guided-development');
-    
-    // temporary hack until this is resolved
-    //   https://github.com/eclipse-theia/theia/issues/8463
-    const promise = new Promise<ManagerAPI>((resolve, reject) => {
-        let intervalId: NodeJS.Timeout;
-        if (!(manager?.isActive)) {
-            intervalId = setInterval(() => {
-                if (manager?.isActive) {
-                    clearInterval(intervalId);
-                    resolve(manager?.exports as ManagerAPI);
-                }
-            }, 500);
-        }
-    });
-
-    return promise;
-}
-
 export async function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib2" is now active!');
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
 
-    const managerAPI = await getManagerAPI();
+    cfLoginAction = new basAPI.actions.CommandAction();
+    cfLoginAction.name = "Login";
+    cfLoginAction.title = "Cloud Foundry Login";
+    cfLoginAction.command = {name: "cf.login"};
 
-    cfLoginAction = managerAPI.createCommandAction("Login", "Cloud Foundry Login", {name: "cf.login"});
+    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
+        managerAPI.setData(EXT_ID, getCollections(), getItems());
+    });
 
-    managerAPI.setData(EXT_ID, getCollections(), getItems());
 }
 
 export function deactivate() {}
-
-// OPEN ISSUES:
-//   Collection that reference items from other contributors:
-//      Are those items necessarily not bound to a specific project?
-//      Does that mean they are static?
-//      No labels?
-//      Constant item IDs?

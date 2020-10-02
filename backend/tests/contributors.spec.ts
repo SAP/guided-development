@@ -11,7 +11,7 @@ const testVscode = {
 
 mockVscode(testVscode, "src/contributors.ts");
 import { Contributors } from "../src/contributors";
-import { IItem } from "./types/GuidedDev";
+import { IItem } from "../src/types/GuidedDev";
 
 describe('Contributors unit test', () => {
     let sandbox: any;
@@ -56,8 +56,8 @@ describe('Contributors unit test', () => {
 
             Contributors.getInstance().setData(extensionId, [], [item1]);
             const itemsMap = Contributors.getInstance().getItems();
-            expect (itemsMap.has(fqid)).to.be.true;
-            expect(itemsMap.get(fqid).id).to.equal(itemId);
+            expect (itemsMap.has(fqid.toLocaleLowerCase())).to.be.true;
+            expect(itemsMap.get(fqid.toLocaleLowerCase()).id).to.equal(itemId);
         });
     });
 });

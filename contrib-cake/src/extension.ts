@@ -1,15 +1,8 @@
-// TODO: activation event * (required for theia) means that when this extension is activated, it's 
-// possible that the manager extension is not yet activated. In this case, we need to time sending the data
-// to the manager. Perhaps the solution is to have this extension (and all contributing extensions) activate
-// the manager
-
-// TODO: use manager's helper methods to clone collections+items
-
-// import { IGuidedDev } from '@sap-devx/guided-development-types';
-import { ICollection, CollectionType, IItem, ManagerAPI, IExecuteAction } from './types/GuidedDev';
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as _ from 'lodash';
+import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development-types';
+import { bas, IExecuteAction } from '@sap-devx/bas-platform-types';
 
 const datauri = require("datauri");
 
@@ -181,49 +174,38 @@ function removeBakeCollection(dirPath: string): void {
     bakeItemsMap.delete(dirPath);
 }
 
-async function getManagerAPI(): Promise<ManagerAPI> {
-    const manager = vscode.extensions.getExtension('SAPOSS.guided-development');
-    
-    // temporary hack until this is resolved
-    //   https://github.com/eclipse-theia/theia/issues/8463
-    const promise = new Promise<ManagerAPI>((resolve, reject) => {
-        let intervalId: NodeJS.Timeout;
-        if (!(manager?.isActive)) {
-            console.log(`[Extension ${EXT_ID}] Waiting for activation of guided-development manager`);
-            intervalId = setInterval(() => {
-                if (manager?.isActive) {
-                    console.log(`[Extension ${EXT_ID}] Detected activation of guided-development manager`);
-                    clearInterval(intervalId);
-                    resolve(manager?.exports as ManagerAPI);
-                }
-            }, 500);
-        }
-    });
-
-    return promise;
-}
-
 export async function activate(context: vscode.ExtensionContext) {
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
+
     extensionPath = context.extensionPath;
     console.log(`[Extension ${EXT_ID}] Activated`);
 
-    const managerAPI = await getManagerAPI();
-
-    eatAction = managerAPI.createExecuteAction("Eat", "", () => {
+    eatAction = new basAPI.actions.ExecuteAction()
+    eatAction.name = "Eat"
+    eatAction.performAction = () => {
         return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
-    });
-    buyAction = managerAPI.createExecuteAction("Buy", "", () => {
+    };
+    buyAction = new basAPI.actions.ExecuteAction();
+    buyAction.name = "Buy";
+    buyAction.performAction = () => {
         return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
-    }); 
-    mixAction = managerAPI.createExecuteAction("Mix", "", () => {
+    };
+    mixAction = new basAPI.actions.ExecuteAction();
+    mixAction.name = "Mix";
+    mixAction.performAction = () => {
         return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
-    }); 
-    insertAction = managerAPI.createExecuteAction("Insert", "", () => {
+    };
+    insertAction = new basAPI.actions.ExecuteAction();
+    insertAction.name = "Insert"
+    insertAction.performAction = () => {
         return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
-    }); 
-    pourAction = managerAPI.createExecuteAction("Pour", "", () => {
+    };
+    pourAction = new basAPI.actions.ExecuteAction()
+    pourAction.name = "Pour";
+    pourAction.performAction = () => {
         return vscode.window.showInformationMessage("The cake mix was poured into the pan");
-    }); 
+    };
 
     vscode.workspace.onDidChangeWorkspaceFolders((e) => {
         // when first folder is added to the workspace, the extension is reactivated, so we could let the find files upon activation handle this use-case

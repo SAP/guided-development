@@ -11,7 +11,7 @@ import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/
 import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
 import { IItem, ICollection, CollectionType } from "../src/types/GuidedDev";
-import { IInternalCollection, IInternalItem } from "../src/Collection";
+import { IInternalCollection, IInternalItem } from "./Collection";
 
 describe('guidedDevelopment unit test', () => {
     let sandbox: any;

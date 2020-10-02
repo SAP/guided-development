@@ -1,0 +1,26 @@
+{
+  "name": "@sap-devx/guided-development-types",
+  "publisher": "SAPOSS",
+  "version": "0.0.1",
+  "author": "",
+  "license": "Apache-2.0",
+  "description": "An npm package that includes Guided Development declarations",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SAP/guided-development.git",
+    "directory": "guided-development-types"
+  },
+  "main": "./out/src/types/GuidedDev",
+  "types": "./out/src/types/GuidedDev",
+  "scripts": {
+    "prep": "cd ../backend && npm i && npm run compile",
+    "copy": "ncp ../backend/out out",
+    "prepublishOnly": "npm run prep && npm run copy"
+  },
+  "devDependencies": {
+    "ncp": "^2.0.0"
+  },
+  "dependencies": {
+    "@sap-devx/bas-platform-types": "0.0.6"
+  }
+}

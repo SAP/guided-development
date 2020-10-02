@@ -6,16 +6,66 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch Chrome",
+      "name": "Guided-dev: Simple example",
+      "type": "extensionHost",
       "request": "launch",
-      "type": "pwa-chrome",
-      "url": "http://localhost:8080",
-      "webRoot": "${workspaceFolder}"
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/backend",
+        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
+        "--extensionDevelopmentPath=${workspaceFolder}/simple-contrib",
+    ],
+      "outFiles": [
+        "${workspaceFolder}/backend/out/**/*.js",
+        "${workspaceFolder/bas-platform/out/**/*.js",
+        "${workspaceFolder/simple-contrib/out/**/*.js",
+      ],
+      "preLaunchTask": "watch backend (webpack)"
+    },
+    {
+      "name": "Guided-dev: Complex example",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/backend",
+        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib1",
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib2",
+        "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib3",
+    ],
+      "outFiles": [
+        "${workspaceFolder}/backend/out/**/*.js",
+        "${workspaceFolder/bas-platform/out/**/*.js",
+        "${workspaceFolder/vscode-contrib1/out/**/*.js",
+        "${workspaceFolder/vscode-contrib2/out/**/*.js",
+        "${workspaceFolder/vscode-contrib3/out/**/*.js"
+      ],
+      "preLaunchTask": "watch backend (webpack)"
+    },
+    {
+      "name": "Guided-dev: Dynamic content example",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/backend",
+        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
+        "--extensionDevelopmentPath=${workspaceFolder}/contrib-cake",
+        "--extensionDevelopmentPath=${workspaceFolder}/contrib-oven",
+    ],
+      "outFiles": [
+        "${workspaceFolder}/backend/out/**/*.js",
+        "${workspaceFolder/bas-platform/out/**/*.js",
+        "${workspaceFolder/contrib-cake/out/**/*.js",
+        "${workspaceFolder/contrib-oven/out/**/*.js",
+      ],
+      "preLaunchTask": "watch backend (webpack)"
     },
     {
       "type": "node",
       "request": "launch",
-      "name": "Run websocket server",
+      "name": "Guided-dev: WebSocket server",
       "program": "${workspaceFolder}/backend/src/webSocketServer/index.ts",
       "outFiles": [
         "${workspaceFolder}/backend/out/**/*.js"
@@ -26,9 +76,31 @@
       "preLaunchTask": "watch backend (tsc)"
     },
     {
+      "name": "Platform: Sample action client",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
+        "--extensionDevelopmentPath=${workspaceFolder}/sample-action-client",
+    ],
+      "outFiles": [
+        "${workspaceFolder}/bas-platfom/out/**/*.js",
+        "${workspaceFolder/sample-action-client/out/**/*.js",
+      ],
+      "preLaunchTask": "watch bas-platform"
+    },
+    {
+      "name": "Client: chrome (8080)",
+      "request": "launch",
+      "type": "pwa-chrome",
+      "url": "http://localhost:8080",
+      "webRoot": "${workspaceFolder}"
+    },
+    {
       "type": "node",
       "request": "launch",
-      "name": "backend unit tests",
+      "name": "Tests: Backend unit tests",
       "program": "${workspaceFolder}/backend/node_modules/mocha/bin/mocha",
       "args": [
         "-r",
@@ -43,44 +115,7 @@
       "protocol": "inspector"
     },
     {
-      "name": "Run Extension",
-      "type": "extensionHost",
-      "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionDevelopmentPath=${workspaceFolder}/contrib-cake",
-        "--extensionDevelopmentPath=${workspaceFolder}/contrib-oven",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib1",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib2",
-        "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib3",
-    ],
-      "outFiles": [
-        "${workspaceFolder}/backend/out/**/*.js",
-        "${workspaceFolder/contrib-cake/out/**/*.js",
-        "${workspaceFolder/contrib-oven/out/**/*.js",
-        "${workspaceFolder/vscode-contrib1/out/**/*.js",
-        "${workspaceFolder/vscode-contrib2/out/**/*.js",
-        "${workspaceFolder/vscode-contrib3/out/**/*.js"
-      ],
-      "preLaunchTask": "watch backend (webpack)"
-    },
-    {
-      "name": "Test extension",
-      "type": "extensionHost",
-      "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionTestsPath=${workspaceFolder}/backend/out/tests"
-      ],
-      "outFiles": [
-        "${workspaceFolder}/backend/dist/**/*.js"
-      ],
-      "preLaunchTask": "watch backend"
-    },
-    {
-      "name": "frontend unit tests",
+      "name": "Tests: Frontend unit tests",
       "type": "node",
       "request": "launch",
       "runtimeArgs": [
@@ -98,6 +133,20 @@
         "${workspaceFolder}/frontend/src/**/*.js"
       ],
       "port": 9229
-    }
+    },
+    {
+      "name": "Tests: Test extension",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/backend",
+        "--extensionTestsPath=${workspaceFolder}/backend/out/tests"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/backend/dist/**/*.js"
+      ],
+      "preLaunchTask": "watch backend"
+    },
   ]
 }

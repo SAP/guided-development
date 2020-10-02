@@ -6,7 +6,7 @@
 	"author": {
 		"name": "SAP SE"
 	},
-	"license": "Apache 2.0",
+	"license": "Apache-2.0",
 	"description": "A VSCode extension that provides a simple way to guide a developer.",
 	"repository": {
 		"type": "git",
@@ -115,6 +115,7 @@
 		"lint:fix": "eslint . --ext .ts,.tsx --cache --fix"
 	},
 	"dependencies": {
+		"@sap-devx/bas-platform-types": "0.0.6",
 		"@sap-devx/webview-rpc": "^0.2.2",
 		"@sap-devx/yeoman-ui-types": "0.0.1",
 		"@vscode-logging/logger": "1.1.0",
@@ -158,5 +159,8 @@
 		"vscode": "^1.1.37",
 		"webpack": "^4.43.0",
 		"webpack-cli": "^3.3.11"
-	}
+	},
+	"extensionDependencies": [
+		"SAPOSS.bas-platform"
+	]
 }
