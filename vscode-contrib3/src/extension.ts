@@ -87,7 +87,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap1"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap1"}
+            {"Project Path": "/home/user/projects/cap1"}
         ]
     };
     items.push(item);
@@ -100,7 +100,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap3"}
+            {"Project Path": "/home/user/projects/cap3"}
         ]
     };
     items.push(item);
@@ -113,7 +113,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap3"}
+            {"Project Path": "/home/user/projects/cap3"}
         ]
     };
     items.push(item);
@@ -126,7 +126,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap2"}
+            {"Project Path": "/home/user/projects/cap2"}
         ]
     };
     items.push(item);
@@ -139,7 +139,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap2"}
+            {"Project Path": "/home/user/projects/cap2"}
         ]
     };
     items.push(item);
@@ -152,7 +152,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap2"}
+            {"Project Path": "/home/user/projects/cap2"}
         ]
     };
     items.push(item);
@@ -165,7 +165,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap3"}
+            {"Project Path": "/home/user/projects/cap3"}
         ]
     };
     items.push(item);
@@ -178,7 +178,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap3"}
+            {"Project Path": "/home/user/projects/cap3"}
         ]
     };
     items.push(item);
@@ -191,7 +191,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap3"}
+            {"Project Path": "/home/user/projects/cap3"}
         ]
     };
     items.push(item);
@@ -204,7 +204,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap3"}
+            {"Project Path": "/home/user/projects/cap3"}
         ]
     };
     items.push(item);
@@ -217,7 +217,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap3"}
+            {"Project Path": "/home/user/projects/cap3"}
         ]
     };
     items.push(item);
@@ -230,7 +230,7 @@ function getItems(): Array<IItem> {
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
-            {"Path": "/home/user/projects/cap3"}
+            {"Project Path": "/home/user/projects/cap3"}
         ]
     };
     items.push(item);
