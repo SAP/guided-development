@@ -4,6 +4,7 @@
 	"description": "SAP Business Application Studio platform extension",
 	"version": "0.0.1",
 	"publisher": "SAPOSS",
+	"license": "Apache-2.0",
 	"engines": {
 		"vscode": "^1.44.2"
 	},
@@ -15,8 +16,8 @@
 	"categories": [
 		"Other"
 	],
-	"main": "./out/extension.js",
-	"types": "./out/api",
+	"main": "./out/src/extension.js",
+	"types": "./out/src/api",
 	"activationEvents": [
 		"*"
 	],

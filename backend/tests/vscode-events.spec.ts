@@ -1,27 +1,94 @@
+import * as vscode from "vscode";
 import * as mocha from "mocha";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
-import * as vscode from "vscode";
+import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ISnippet, ICommand, IFile, ActionType } from "@sap-devx/bas-platform-types/out/src/api";
+
 import { VSCodeEvents } from "../src/vscode-events";
-import * as api from "../src/api";
-import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction } from "bas-platform";
-import { open } from "fs";
-import { CommandAction, ExecuteAction, FileAction, SnippetAction } from "bas-platform/out/actions/impl";
-import { performAction } from "bas-platform/out/actions/client";
+
+function mockPerformAction(action: IAction, options?: any): void {
+    if (action) {
+        switch ((action as MockAction)._actionType) {
+            case ActionType.Command:
+                let commandAction = (action as MockCommandAction);
+                vscode.commands.executeCommand(commandAction.command.name, commandAction.command.params);
+                break;
+            case ActionType.Execute:
+                let executeAction = (action as MockExecuteAction);
+                executeAction.performAction();
+                break;
+            case ActionType.Snippet:
+                let snippetAction = (action as MockSnippetAction);
+                vscode.commands.executeCommand("loadCodeSnippet", { contributorId: snippetAction.snippet.contributorId, snippetName: snippetAction.snippet.snippetName, context: snippetAction.snippet.context });
+                break;
+            case ActionType.File:
+                let fileAction = (action as MockFileAction);
+                vscode.commands.executeCommand('vscode.open', fileAction.file.uri, { viewColumn: vscode.ViewColumn.Two });
+                break;
+        }
+    }
+}
+
+abstract class MockAction implements IAction {
+    name: string = "";
+    title?: string = "";
+    _actionType?: ActionType = ActionType.Command;
+}
+
+class MockExecuteAction extends MockAction implements IExecuteAction {
+    performAction: () => Thenable<any>;
+
+    constructor() {
+        super();
+        this._actionType = ActionType.Execute;
+        this.performAction = () => { return Promise.resolve() }
+    }
+}
+
+class MockSnippetAction extends MockAction implements ISnippetAction {
+    snippet: ISnippet;
+
+    constructor() {
+        super();
+        this._actionType = ActionType.Snippet;
+        this.snippet = { contributorId: "", context: "", snippetName: "" };
+    }
+}
+
+class MockCommandAction extends MockAction implements ICommandAction {
+    command: ICommand;
+
+    constructor() {
+        super();
+        this._actionType = ActionType.Command;
+        this.command = { name: "" };
+    }
+}
+
+class MockFileAction extends MockAction implements IFileAction {
+    file: IFile;
+
+    constructor() {
+        super();
+        this._actionType = ActionType.File;
+        this.file = { uri: vscode.Uri.parse("") };
+    }
+}
 
 const mockBasAPI: typeof bas = {
     getExtensionAPI: <T>(extensionId: string): Promise<T> => {
         return Promise.resolve(undefined);
     },
     actions: {
-        performAction,
-        ExecuteAction,
-        SnippetAction,
-        CommandAction,
-        FileAction
+        performAction: mockPerformAction,
+        ExecuteAction: MockExecuteAction,
+        SnippetAction: MockSnippetAction,
+        CommandAction: MockCommandAction,
+        FileAction: MockFileAction
     }
 }
+
 describe('vscode-events unit test', () => {
     let events: VSCodeEvents;
     let sandbox: any;
@@ -75,7 +142,7 @@ describe('vscode-events unit test', () => {
         it("Command as ActionType", () => {
             commandsMock.expects("executeCommand").
                 withExactArgs('workbench.action.openGlobalSettings', undefined).resolves();
-            const commandOpenAction = new CommandAction();
+            const commandOpenAction = new MockCommandAction();
             commandOpenAction.name = "Open";
             commandOpenAction.command = { name: "workbench.action.openGlobalSettings" };
 
@@ -98,7 +165,7 @@ describe('vscode-events unit test', () => {
             commandsMock.expects("executeCommand").
                 withExactArgs("loadCodeSnippet", { contributorId: "SAPOSS.vscode-snippet-contrib", snippetName: "snippet_1", context: { uri: "uri" } }).resolves();
 
-            const snippetOpenAction: ISnippetAction = new SnippetAction();
+            const snippetOpenAction: ISnippetAction = new MockSnippetAction();
             snippetOpenAction.name = "Open";
             snippetOpenAction.snippet = {
                 contributorId: "SAPOSS.vscode-snippet-contrib",
@@ -122,8 +189,8 @@ describe('vscode-events unit test', () => {
         it("File as ActionType", () => {
             const uri = vscode.Uri.parse("README");
             commandsMock.expects("executeCommand").
-                withExactArgs('vscode.open', uri, {viewColumn: vscode.ViewColumn.Two}).resolves();
-            const openFileAction: IFileAction = new FileAction();
+                withExactArgs('vscode.open', uri, { viewColumn: vscode.ViewColumn.Two }).resolves();
+            const openFileAction: IFileAction = new MockFileAction();
             openFileAction.name = "Open";
             openFileAction.file = { uri };
 
@@ -144,7 +211,7 @@ describe('vscode-events unit test', () => {
         it("Execute as ActionType", () => {
             expect(executeAction.performAction());
 
-            const openExecuteAction: IExecuteAction = new ExecuteAction();
+            const openExecuteAction: IExecuteAction = new MockExecuteAction();
             openExecuteAction.name = "Open";
             openExecuteAction.performAction = () => {
                 return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
@@ -167,7 +234,7 @@ describe('vscode-events unit test', () => {
     describe("performAction - on failure", () => {
         it("action or actionType does not exist", () => {
             commandsMock.expects("executeCommand").never();
-            const commandAction: ICommandAction = new CommandAction();
+            const commandAction: ICommandAction = new MockCommandAction();
             commandAction.name = "Open";
             commandAction.command = { name: "workbench.action.openGlobalSettings" };
             const item = {

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
-import { IItem, ManagerAPI } from 'guided-development';
-import { bas, IExecuteAction } from "bas-platform";
+import { IItem, ManagerAPI } from '@sap-devx/guided-development-types';
+import { bas, IExecuteAction } from "@sap-devx/bas-platform-types";
 
 const EXT_ID = "saposs.contrib-oven";
 

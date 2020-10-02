@@ -6,7 +6,7 @@
 	"author": {
 		"name": "SAP SE"
 	},
-	"license": "Apache 2.0",
+	"license": "Apache-2.0",
 	"description": "A VSCode extension that provides a simple way to guide a developer.",
 	"repository": {
 		"type": "git",
@@ -35,7 +35,6 @@
 		"onWebviewPanel:GuidedDevelopment"
 	],
 	"main": "./dist/extension",
-	"types": "./out/src/types/GuidedDev",
 	"contributes": {
 		"commands": [
 			{
@@ -98,7 +97,6 @@
 		}
 	},
 	"scripts": {
-		"backend-dev": "cd ../bas-platform && npm i && npm run compile && npm link && cd ../backend && npm i && npm link bas-platform && npm run compile",
 		"backend": "npm i && npm run compile",
 		"types": "cd ../types && npm i && npm run compile",
 		"frontend": "npm run frontend:install && npm run frontend:build && npm run frontend:copy",
@@ -112,11 +110,13 @@
 		"watch": "tsc -watch -p ./",
 		"package": "npm run webpack && vsce package .",
 		"test": "nyc mocha -p tsconfig.json --opts ./mocha.opts",
+		"test2": "nyc mocha -p tsconfig.json --opts ./mocha.opts",
 		"ws:run": "node ./out/src/webSocketServer/index.js",
 		"lint": "eslint . --ext .ts,.tsx --cache",
 		"lint:fix": "eslint . --ext .ts,.tsx --cache --fix"
 	},
 	"dependencies": {
+		"@sap-devx/bas-platform-types": "0.0.6",
 		"@sap-devx/webview-rpc": "^0.2.2",
 		"@sap-devx/yeoman-ui-types": "0.0.1",
 		"@vscode-logging/logger": "1.1.0",

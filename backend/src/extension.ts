@@ -5,7 +5,7 @@ import { Contributors } from './contributors';
 import { GuidedDevelopmentPanel } from './panels/GuidedDevelopmentPanel';
 import { AbstractWebviewPanel } from './panels/AbstractWebviewPanel';
 import { VSCodeEvents } from "./vscode-events";
-import { bas } from 'bas-platform';
+import { bas } from '@sap-devx/bas-platform-types';
 import { setSetData, managerApi } from "./api";
 
 let extContext: vscode.ExtensionContext;

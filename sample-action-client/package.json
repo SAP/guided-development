@@ -41,6 +41,7 @@
 		"package": "vsce package ."
 	},
 	"devDependencies": {
+		"@sap-devx/bas-platform-types": "0.0.6",
 		"@types/vscode": "^1.40.0",
 		"typescript": "^3.9.7",
 		"vsce": "^1.69.0",

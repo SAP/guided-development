@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import { ICollection, CollectionType, IItem, ManagerAPI } from 'guided-development';
-import { ICommandAction, IFileAction, ISnippetAction, bas } from "bas-platform";
+import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development-types';
+import { ICommandAction, IFileAction, ISnippetAction, bas } from "@sap-devx/bas-platform-types";
 
 const datauri = require("datauri");
 var path = require('path');
