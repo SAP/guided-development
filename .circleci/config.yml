@@ -62,16 +62,41 @@ jobs: # a collection of steps
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
           path: backend/reports/coverage/lcov-report
           destination: backend-coverage
+      - run:
+          name: install bas-platform
+          working_directory: bas-platform
+          command: npm install
+      - run:
+          name: build bas-platform
+          working_directory: bas-platform
+          command: npm run compile
+      - run:
+          name: create .vsix
+          working_directory: bas-platform
+          command: npx vsce package .
+      # - run:
+      #     name: test bas-platform
+      #     working_directory: bas-platform
+      #     command: npm run test
+      - store_artifacts: # special step to save test results as as artifact
+          path: bas-platform/coverage
+          destination: bas-platform-coverage
       - save_cache:
           paths:
             - backend/node_modules
             - frontend/node_modules
+            - bas-platform/node_modules
           key: dependency-cache-{{ checksum "backend/package.json" }}-{{ checksum "frontend/package.json" }}
       - persist_to_workspace:
           root: backend
           paths: 
            # https://golang.org/pkg/path/filepath/#Match
             - guided-development-*
+      - persist_to_workspace:
+          root: bas-platform
+          paths: 
+           # https://golang.org/pkg/path/filepath/#Match
+            - bas-platform-*
       - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test-results.xml
   
