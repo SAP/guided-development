@@ -91,7 +91,7 @@ jobs: # a collection of steps
           root: .
           paths: 
            # https://golang.org/pkg/path/filepath/#Match
-            - */*.vsix
+            - /*/*.vsix
             - backend/guided-development-*
             - bas-platform/bas-platform-*
       - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
