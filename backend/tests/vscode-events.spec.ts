@@ -3,7 +3,7 @@ import * as mocha from "mocha";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
-import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ISnippet, ICommand, IFile, ActionType } from "@sap-devx/bas-platform-types/out/src/api";
+import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ISnippet, ICommand, IFile, ActionType } from "@sap-devx/bas-platform-types";
 
 import { VSCodeEvents } from "../src/vscode-events";
 
@@ -159,7 +159,7 @@ describe('vscode-events unit test', () => {
             }
 
             events.setBasAPI(mockBasAPI);
-            return events.performAction(item, 1);
+            return events.performAction(item, 1, undefined);
         });
         it("Snippet as ActionType", () => {
             commandsMock.expects("executeCommand").
@@ -184,7 +184,7 @@ describe('vscode-events unit test', () => {
                     {"Project Path": "/home/user/projects/cap3"}
                 ]
             }
-            return events.performAction(item, 1);
+            return events.performAction(item, 1, undefined);
         });
         it("File as ActionType", () => {
             const uri = vscode.Uri.parse("README");
@@ -206,7 +206,7 @@ describe('vscode-events unit test', () => {
                 ]
             }
 
-            return events.performAction(item, 1);
+            return events.performAction(item, 1, undefined);
         });
         it("Execute as ActionType", () => {
             expect(executeAction.performAction());
@@ -228,7 +228,7 @@ describe('vscode-events unit test', () => {
                     {"Project Path": "/home/user/projects/cap1"}
                 ]
             }
-            return events.performAction(item, 1);
+            return events.performAction(item, 1, undefined);
         });
     });
     describe("performAction - on failure", () => {
@@ -248,7 +248,7 @@ describe('vscode-events unit test', () => {
                     {"Project Path": "/home/user/projects/cap1"}
                 ]
             }
-            return events.performAction(undefined, 1);
+            return events.performAction(undefined, 1, undefined);
         });
     });
 });

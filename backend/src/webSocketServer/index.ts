@@ -6,10 +6,12 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
-import { CollectionType } from "../types/GuidedDev";
+import { CollectionType, IItemContext } from "../types/GuidedDev";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
+
 import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+
 import * as api from "../api";
 
 class GuidedDevelopmentWebSocketServer {
@@ -19,7 +21,7 @@ class GuidedDevelopmentWebSocketServer {
 
   constructor() {
     this.appEvents = new ServerEvents();
-  	api.setSetData(this.appEvents, this.appEvents.setData);
+    api.setSetData(this.appEvents, this.appEvents.setData);
   }
 
   init() {
@@ -44,8 +46,7 @@ class GuidedDevelopmentWebSocketServer {
       const logger: AppLog = new ServerLog(this.rpc);
       const childLogger = { debug: () => { }, error: () => { }, fatal: () => { }, warn: () => { }, info: () => { }, trace: () => { }, getChildLogger: () => { return {} as IChildLogger; } };
       const collections = createCollections();
-      const items = createItems(collections);
-      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections, items);
+      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections);
 
       // demonstrate updating of items (mimics contributors calling the onChange callback)
       setTimeout(() => {
@@ -77,16 +78,11 @@ class GuidedDevelopmentWebSocketServer {
           ]
         };
 
-        (collections[0] as IInternalCollection).items.push(item);
+        (collections[0] as IInternalCollection).contextualItems.push({item, context:undefined});
         this.guidedDevelopment.setCollections(collections);
       }, 3000);
     });
   }
-}
-
-function createItems(collections: IInternalCollection[]): Map<string, IInternalItem> {
-  const items = new Map();
-  return items;
 }
 
 function createCollections(): IInternalCollection[] {
@@ -95,10 +91,10 @@ function createCollections(): IInternalCollection[] {
     name: "Open",
     title: "Open Global Settings (via execute)",
     performAction: () => {
-    console.log("workbench.action.openGlobalSettings");
-    return Promise.resolve();
+      console.log("workbench.action.openGlobalSettings");
+      return Promise.resolve();
+    }
   }
-}
 
   const openViaCommandAction: ICommandAction = {
     _actionType: ActionType.Command,
@@ -123,11 +119,33 @@ function createCollections(): IInternalCollection[] {
     name: "Open",
     title: "Open Snippet (via snippet)",
     snippet: {
-      contributorId: "SAPOSS.vscode-snippet-contrib", 
-      snippetName: "snippet_1", 
-      context: {uri: "uri"}                    
+      contributorId: "SAPOSS.vscode-snippet-contrib",
+      snippetName: "snippet_1",
+      context: { uri: "uri" }
     }
   }
+
+  const context1: IItemContext = {
+    id: "1",
+    action1Parameters: ["universe!"]
+  }
+  const context2: IItemContext = {
+    id: "2",
+    action1Parameters: ["world!"]
+  }
+
+  const item1: IInternalItem = {
+    id: "open-command",
+    fqid: "saposs.vscode-contrib2.open-command",
+    title: "Open Global Settings (via command)",
+    description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+    action1: openViaCommandAction,
+    labels: [
+      { "Project Name": "cap2" },
+      { "Project Path": "/home/user/projects/cap2" },
+      { "Project Type": "CAP" },
+    ]
+  };
 
   const collections: IInternalCollection[] = [];
   let collection: IInternalCollection = {
@@ -139,7 +157,9 @@ function createCollections(): IInternalCollection[] {
       "saposs.vscode-contrib1.open",
       "saposs.vscode-contrib2.clone"
     ],
-    items: [
+    contextId: "1",
+    contextualItems: [
+      {item:
       {
         id: "open",
         fqid: "saposs.vscode-contrib1.open",
@@ -155,31 +175,27 @@ function createCollections(): IInternalCollection[] {
           { "Project Path": "/home/user/projects/cap1" },
           { "Project Type": "CAP" },
         ]
+      }, context: undefined},
+      {
+        item: item1,
+        context: context1
       },
       {
-        id: "open-command",
-        fqid: "saposs.vscode-contrib2.open-command",
-        title: "Open Global Settings (via command)",
-        description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        action1: openViaCommandAction,
-        labels: [
-          { "Project Name": "cap2" },
-          { "Project Path": "/home/user/projects/cap2" },
-          { "Project Type": "CAP" },
-        ]
+        item: item1,
+        context: context2
       },
-      {
+      {item:{
         id: "open-snippet",
         fqid: "SAPOSS.vscode-contrib3.open-snippet",
         title: "Open Snippet (via snippet)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         action1: snippet1Action,
         labels: [
-          {"Project Name": "cap3"},
-          {"Project Path": "/home/user/projects/cap3"},
-          {"Project Type": "CAP"},
+          { "Project Name": "cap3" },
+          { "Project Path": "/home/user/projects/cap3" },
+          { "Project Type": "CAP" },
         ]
-      }
+      }, context: undefined},
     ]
   };
   collections.push(collection);
@@ -192,7 +208,8 @@ function createCollections(): IInternalCollection[] {
     itemIds: [
       "saposs.vscode-contrib2.show-items"
     ],
-    items: [
+    contextualItems: [
+      {item:
       {
         id: "show-items",
         title: "Show items",
@@ -221,7 +238,7 @@ function createCollections(): IInternalCollection[] {
           { "Project Path": "/home/user/projects/cap1" },
           { "Project Type": "CAP" },
         ]
-      }
+      }, context: undefined}
     ]
   };
   collections.push(collection);

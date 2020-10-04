@@ -13,9 +13,8 @@ export class GuidedDevelopment {
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
   private collections: Array<IInternalCollection>;
-  private items: Map<String,IInternalItem>;
 
-  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[], items: Map<String,IInternalItem>) {
+  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[]) {
     this.rpc = rpc;
     if (!this.rpc) {
       throw new Error("rpc must be set");
@@ -31,7 +30,6 @@ export class GuidedDevelopment {
     this.rpc.registerMethod({ func: this.performAction, thisArg: this });
 
     this.collections = collections;
-    this.items = items;
     this.messages = messages;
   }
 
@@ -42,12 +40,12 @@ export class GuidedDevelopment {
 
   private getItem(itemFqid: string): IInternalItem {
     for (const collection of this.collections) {
-      for (const item of collection.items) {
-        if (item.fqid === itemFqid) {
-          return item;
+      for (const contextualItem of collection.contextualItems) {
+        if (contextualItem.item.fqid === itemFqid) {
+          return contextualItem.item;
         }
-        if (item.items) {
-          for (const subItem of item.items) {
+        if (contextualItem.item.items) {
+          for (const subItem of contextualItem.item.items) {
             if (subItem.fqid === itemFqid) {
               return subItem;
             }  
@@ -58,9 +56,9 @@ export class GuidedDevelopment {
     // TODO - console log: item does not exist
   }
 
-  private async performAction(itemFqid: string, index: number) {
+  private async performAction(itemFqid: string, index: number, contextId?: string) {
     const item: IInternalItem = this.getItem(itemFqid);
-    this.appEvents.performAction(item, index);
+    this.appEvents.performAction(item, index, contextId);
   }
 
   private async getState() {

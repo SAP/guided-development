@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as _ from 'lodash';
-import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development-types';
+import { ICollection, CollectionType, IItem, ManagerAPI, IItemContext } from '@sap-devx/guided-development-types';
 import { bas, IExecuteAction } from '@sap-devx/bas-platform-types';
 
 const datauri = require("datauri");
@@ -10,6 +10,8 @@ const EXT_ID = "saposs.contrib-cake";
 
 const bakeCollectionMap: Map<string, ICollection> = new Map(); // key is dirname; value is collection
 const bakeItemsMap: Map<string, Array<string>> = new Map(); // key is dirname; value is array of item ids
+const items: Array<IItem> = [];
+
 let extensionPath: string;
 let bakeCollectionTemplate: ICollection;
 
@@ -25,13 +27,13 @@ bakeCollectionTemplate = {
     description: "This is a repice for making baked cakes. You can bake a cake only if there is a bake.json file in your workspace",
     type: CollectionType.Scenario,
     itemIds: [
-        `${EXT_ID}.buy-ingredients`,
         `saposs.contrib-oven.prep-oven`,
-        `${EXT_ID}.mix-ingredients`,
-        `${EXT_ID}.pour-mix`,
-        `${EXT_ID}.place-pan`,
         `saposs.contrib-oven.bake`,
-        `${EXT_ID}.eat-cake`,
+        // `${EXT_ID}.buy-ingredients`,
+        // `${EXT_ID}.mix-ingredients`,
+        // `${EXT_ID}.pour-mix`,
+        // `${EXT_ID}.place-pan`,
+        // `${EXT_ID}.eat-cake`,
     ]
 };
 
@@ -61,30 +63,9 @@ function getCollections(): ICollection[] {
 }
 
 function getItems(): Array<IItem> {
-    const initialItems: Array<IItem> = getInitialItems();
-    const items: Array<IItem> = [];
-
-    for (const mapEntry of bakeItemsMap) {
-        const dirname = mapEntry[0];
-        const name = path.parse(dirname).name;
-
-        for (const itemId of mapEntry[1]) {
-            const origItem = initialItems.find(value => itemId.includes(`${EXT_ID}.${value.id}`));
-            if (origItem) {
-                const clonedItem: IItem = _.clone(origItem);
-                clonedItem.id = `${origItem.id}-${name}`;
-                clonedItem.labels = [
-                    { "Project Name": name },
-                    { "Project Type": "Baked Cake" },
-                    { "Project Path": dirname }
-                ]
-        
-                items.push(clonedItem);
-            }
-        }
+    if (items.length === 0) {
+        items.push(...getInitialItems());
     }
-
-    items.push(...initialItems);
     return items;
 }
 
@@ -168,11 +149,22 @@ function addBakeCollection(dirPath: string): void {
     const collection: ICollection = JSON.parse(JSON.stringify(bakeCollectionTemplate));
     collection.id = `bake-${name}`;
     collection.title = `Bake a Cake (${name})`;
-    for (const index in collection.itemIds) {
-        collection.itemIds[index] = `${collection.itemIds[index]}-${name}`;
+    collection.contextId = name;
+    const context: IItemContext = {
+        id: name,
+        action1Parameters: [name]
     }
+    addContextToItems(context);
     bakeCollectionMap.set(dirPath, collection);
-    bakeItemsMap.set(dirPath, collection.itemIds);
+}
+
+function addContextToItems(context: IItemContext) {
+    for (const item of getItems()) {
+        if (!item.contexts) {
+            item.contexts = [];
+        }
+        item.contexts.push(context);
+    }
 }
 
 function removeBakeCollection(dirPath: string): void {

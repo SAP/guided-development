@@ -5,6 +5,7 @@ export interface ICollection {
     title: string;
     description: string;
     type: CollectionType;
+    contextId?: string;
     itemIds: Array<string>;
 }
 
@@ -12,6 +13,12 @@ export enum CollectionType {
     Platform,
     Scenario,
     Extension
+}
+
+export interface IItemContext {
+    id: string;
+    action1Parameters?: any[]; // override parameters for command action1
+    action2Parameters?: any[]; // override parameters for command action2
 }
 
 export interface IItem {
@@ -24,6 +31,7 @@ export interface IItem {
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
+    contexts?: IItemContext[];
 }
 
 export interface IImage {

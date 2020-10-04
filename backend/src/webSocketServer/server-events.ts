@@ -2,11 +2,11 @@ import { AppEvents } from "../app-events";
 import { ICollection, IItem } from '../types/GuidedDev';
 
 export class ServerEvents implements AppEvents {
-    public async performAction(item: IItem, index: number): Promise<any> {
+    public async performAction(item: IItem, index: number, contextId: string): Promise<any> {
         if (item) {
             let action = item[index == 1 ? 'action1' : 'action2'];
             if (action) {
-                console.log(`Mock executing command ${action.name}`);
+                console.log(`Mock executing command ${action.name} with context ID ${contextId}`);
                 return Promise.resolve();    
             }
         }

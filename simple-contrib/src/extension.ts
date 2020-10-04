@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { bas, ICommandAction } from "@sap-devx/bas-platform-types";
-import { ICollection, CollectionType, IItem, ManagerAPI } from "@sap-devx/guided-development-types";
+import { ICollection, CollectionType, IItem, ManagerAPI, IItemContext } from "@sap-devx/guided-development-types";
 
 const EXT_ID = "SAPOSS.simple-contrib";
 

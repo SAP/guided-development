@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import { IInternalItem, IInternalCollection } from "./Collection";
+import { IInternalItem, IInternalCollection, IInternalContextualItem } from "./Collection";
 import { IItem, ICollection } from './types/GuidedDev';
 
 export class Contributors {
@@ -36,10 +36,6 @@ export class Contributors {
         }
 
         return _.sortBy(collections, ['type']);
-    }
-
-    public getItems(): Map<string, IInternalItem> {
-        return this.itemsMap;
     }
 
     private static activateExtension(extension: vscode.Extension<any>): void {
@@ -97,16 +93,29 @@ export class Contributors {
     private initCollectionItems() {
         for (const collections of this.collectionsMap.values()) {
             for (const collection of collections) {
-                collection.items = [];
-                for (const itemId of collection.itemIds) {
-                    const item: IInternalItem = this.itemsMap.get(itemId.toLocaleLowerCase());
-                    if (item) {
-                        collection.items.push(item);
-                        this.initSubItems(item);
-                    }
-                }
+                // TODO: handle context for subitems
+                // TODO: handle duplicates?
+                collection.contextualItems = this.getItems(collection);
             }
         }
+    }
+
+    private getItems(collection: IInternalCollection): IInternalContextualItem[] {
+        const contextId: string = collection.contextId;
+        const result: IInternalContextualItem[] = [];
+        for (const item of this.itemsMap.values()) {
+            if (item.contexts) {
+                for (const context of item.contexts) {
+                    if (context.id === contextId) {
+                        result.push({ item, context });
+                    }
+                }
+            } else {
+                result.push({ item, context: undefined });
+            }
+            this.initSubItems(item);
+        }
+        return result;
     }
 
     private initSubItems(item: IInternalItem) {

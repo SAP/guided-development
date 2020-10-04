@@ -55,7 +55,7 @@ describe('Contributors unit test', () => {
             };
 
             Contributors.getInstance().setData(extensionId, [], [item1]);
-            const itemsMap = Contributors.getInstance().getItems();
+            const itemsMap = Contributors.getInstance()["itemsMap"];
             expect (itemsMap.has(fqid.toLocaleLowerCase())).to.be.true;
             expect(itemsMap.get(fqid.toLocaleLowerCase()).id).to.equal(itemId);
         });

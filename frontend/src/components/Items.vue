@@ -1,29 +1,30 @@
 <template>
   <div id="items-component">
     <v-expansion-panels dark focusable multiple>
-      <template v-for="(item, index) in items">
-        <v-expansion-panel v-if="isFiltered(item.fqid)" :key="index">
-          <v-expansion-panel-header class="pa-5"><a style="font-size:14px">{{item.title}}</a></v-expansion-panel-header>
+      <template :v-if="contextualItems" v-for="(contextualItem, index) in contextualItems">
+        <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index">
+          <v-expansion-panel-header class="pa-5"><a style="font-size:14px">{{contextualItem.item.title}}</a></v-expansion-panel-header>
           <v-expansion-panel-content class="headline">
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="8" style="margin-left:20px">
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px">{{item.description}}</v-card-text>
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px">Item ID: {{item.fqid}}</v-card-text>
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="item.labels">Labels:</v-card-text>
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in item.labels" :key="index">
+                  <v-card-text class="pa-0 ma-0" style="font-size:12px">{{contextualItem.item.description}}</v-card-text>
+                  <v-card-text class="pa-0 ma-0" style="font-size:12px">Item ID: {{contextualItem.item.fqid}}</v-card-text>
+                  <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="contextualItem.context">Context ID: {{ contextualItem.context.id }}</v-card-text>
+                  <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="contextualItem.item.labels">Labels:</v-card-text>
+                  <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in contextualItem.item.labels" :key="index">
                     <v-card-text class="pa-0 ma-0" style="font-size:12px;text-indent:40px" v-for="(value, key) in label" :key="key">{{key}}: {{value}}</v-card-text>
                   </v-card-text>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-img v-if="item.image" style="cursor:pointer" :src="item.image.image" max-width="80%" @click="imageDialog = true">
-                    <v-icon v-if="item.image" style="position:absolute;bottom:0px;right:0px" @click="imageDialog = true">search</v-icon>
+                  <v-img v-if="contextualItem.item.image" style="cursor:pointer" :src="contextualItem.item.image.image" max-width="80%" @click="imageDialog = true">
+                    <v-icon v-if="contextualItem.item.image" style="position:absolute;bottom:0px;right:0px" @click="imageDialog = true">search</v-icon>
                   </v-img>
-                  <v-card-text v-if="item.image" align="left" class="mt-4 pb-0" style="font-size:14px;padding-left:0px"><b>Note</b></v-card-text>
-                  <v-card-text v-if="item.image" align="left" class="pa-0 ma-0" style="font-size:12px;padding-left:0px">{{item.image.note}}</v-card-text>
-                  <v-dialog v-model="imageDialog" max-width="40%">
+                  <v-card-text v-if="contextualItem.item.image" align="left" class="mt-4 pb-0" style="font-size:14px;padding-left:0px"><b>Note</b></v-card-text>
+                  <v-card-text v-if="contextualItem.item.image" align="left" class="pa-0 ma-0" style="font-size:12px;padding-left:0px">{{contextualItem.item.image.note}}</v-card-text>
+                  <v-dialog v-model="contextualItem.item.imageDialog" max-width="40%">
                     <v-card align="center" height="100%">
-                      <v-img v-if="item.image" :src="item.image.image" alt="" width="100%" height="100%" @click.stop="imageDialog = false">
+                      <v-img v-if="contextualItem.item.image" :src="contextualItem.item.image.image" alt="" width="100%" height="100%" @click.stop="imageDialog = false">
                         <v-icon style="position:absolute;top:0px;right:0px" @click.stop="imageDialog = false">clear</v-icon>
                       </v-img>
                     </v-card>
@@ -33,15 +34,15 @@
               <v-row>
                 <v-col style="margin-left:20px">
                   <Items
-                      v-if="item.items"
-                      :items="item.items"
+                      v-if="contextualItem.item.items"
+                      :items="contextualItem.item.items"
                       :filter="filter"
                       @action="onAction"
                   />
-                  <v-list-item-subtitle class="py-4" v-if="item.action1 && item.action1.title && !item.items">{{item.action1.title}}</v-list-item-subtitle>
-                  <v-btn small v-if="item.action1 && !item.items" @click="onAction(item.fqid, 1)">{{item.action1.name}}</v-btn>
-                  <v-list-item-subtitle class="py-4" v-if="item.action2 && item.action2.title && !item.items">{{item.action2.title}}</v-list-item-subtitle>
-                  <v-btn small v-if="item.action2 && !item.items" @click="onAction(item.fqid, 2)">{{item.action2.name}}</v-btn>
+                  <v-list-item-subtitle class="py-4" v-if="contextualItem.item.action1 && contextualItem.item.action1.title && !contextualItem.item.items">{{contextualItem.item.action1.title}}</v-list-item-subtitle>
+                  <v-btn small v-if="contextualItem.item.action1 && !contextualItem.item.items" @click="onAction(contextualItem, 1)">{{contextualItem.item.action1.name}}</v-btn>
+                  <v-list-item-subtitle class="py-4" v-if="contextualItem.item.action2 && contextualItem.item.action2.title && !contextualItem.item.items">{{contextualItem.item.action2.title}}</v-list-item-subtitle>
+                  <v-btn small v-if="contextualItem.item.action2 && !contextualItem.item.items" @click="onAction(contextualItem, 2)">{{item.action2.name}}</v-btn>
                 </v-col>
               </v-row>
             </v-container>
@@ -61,11 +62,11 @@ export default {
       filteredItems: new Set()
     };
   },
-  props: ["items", "filter"],
+  props: ["contextualItems", "filter"],
   methods: {
-    onAction(itemFqid, index) {
+    onAction(contextualItem, index) {
       // fire 'action' event
-      this.$emit("action", itemFqid, index);
+      this.$emit("action", contextualItem, index);
     },
     isFiltered(itemFqid) {
       return this.filteredItems.has(itemFqid);
@@ -75,7 +76,8 @@ export default {
     filter: {
       handler: function () {
         this.filteredItems = new Set();
-        for (const item of this.items) {
+        for (const contextualItem of this.contextualItems) {
+          const item = contextualItem.item;
           let foundLabelMismatch = false;
           for (const label of item.labels) {
             const labelKey = Object.keys(label)[0];

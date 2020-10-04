@@ -1,7 +1,7 @@
 {
   "name": "@sap-devx/guided-development-types",
   "publisher": "SAPOSS",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "",
   "license": "Apache-2.0",
   "description": "An npm package that includes Guided Development declarations",

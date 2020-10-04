@@ -96,7 +96,7 @@ describe('guidedDevelopment unit test', () => {
     const rpc = new TestRpc();
     const outputChannel = new TestOutputChannel();
     const appEvents = new TestEvents();
-    const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {}, [], new Map());
+    const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {}, []);
 
     let itemIds = ["saposs.contrib1.create","saposs.contrib1.open","saposs.contrib2.delete"];
     let items: Map<String,IInternalItem>;
@@ -127,7 +127,7 @@ describe('guidedDevelopment unit test', () => {
 
     it("constructor", () => {
         try {
-            new GuidedDevelopment(undefined, appEvents,  outputChannel, testLogger, {}, [], new Map());
+            new GuidedDevelopment(undefined, appEvents,  outputChannel, testLogger, {}, []);
             fail("contructor should throw an exception");
         } catch (error) {
             expect(error.message).to.be.equal("rpc must be set");
@@ -146,7 +146,7 @@ describe('guidedDevelopment unit test', () => {
             description: "description1",
             itemIds: [],
             type: CollectionType.Platform,
-            items: []
+            contextualItems: []
         };
         await guidedDevelopment["setCollections"]([collection1]);
         expect(guidedDevelopment["collections"]).to.have.length(1);
@@ -178,7 +178,7 @@ describe('guidedDevelopment unit test', () => {
             description: "description1",
             itemIds: [],
             type: CollectionType.Platform,
-            items: [item2]
+            contextualItems: [{item:item2}]
         };
         await guidedDevelopment["setCollections"]([collection1]);
         const foundItem = guidedDevelopment["getItem"](fqid2);

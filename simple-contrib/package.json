@@ -37,6 +37,6 @@
 	],
 	"dependencies": {
 		"@sap-devx/bas-platform-types": "0.0.6",
-		"@sap-devx/guided-development-types": "0.0.2"
+		"@sap-devx/guided-development-types": "0.0.3"
 	}
 }
