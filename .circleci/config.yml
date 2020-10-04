@@ -88,6 +88,7 @@ jobs: # a collection of steps
             - bas-platform/node_modules
           key: dependency-cache-{{ checksum "backend/package.json" }}-{{ checksum "frontend/package.json" }}
       - persist_to_workspace:
+          root: "."
           paths: 
            # https://golang.org/pkg/path/filepath/#Match
             - backend/guided-development-*
