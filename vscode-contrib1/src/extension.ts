@@ -92,7 +92,6 @@ function getItems(): Array<IItem> {
             "saposs.vscode-contrib1.open",
             "saposs.vscode-contrib2.cfLogin"
         ],
-        // action1: showInfoMessageAction,
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
