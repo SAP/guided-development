@@ -36,10 +36,10 @@
 		},
 		{
 			"type": "npm",
-			"label": "watch backend (tsc)",
+			"label": "watch bas-platform",
 			"isBackground": true,
 			"options": {
-				"cwd": "${workspaceFolder}/backend"
+				"cwd": "${workspaceFolder}/bas-platform"
 			},
 			"script": "watch",
 			"problemMatcher": "$tsc-watch",
@@ -50,10 +50,10 @@
 		},
 		{
 			"type": "npm",
-			"label": "watch bas-platform",
+			"label": "watch backend (tsc)",
 			"isBackground": true,
 			"options": {
-				"cwd": "${workspaceFolder}/bas-platform"
+				"cwd": "${workspaceFolder}/backend"
 			},
 			"script": "watch",
 			"problemMatcher": "$tsc-watch",
