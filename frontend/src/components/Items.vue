@@ -4,7 +4,7 @@
       <template v-for="(item, index) in items">
         <v-expansion-panel v-if="isFiltered(item.fqid)" :key="index">
           <v-expansion-panel-header class="pa-5"><a style="font-size:14px">{{item.title}}</a></v-expansion-panel-header>
-          <v-expansion-panel-content class="headline">
+          <v-expansion-panel-content v-bind:class="{'headline':true, 'color-a':colorFlag, 'color-b':!colorFlag}">
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="8" style="margin-left:20px">
@@ -38,6 +38,7 @@
                       v-if="item.items"
                       :items="item.items"
                       :filter="filter"
+                      :colorFlag="!colorFlag"
                       @action="onAction"
                   />
                   <v-list-item-subtitle class="py-1" v-if="item.action1 && item.action1.title && !item.items">{{item.action1.title}}</v-list-item-subtitle>
@@ -63,7 +64,7 @@ export default {
       filteredItems: new Set()
     };
   },
-  props: ["items", "filter"],
+  props: ["items", "filter", "colorFlag"],
   methods: {
     onAction(itemFqid, index) {
       // fire 'action' event
@@ -123,8 +124,13 @@ button.v-expansion-panel-header--active {
   padding-left: 28px ;
   padding-bottom: 8px ;
 }
+.color-a {
+  background-color: var(--vscode-list-hoverBackground,yellow);
+}
+.color-b {
+  background-color: var(--vscode-list-hoverBackground,orange);
+}
 .v-expansion-panel-content__wrap {
-  background-color: var(--vscode-list-hoverBackground,#2a2d2e);
   color: var(--vscode-foreground, #cccccc);
   text-transform: none;
 }
