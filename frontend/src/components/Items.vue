@@ -9,14 +9,16 @@
               <v-row>
                 <v-col cols="12" sm="6" md="8" style="margin-left:20px">
                   <v-card-text class="pa-0 ma-0" style="font-size:12px">{{item.description}}</v-card-text>
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px">Item ID: {{item.fqid}}</v-card-text>
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="item.labels">Labels:</v-card-text>
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in item.labels" :key="index">
-                    <v-card-text class="pa-0 ma-0" style="font-size:12px;text-indent:40px" v-for="(value, key) in label" :key="key">{{key}}: {{value}}</v-card-text>
-                  </v-card-text>
+                  <v-card-text class="pa-0 my-6" style="font-size:12px">Item ID: {{item.fqid}}</v-card-text>
+                  <div v-if="false">
+                    <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="item.labels">Labels:</v-card-text>
+                    <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in item.labels" :key="index">
+                      <v-card-text class="pa-0 ma-0" style="font-size:12px;text-indent:40px" v-for="(value, key) in label" :key="key">{{key}}: {{value}}</v-card-text>
+                    </v-card-text>
+                  </div>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-img v-if="item.image" style="cursor:pointer" :src="item.image.image" max-width="80%" @click="imageDialog = true">
+                  <v-img v-if="item.image" style="cursor:pointer" :src="item.image.image" max-width="100%" @click="imageDialog = true">
                     <v-icon v-if="item.image" style="position:absolute;bottom:0px;right:0px" @click="imageDialog = true">search</v-icon>
                   </v-img>
                   <v-card-text v-if="item.image" align="left" class="mt-4 pb-0" style="font-size:14px;padding-left:0px"><b>Note</b></v-card-text>
@@ -38,9 +40,9 @@
                       :filter="filter"
                       @action="onAction"
                   />
-                  <v-list-item-subtitle class="py-4" v-if="item.action1 && item.action1.title && !item.items">{{item.action1.title}}</v-list-item-subtitle>
+                  <v-list-item-subtitle class="py-1" v-if="item.action1 && item.action1.title && !item.items">{{item.action1.title}}</v-list-item-subtitle>
                   <v-btn small v-if="item.action1 && !item.items" @click="onAction(item.fqid, 1)">{{item.action1.name}}</v-btn>
-                  <v-list-item-subtitle class="py-4" v-if="item.action2 && item.action2.title && !item.items">{{item.action2.title}}</v-list-item-subtitle>
+                  <v-list-item-subtitle class="py-1 mt-4" v-if="item.action2 && item.action2.title && !item.items">{{item.action2.title}}</v-list-item-subtitle>
                   <v-btn small v-if="item.action2 && !item.items" @click="onAction(item.fqid, 2)">{{item.action2.name}}</v-btn>
                 </v-col>
               </v-row>
@@ -131,6 +133,9 @@ button.v-expansion-panel-header--active {
 }
 .v-expansion-panel .v-icon,
 .v-expansion-panel-header__icon .v-icon {
+  color: var(--vscode-foreground, #cccccc) !important;
+}
+.v-icon--link.material-icons.theme--light {
   color: var(--vscode-foreground, #cccccc) !important;
 }
 .v-card.v-sheet {
