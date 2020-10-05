@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as _ from 'lodash';
 import { ICollection, CollectionType, IItem, ManagerAPI, IItemContext } from '@sap-devx/guided-development-types';
-import { bas, IExecuteAction } from '@sap-devx/bas-platform-types';
+import { bas, IExecuteAction, ICommandAction } from '@sap-devx/bas-platform-types';
 
 const datauri = require("datauri");
 
@@ -19,7 +19,8 @@ let eatAction: IExecuteAction,
     buyAction: IExecuteAction,
     mixAction: IExecuteAction,
     insertAction: IExecuteAction,
-    pourAction: IExecuteAction;
+    pourAction: IExecuteAction,
+    sampleAction: ICommandAction;
 
 bakeCollectionTemplate = {
     id: "collection2",
@@ -199,11 +200,16 @@ export async function activate(context: vscode.ExtensionContext) {
     insertAction.performAction = () => {
         return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
     };
-    pourAction = new basAPI.actions.ExecuteAction()
+    pourAction = new basAPI.actions.ExecuteAction();
     pourAction.name = "Pour";
     pourAction.performAction = () => {
         return vscode.window.showInformationMessage("The cake mix was poured into the pan");
     };
+
+    sampleAction = new basAPI.actions.CommandAction();
+    sampleAction.command = {
+        name: "workbench.action.files.openFile"
+    }
 
     vscode.workspace.onDidChangeWorkspaceFolders((e) => {
         // when first folder is added to the workspace, the extension is reactivated, so we could let the find files upon activation handle this use-case

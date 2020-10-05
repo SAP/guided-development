@@ -189,13 +189,20 @@ function createCollections(): IInternalCollection[] {
         fqid: "SAPOSS.vscode-contrib3.open-snippet",
         title: "Open Snippet (via snippet)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        action1: snippet1Action,
-        labels: [
-          { "Project Name": "cap3" },
-          { "Project Path": "/home/user/projects/cap3" },
-          { "Project Type": "CAP" },
-        ]
-      }, context: undefined},
+        labels: [],
+        contextualItems:[{item:{
+          id: "sub-open-snippet",
+          fqid: "SAPOSS.vscode-contrib3.sub-open-snippet",
+          title: "subitem1",
+          description: "",
+          action1: snippet1Action,
+          labels: [
+            { "Project Name": "cap3" },
+            { "Project Path": "/home/user/projects/cap3" },
+            { "Project Type": "CAP" },
+          ]
+          }}]
+      }},
     ]
   };
   collections.push(collection);
@@ -218,8 +225,9 @@ function createCollections(): IInternalCollection[] {
         itemIds: [
           "saposs.vscode-contrib2.open-command"
         ],
-        items: [
+        contextualItems: [
           {
+            item: {
             id: "open-command",
             fqid: "saposs.vscode-contrib2.open-command",
             title: "Open Global Settings (via command)",
@@ -232,13 +240,14 @@ function createCollections(): IInternalCollection[] {
               { "Project Type": "CAP" },
             ]
           }
+          }
         ],
         labels: [
           { "Project Name": "cap1" },
           { "Project Path": "/home/user/projects/cap1" },
           { "Project Type": "CAP" },
         ]
-      }, context: undefined}
+      }}
     ]
   };
   collections.push(collection);

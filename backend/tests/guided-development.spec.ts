@@ -169,7 +169,7 @@ describe('guidedDevelopment unit test', () => {
             description: "description2",
             title: "title2",
             labels: [],
-            items: [item1]
+            contextualItems: [{item:item1}]
         };
 
         const collection1: IInternalCollection = {

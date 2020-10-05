@@ -101,30 +101,35 @@ export class Contributors {
     }
 
     private getItems(collection: IInternalCollection): IInternalContextualItem[] {
-        const contextId: string = collection.contextId;
         const result: IInternalContextualItem[] = [];
+
+        for (const itemId of collection.itemIds) {
+            const item = this.itemsMap.get(itemId);
+            this.initSubItems(item);
+            result.push({ item, context: undefined });
+        }
+
+        const contextId: string = collection.contextId;
         for (const item of this.itemsMap.values()) {
             if (item.contexts) {
                 for (const context of item.contexts) {
                     if (context.id === contextId) {
                         result.push({ item, context });
+                        this.initSubItems(item);
                     }
                 }
-            } else {
-                result.push({ item, context: undefined });
             }
-            this.initSubItems(item);
         }
         return result;
     }
 
     private initSubItems(item: IInternalItem) {
         if (item.itemIds) {
-            item.items = [];
+            item.contextualItems = [];
             for (const itemId of item.itemIds) {
                 const subitem: IInternalItem = this.itemsMap.get(itemId.toLowerCase());
                 if (subitem) {
-                    item.items.push(subitem);
+                    item.contextualItems.push({ item: subitem, context: undefined });
                     this.initSubItems(subitem);
                 }
             }

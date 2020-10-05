@@ -11,5 +11,5 @@ export interface IInternalCollection extends ICollection {
 
 export interface IInternalItem extends IItem {
     fqid?: string;
-    items?: IInternalItem[];
+    contextualItems?: IInternalContextualItem[];
 }

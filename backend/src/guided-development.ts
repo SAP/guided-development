@@ -44,10 +44,10 @@ export class GuidedDevelopment {
         if (contextualItem.item.fqid === itemFqid) {
           return contextualItem.item;
         }
-        if (contextualItem.item.items) {
-          for (const subItem of contextualItem.item.items) {
-            if (subItem.fqid === itemFqid) {
-              return subItem;
+        if (contextualItem.item.contextualItems) {
+          for (const subItem of contextualItem.item.contextualItems) {
+            if (subItem.item.fqid === itemFqid) {
+              return subItem.item;
             }  
           }
         }
