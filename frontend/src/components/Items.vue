@@ -3,8 +3,10 @@
     <v-expansion-panels dark focusable multiple>
       <template v-for="(item, index) in items">
         <v-expansion-panel v-if="isFiltered(item.fqid)" :key="index">
-          <v-expansion-panel-header class="pa-5"><a style="font-size:14px">{{item.title}}</a></v-expansion-panel-header>
-          <v-expansion-panel-content class="headline">
+          <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
+              <a style="font-size:14px">{{item.title}}</a>
+          </v-expansion-panel-header>
+          <v-expansion-panel-content v-bind:class="{'headline':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="8" style="margin-left:20px">
@@ -38,6 +40,7 @@
                       v-if="item.items"
                       :items="item.items"
                       :filter="filter"
+                      :bColorFlag="!bColorFlag"
                       @action="onAction"
                   />
                   <v-list-item-subtitle class="py-1" v-if="item.action1 && item.action1.title && !item.items">{{item.action1.title}}</v-list-item-subtitle>
@@ -63,7 +66,7 @@ export default {
       filteredItems: new Set()
     };
   },
-  props: ["items", "filter"],
+  props: ["items", "filter", "bColorFlag"],
   methods: {
     onAction(itemFqid, index) {
       // fire 'action' event
@@ -108,12 +111,20 @@ export default {
 </script>
 
 <style>
+.v-expansion-panel::before {
+   box-shadow: none !important;
+}
+.v-expansion-panel {
+  box-shadow: none;
+}
 .v-expansion-panel-header {
-  background-color: var(--vscode-editor-background, #1e1e1e);
   text-transform: none;
 }
-button.v-expansion-panel-header--active {
-  background-color: var(--vscode-list-hoverBackground,#2a2d2e) !important;
+.v-expansion-panel--active>.itemColor {
+   background-color: var(--vscode-editorHoverWidget-statusBarBackground, #2c2c2d) !important;
+}
+.v-expansion-panel--active>.subItemColor {
+  background-color: var(--vscode-editorHoverWidget-background, #252526) !important;
 }
 .v-expansion-panel-header--active:before {
   opacity: 0 !important;
@@ -123,8 +134,10 @@ button.v-expansion-panel-header--active {
   padding-left: 28px ;
   padding-bottom: 8px ;
 }
+.itemColor, .subItemColor {
+  background-color: var(--vscode-editor-background, #1e1e1e) !important;
+}
 .v-expansion-panel-content__wrap {
-  background-color: var(--vscode-list-hoverBackground,#2a2d2e);
   color: var(--vscode-foreground, #cccccc);
   text-transform: none;
 }
