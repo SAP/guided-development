@@ -21,6 +21,7 @@
             v-if="collection.items"
             :items="collection.items"
             :filter="filter"
+            :parent='0'
             @action="onAction"
           />
         </div>
