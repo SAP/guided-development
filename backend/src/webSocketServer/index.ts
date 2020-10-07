@@ -123,7 +123,7 @@ function createCollections(): IInternalCollection[] {
     name: "Open",
     title: "Open Snippet (via snippet)",
     snippet: {
-      contributorId: "SAPOSS.vscode-snippet-contrib", 
+      contributorId: "saposs.vscode-food-snippet-contrib", 
       snippetName: "snippet_1", 
       context: {uri: "uri"}                    
     }

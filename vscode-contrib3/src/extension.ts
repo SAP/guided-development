@@ -251,7 +251,7 @@ export async function activate(context: vscode.ExtensionContext) {
     openSnippetAction = new basAPI.actions.SnippetAction();
     openSnippetAction.name = "Open";
     openSnippetAction.snippet = {
-        contributorId: "SAPOSS.vscode-snippet-contrib", 
+        contributorId: "saposs.vscode-food-snippet-contrib", 
         snippetName: "snippet_1", 
         context: {}                    
     };
