@@ -1,15 +1,10 @@
-import { ICollection, IItem, IItemContext } from "./types/GuidedDev";
-
-export interface IInternalContextualItem {
-    item: IInternalItem;
-    context?: IItemContext;
-}
+import { ICollection, IItem } from "./types";
 
 export interface IInternalCollection extends ICollection {
-    contextualItems: IInternalContextualItem[];
+    items: IInternalItem[];
 }
 
 export interface IInternalItem extends IItem {
     fqid?: string;
-    contextualItems?: IInternalContextualItem[];
+    items?: IInternalItem[];
 }

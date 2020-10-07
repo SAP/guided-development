@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
-import { IInternalItem, IInternalCollection, IInternalContextualItem } from "./Collection";
-import { IItem, ICollection } from './types/GuidedDev';
+import { IInternalItem, IInternalCollection } from "./Collection";
+import { IItem, ICollection } from './types';
 
 export class Contributors {
     private onChangedCallback: (collections: Array<IInternalCollection>) => void;
@@ -95,41 +95,34 @@ export class Contributors {
             for (const collection of collections) {
                 // TODO: handle context for subitems
                 // TODO: handle duplicates?
-                collection.contextualItems = this.getItems(collection);
+                collection.items = this.getItems(collection);
             }
         }
     }
 
-    private getItems(collection: IInternalCollection): IInternalContextualItem[] {
-        const result: IInternalContextualItem[] = [];
+    private getItems(collection: IInternalCollection): IInternalItem[] {
+        const result: IInternalItem[] = [];
 
         for (const itemId of collection.itemIds) {
-            const item = this.itemsMap.get(itemId);
-            this.initSubItems(item);
-            result.push({ item, context: undefined });
-        }
-
-        const contextId: string = collection.contextId;
-        for (const item of this.itemsMap.values()) {
-            if (item.contexts) {
-                for (const context of item.contexts) {
-                    if (context.id === contextId) {
-                        result.push({ item, context });
-                        this.initSubItems(item);
-                    }
-                }
+            const item = this.itemsMap.get(itemId.toLocaleLowerCase());
+            if (item) {
+                this.initSubItems(item);
+                result.push(item);
+            } else {
+                console.error(`Could not find item id ${itemId}`)
             }
         }
+
         return result;
     }
 
     private initSubItems(item: IInternalItem) {
         if (item.itemIds) {
-            item.contextualItems = [];
+            item.items = [];
             for (const itemId of item.itemIds) {
                 const subitem: IInternalItem = this.itemsMap.get(itemId.toLowerCase());
                 if (subitem) {
-                    item.contextualItems.push({ item: subitem, context: undefined });
+                    item.items.push(subitem);
                     this.initSubItems(subitem);
                 }
             }

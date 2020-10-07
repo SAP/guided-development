@@ -18,8 +18,8 @@
           <v-card-title class="prompt-title">{{collection.title}}</v-card-title>
           <v-card-subtitle class="prompt-subtitle">{{collection.description}}</v-card-subtitle>
           <Items
-            v-if="collection.contextualItems"
-            :contextualItems="collection.contextualItems"
+            v-if="collection.items"
+            :items="collection.items"
             :filter="filter"
             @action="onAction"
           />
@@ -58,9 +58,9 @@ export default {
     }
   },
   methods: {
-    onAction(contextualItem, index) {
+    onAction(item, index, contextId) {
       // fire 'action' event
-      this.$emit("action", contextualItem, index);
+      this.$emit("action", item, index, contextId);
     },
     onFilter(e) {
       const labelObj = JSON.parse(e);
@@ -78,7 +78,7 @@ export default {
       this.labels = new Map();
       if (this.collections) {
         for (const collection of this.collections) {
-          for (const item of collection.contextualItems) {
+          for (const item of collection.items) {
             if (item.labels) {
               for (const labelObj of item.labels) {
                 const key = Object.keys(labelObj)[0];

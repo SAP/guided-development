@@ -1,11 +1,10 @@
-import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+import { IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
 
 export interface ICollection {
     id: string;
     title: string;
     description: string;
     type: CollectionType;
-    contextId?: string;
     itemIds: Array<string>;
 }
 
@@ -15,10 +14,23 @@ export enum CollectionType {
     Extension
 }
 
+interface ICommandActionParams {
+    params?: any[];
+}
+
+interface ISnippetActionParams {
+    snippetName?: string;
+}
+
 export interface IItemContext {
-    id: string;
-    action1Parameters?: any[]; // override parameters for command action1
-    action2Parameters?: any[]; // override parameters for command action2
+    project: string;
+    params?: any[];
+}
+
+export interface IItemAction<> {
+    title: string;
+    action: IAction;
+    contexts?: IItemContext[];
 }
 
 export interface IItem {
@@ -26,12 +38,11 @@ export interface IItem {
     title: string;
     description: string;
     image?: IImage;
-    action1?: IExecuteAction | ICommandAction | ISnippetAction | IFileAction;
-    action2?: IExecuteAction | ICommandAction | ISnippetAction | IFileAction;
+    action1?: IItemAction;
+    action2?: IItemAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
-    contexts?: IItemContext[];
 }
 
 export interface IImage {

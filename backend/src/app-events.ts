@@ -1,6 +1,7 @@
-import { ICollection, IItem } from "./types/GuidedDev";
+import { IAction } from "@sap-devx/bas-platform-types";
+import { ICollection, IItem } from "./types";
 
 export interface AppEvents {
-  performAction(item: IItem, index: number, contextId: string): Promise<any>;
+  performAction(action: IAction): Promise<any>;
   setData(extensionId: string, collections: ICollection[], items: IItem[]): void;
 }

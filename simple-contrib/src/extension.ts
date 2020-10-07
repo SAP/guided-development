@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { bas, ICommandAction } from "@sap-devx/bas-platform-types";
-import { ICollection, CollectionType, IItem, ManagerAPI, IItemContext } from "@sap-devx/guided-development-types";
+import { ICollection, CollectionType, IItem, ManagerAPI } from "@sap-devx/guided-development-types";
 
 const EXT_ID = "SAPOSS.simple-contrib";
 
@@ -31,8 +31,8 @@ export async function activate(context: vscode.ExtensionContext) {
      * [extension-provided commands](https://code.visualstudio.com/api/references/vscode-api#commands)).
      */
     const myAction: ICommandAction = new basAPI.actions.CommandAction();
-    myAction.name = "Execute a Command";
-    myAction.command.name = "workbench.action.showCommands";
+    myAction.name = "workbench.action.showCommands";
+    myAction.params = ["/tmp/x"];
 
     const itemId: string = "1";
     const myItem: IItem = {
@@ -40,7 +40,10 @@ export async function activate(context: vscode.ExtensionContext) {
         title: "My Simple Item",
         description: "This is my first item",
         labels: [],
-        action1: myAction
+        action1: {
+            title: "Execute a Command",
+            action: myAction
+        }
     }
 
     /**

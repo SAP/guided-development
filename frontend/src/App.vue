@@ -57,12 +57,8 @@ export default {
   watch: {
   },
   methods: {
-    async onAction(contextualItem, index) {
-      const itemFqid = contextualItem.item.fqid;
-      let contextId;
-      if (contextualItem.context) {
-        contextId = contextualItem.context.id;
-      }
+    async onAction(item, index, contextId) {
+      const itemFqid = item.fqid;
       await this.rpc.invoke("performAction", [itemFqid, index, contextId]);
     },
     async showCollections(collections) {

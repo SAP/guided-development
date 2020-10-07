@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { Action } from "./impl";
 
 export enum ActionType {
     Execute = "EXECUTE",
@@ -8,39 +9,26 @@ export enum ActionType {
     Snippet = "SNIPPET"
 }
 
-export interface ICommand {
+export interface IAction {
+    actionType: ActionType;
+}
+
+export interface ICommandAction extends IAction {
     name: string;
     params?: any[];
 }
 
-export interface ISnippet {
+export interface ISnippetAction extends IAction {
     contributorId: string;
     snippetName: string;
     context: any;
 }
 
-export interface IFile {
+export interface IFileAction extends IAction {
     uri: vscode.Uri;
 }
 
-export interface IAction {
-    name: string;
-    title?: string;
-    _actionType?: ActionType
-}
-
 export interface IExecuteAction extends IAction {
-    performAction: () => Thenable<any>;
-}
-
-export interface ICommandAction extends IAction {
-    command: ICommand;
-}
-
-export interface ISnippetAction extends IAction {
-    snippet: ISnippet;
-}
-
-export interface IFileAction extends IAction {
-    file: IFile;
+    executeAction: (params?: any[]) => Thenable<any>;
+    params?: any[];
 }

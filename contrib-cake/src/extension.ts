@@ -1,48 +1,62 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import * as _ from 'lodash';
-import { ICollection, CollectionType, IItem, ManagerAPI, IItemContext } from '@sap-devx/guided-development-types';
-import { bas, IExecuteAction, ICommandAction } from '@sap-devx/bas-platform-types';
-
-const datauri = require("datauri");
+import { ICollection, CollectionType, IItem, ManagerAPI, IItemAction, IItemContext } from '@sap-devx/guided-development-types';
+import { bas, IExecuteAction } from '@sap-devx/bas-platform-types';
+// @ts-ignore
+import * as datauri from "datauri";
 
 const EXT_ID = "saposs.contrib-cake";
 
-const bakeCollectionMap: Map<string, ICollection> = new Map(); // key is dirname; value is collection
-const bakeItemsMap: Map<string, Array<string>> = new Map(); // key is dirname; value is array of item ids
-const items: Array<IItem> = [];
+const projectsMap: Map<string, any> = new Map();
 
 let extensionPath: string;
-let bakeCollectionTemplate: ICollection;
 
 let eatAction: IExecuteAction,
     buyAction: IExecuteAction,
     mixAction: IExecuteAction,
-    insertAction: IExecuteAction,
-    pourAction: IExecuteAction,
-    sampleAction: ICommandAction;
+    bakeAction: IExecuteAction,
+    pourAction: IExecuteAction
 
-bakeCollectionTemplate = {
-    id: "collection2",
-    title: "Bake a Cake",
-    description: "This is a repice for making baked cakes. You can bake a cake only if there is a bake.json file in your workspace",
-    type: CollectionType.Scenario,
-    itemIds: [
-        `saposs.contrib-oven.prep-oven`,
-        `saposs.contrib-oven.bake`,
-        // `${EXT_ID}.buy-ingredients`,
-        // `${EXT_ID}.mix-ingredients`,
-        // `${EXT_ID}.pour-mix`,
-        // `${EXT_ID}.place-pan`,
-        // `${EXT_ID}.eat-cake`,
-    ]
-};
+let bakeItemAction: IItemAction;
+    
+function initActions(basAPI: typeof bas) {
+    eatAction = new basAPI.actions.ExecuteAction()
+    eatAction.executeAction = () => {
+        return vscode.window.showInformationMessage("The cake was delicious!!!");
+    };
+    buyAction = new basAPI.actions.ExecuteAction();
+    buyAction.executeAction = () => {
+        return vscode.window.showInformationMessage("You bought all required ingredients");
+    };
+    mixAction = new basAPI.actions.ExecuteAction();
+    mixAction.executeAction = () => {
+        return vscode.window.showInformationMessage("The cake mix is ready");
+    };
+
+    bakeAction = new basAPI.actions.ExecuteAction();
+    bakeAction.executeAction = (params) => {
+        if (params && params.length > 0) {
+            return vscode.window.showInformationMessage(`The cake is ready (${params})`);
+        } else {
+            return vscode.window.showInformationMessage(`The cake is ready`);
+        }
+    };
+    bakeItemAction = {
+        title: "Bake",
+        action: bakeAction,
+        contexts: []
+    };
+
+    pourAction = new basAPI.actions.ExecuteAction();
+    pourAction.executeAction = () => {
+        return vscode.window.showInformationMessage("The cake mix was poured into the pan");
+    };
+}
 
 function getCollections(): ICollection[] {
     const collections: ICollection[] = [];
-    let collection: ICollection;
 
-    collection = {
+    const noBakeCollection = {
         id: "collection1",
         title: "Make a No Bake Cake",
         description: "This is a recipe for making a no-bake cake",
@@ -54,20 +68,37 @@ function getCollections(): ICollection[] {
             `${EXT_ID}.eat-cake`,
         ]
     };
-    collections.push(collection);
+    collections.push(noBakeCollection);
 
-    for (const collection of bakeCollectionMap.values()) {
-        collections.push(collection);
-    }
-
+    const bakeCollection: ICollection = {
+        id: "collection2",
+        title: "Bake a Cake",
+        description: "This is a repice for making baked cakes. You can bake a cake only if there is a bake.json file in your workspace",
+        type: CollectionType.Scenario,
+        itemIds: [
+            `${EXT_ID}.buy-ingredients`,
+            `${EXT_ID}.mix-ingredients`,
+            `${EXT_ID}.pour-mix`,
+            `${EXT_ID}.bake`,
+            `${EXT_ID}.eat-cake`,
+        ]
+    };
+    
+    collections.push(bakeCollection);
     return collections;
 }
 
 function getItems(): Array<IItem> {
-    if (items.length === 0) {
-        items.push(...getInitialItems());
+    bakeItemAction.contexts = [];
+    for (const project of projectsMap) {
+        const context: IItemContext = {
+            project: project[1],
+            params: [project[0]]
+        }
+        bakeItemAction.contexts.push(context);
     }
-    return items;
+
+    return getInitialItems();
 }
 
 function getInitialItems(): Array<IItem> {
@@ -80,7 +111,10 @@ function getInitialItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'cake1.jpg')),
             note: "image note of eat-cake"
         },
-        action1: eatAction,
+        action1: {
+            title: "Eat",
+            action: eatAction
+        },
         labels: [
             { "Project Type": "All Cakes" }
         ]
@@ -91,7 +125,10 @@ function getInitialItems(): Array<IItem> {
         id: "buy-ingredients",
         title: "Buy Ingredients",
         description: "Buy relevant ingredeients for your cake",
-        action1: buyAction,
+        action1: {
+            title: "Buy",
+            action: buyAction
+        },
         labels: []
     };
     items.push(item);
@@ -100,16 +137,19 @@ function getInitialItems(): Array<IItem> {
         id: "mix-ingredients",
         title: "Mix Ingredients",
         description: "Mix ingredeients according to recipe",
-        action1: mixAction,
+        action1: {
+            title: "Mix",
+            action: mixAction
+        },
         labels: []
     };
     items.push(item);
 
     item = {
-        id: "insert-pan",
-        title: "Insert Pan into Oven",
-        description: "Insert the pan into the oven",
-        action1: insertAction,
+        id: "bake",
+        title: "Bake your cake",
+        description: "Bake your cake",
+        action1: bakeItemAction,
         labels: []
     };
     items.push(item);
@@ -122,7 +162,10 @@ function getInitialItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'info.png')),
             note: "image note of pour-mix"
         },
-        action1: pourAction,
+        action1: {
+            title: "Pour",
+            action: pourAction
+        },
         labels: []
     };
     items.push(item);
@@ -132,9 +175,7 @@ function getInitialItems(): Array<IItem> {
         title: "Place Pan in Oven",
         description: "Place the pan with the mix in the oven",
         itemIds: [
-            "saposs.contrib-oven.open-oven",
             `${EXT_ID}.insert-pan`,
-            "saposs.contrib-oven.close-oven"
         ],
         labels: []
     };
@@ -145,71 +186,21 @@ function getInitialItems(): Array<IItem> {
 
 function addBakeCollection(dirPath: string): void {
     const name = path.parse(dirPath).name;
-
-    // clone collection template
-    const collection: ICollection = JSON.parse(JSON.stringify(bakeCollectionTemplate));
-    collection.id = `bake-${name}`;
-    collection.title = `Bake a Cake (${name})`;
-    collection.contextId = name;
-    const context: IItemContext = {
-        id: name,
-        action1Parameters: [name]
-    }
-    addContextToItems(context);
-    bakeCollectionMap.set(dirPath, collection);
-}
-
-function addContextToItems(context: IItemContext) {
-    for (const item of getItems()) {
-        if (!item.contexts) {
-            item.contexts = [];
-        }
-        item.contexts.push(context);
-    }
+    projectsMap.set(dirPath, name);
 }
 
 function removeBakeCollection(dirPath: string): void {
-    bakeCollectionMap.delete(dirPath);
-    bakeItemsMap.delete(dirPath);
+    projectsMap.delete(dirPath);
 }
 
 export async function activate(context: vscode.ExtensionContext) {
     const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    initActions(basAPI);
+
     const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
 
     extensionPath = context.extensionPath;
     console.log(`[Extension ${EXT_ID}] Activated`);
-
-    eatAction = new basAPI.actions.ExecuteAction()
-    eatAction.name = "Eat"
-    eatAction.performAction = () => {
-        return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
-    };
-    buyAction = new basAPI.actions.ExecuteAction();
-    buyAction.name = "Buy";
-    buyAction.performAction = () => {
-        return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
-    };
-    mixAction = new basAPI.actions.ExecuteAction();
-    mixAction.name = "Mix";
-    mixAction.performAction = () => {
-        return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
-    };
-    insertAction = new basAPI.actions.ExecuteAction();
-    insertAction.name = "Insert"
-    insertAction.performAction = () => {
-        return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
-    };
-    pourAction = new basAPI.actions.ExecuteAction();
-    pourAction.name = "Pour";
-    pourAction.performAction = () => {
-        return vscode.window.showInformationMessage("The cake mix was poured into the pan");
-    };
-
-    sampleAction = new basAPI.actions.CommandAction();
-    sampleAction.command = {
-        name: "workbench.action.files.openFile"
-    }
 
     vscode.workspace.onDidChangeWorkspaceFolders((e) => {
         // when first folder is added to the workspace, the extension is reactivated, so we could let the find files upon activation handle this use-case

@@ -19,6 +19,6 @@ function _scheduleAction(action: IAction) {
     }
     actionsList.push(action);
     actionsSettings.update("actions", actionsList, vscode.ConfigurationTarget.Workspace).then(() => { }, (reason) => {
-        console.error(`Couldn't update action: ${reason}`);
+        console.error(`Couldn't schedule action: ${reason}`);
     });
 }

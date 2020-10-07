@@ -10,8 +10,8 @@
     "url": "https://github.com/SAP/guided-development.git",
     "directory": "guided-development-types"
   },
-  "main": "./out/src/types/GuidedDev",
-  "types": "./out/src/types/GuidedDev",
+  "main": "./out/src/types",
+  "types": "./out/src/types",
   "scripts": {
     "prep": "cd ../backend && npm i && npm run compile",
     "copy": "ncp ../backend/out out",

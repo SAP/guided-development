@@ -2,7 +2,7 @@
   <div id="items-component">
     <v-expansion-panels dark focusable multiple>
       <template
-        :v-if="contextualItems"
+        :v-if="items"
         v-for="(contextualItem, index) in contextualItems"
       >
         <v-expansion-panel
@@ -24,11 +24,8 @@
                   <v-card-text class="pa-0 ma-0" style="font-size: 12px"
                     >Item ID: {{ contextualItem.item.fqid }}</v-card-text
                   >
-                  <v-card-text
-                    class="pa-0 ma-0"
-                    style="font-size: 12px"
-                    v-if="contextualItem.context"
-                    >Context ID: {{ contextualItem.context.id }}</v-card-text
+                  <v-card-text v-if="contextualItem.context" class="pa-0 ma-0" style="font-size: 12px"
+                    >Project: {{ contextualItem.context.project }}</v-card-text
                   >
                   <v-card-text
                     class="pa-0 ma-0"
@@ -106,8 +103,8 @@
               <v-row>
                 <v-col style="margin-left: 20px">
                   <Items
-                    v-if="contextualItem.item.contextualItems"
-                    :contextualItems="contextualItem.item.contextualItems"
+                    v-if="contextualItem.item.items"
+                    :items="contextualItem.item.items"
                     :filter="filter"
                     @action="onAction"
                   />
@@ -116,7 +113,7 @@
                     v-if="
                       contextualItem.item.action1 &&
                       contextualItem.item.action1.title &&
-                      !contextualItem.item.contextualItems
+                      !contextualItem.item.items
                     "
                     >{{
                       contextualItem.item.action1.title
@@ -126,17 +123,17 @@
                     small
                     v-if="
                       contextualItem.item.action1 &&
-                      !contextualItem.item.contextualItems
+                      !contextualItem.item.items
                     "
                     @click="onAction(contextualItem, 1)"
-                    >{{ contextualItem.item.action1.name }}</v-btn
+                    >{{ contextualItem.item.action1.title }}</v-btn
                   >
                   <v-list-item-subtitle
                     class="py-4"
                     v-if="
                       contextualItem.item.action2 &&
                       contextualItem.item.action2.title &&
-                      !contextualItem.item.contextualItems
+                      !contextualItem.item.items
                     "
                     >{{
                       contextualItem.item.action2.title
@@ -146,10 +143,10 @@
                     small
                     v-if="
                       contextualItem.item.action2 &&
-                      !contextualItem.item.contextualItems
+                      !contextualItem.item.items
                     "
                     @click="onAction(contextualItem, 2)"
-                    >{{ contextualItem.item.action2.name }}</v-btn
+                    >{{ contextualItem.item.action2.title }}</v-btn
                   >
                 </v-col>
               </v-row>
@@ -167,26 +164,48 @@ export default {
   data() {
     return {
       imageDialog: false,
-      filteredItems: new Set(),
+      filteredItems: new Set()
     };
   },
-  props: ["contextualItems", "filter"],
+  props: ["items", "filter"],
   methods: {
     onAction(contextualItem, index) {
       // fire 'action' event
-      this.$emit("action", contextualItem, index);
+      let project;
+      if (contextualItem.context) {
+        project = contextualItem.context.project;
+      }
+      this.$emit("action", contextualItem.item, index, project);
     },
     isFiltered(itemFqid) {
       return this.filteredItems.has(itemFqid);
     },
   },
+  computed: {
+    contextualItems: function() {
+      const result = [];
+      for (const item of this.items) {
+        if (item.action1) {
+          if (item.action1.contexts) { // multiple contexts -- duplicate item
+            for (const context of item.action1.contexts) {
+              result.push({item, context});
+            }
+          } else { // no contexts -- show item only once
+            result.push({item, context: undefined});
+          }
+        } else { // no actions -- probably has subitems
+            result.push({item, context: undefined});
+        }
+      }
+      return result;
+    }
+  },
   watch: {
     filter: {
       handler: function () {
         this.filteredItems = new Set();
-        if (this.contextualItems) {
-          for (const contextualItem of this.contextualItems) {
-            const item = contextualItem.item;
+        if (this.items) {
+          for (const item of this.items) {
             let foundLabelMismatch = false;
             for (const label of item.labels) {
               const labelKey = Object.keys(label)[0];

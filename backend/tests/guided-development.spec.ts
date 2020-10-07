@@ -10,8 +10,9 @@ import { AppEvents } from '../src/app-events';
 import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
-import { IItem, ICollection, CollectionType } from "../src/types/GuidedDev";
+import { IItem, ICollection, CollectionType } from "./types";
 import { IInternalCollection, IInternalItem } from "./Collection";
+import { IAction } from "@sap-devx/bas-platform-types";
 
 describe('guidedDevelopment unit test', () => {
     let sandbox: any;
@@ -22,7 +23,7 @@ describe('guidedDevelopment unit test', () => {
     let appEventsMock: any;
 
     class TestEvents implements AppEvents {
-        public performAction(item: IItem, index: number): Promise<any> {
+        public performAction(action: IAction): Promise<any> {
             return;
         }
         public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
@@ -146,7 +147,7 @@ describe('guidedDevelopment unit test', () => {
             description: "description1",
             itemIds: [],
             type: CollectionType.Platform,
-            contextualItems: []
+            items: []
         };
         await guidedDevelopment["setCollections"]([collection1]);
         expect(guidedDevelopment["collections"]).to.have.length(1);
@@ -169,7 +170,7 @@ describe('guidedDevelopment unit test', () => {
             description: "description2",
             title: "title2",
             labels: [],
-            contextualItems: [{item:item1}]
+            items: [item1]
         };
 
         const collection1: IInternalCollection = {
@@ -178,7 +179,7 @@ describe('guidedDevelopment unit test', () => {
             description: "description1",
             itemIds: [],
             type: CollectionType.Platform,
-            contextualItems: [{item:item2}]
+            items: [item2]
         };
         await guidedDevelopment["setCollections"]([collection1]);
         const foundItem = guidedDevelopment["getItem"](fqid2);
