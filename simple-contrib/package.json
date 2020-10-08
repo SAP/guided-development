@@ -35,8 +35,9 @@
 	"extensionDependencies": [
 		"SAPOSS.bas-platform"
 	],
-	"dependencies": {
+	"dependenciesX": {
 		"@sap-devx/bas-platform-types": "0.0.6",
 		"@sap-devx/guided-development-types": "0.0.2"
-	}
+	},
+	"dependencies": {}
 }

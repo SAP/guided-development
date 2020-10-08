@@ -3,76 +3,77 @@ import * as mocha from "mocha";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
-import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ISnippet, ICommand, IFile, ActionType } from "@sap-devx/bas-platform-types/out/src/api";
+import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType } from "@sap-devx/bas-platform-types";
 
 import { VSCodeEvents } from "../src/vscode-events";
+import { IItem } from "./types";
 
 function mockPerformAction(action: IAction, options?: any): void {
     if (action) {
-        switch ((action as MockAction)._actionType) {
+        switch ((action as MockAction).actionType) {
             case ActionType.Command:
                 let commandAction = (action as MockCommandAction);
-                vscode.commands.executeCommand(commandAction.command.name, commandAction.command.params);
+                vscode.commands.executeCommand(commandAction.name, commandAction.params);
                 break;
             case ActionType.Execute:
                 let executeAction = (action as MockExecuteAction);
-                executeAction.performAction();
+                executeAction.executeAction();
                 break;
             case ActionType.Snippet:
                 let snippetAction = (action as MockSnippetAction);
-                vscode.commands.executeCommand("loadCodeSnippet", { contributorId: snippetAction.snippet.contributorId, snippetName: snippetAction.snippet.snippetName, context: snippetAction.snippet.context });
+                vscode.commands.executeCommand("loadCodeSnippet", { contributorId: snippetAction.contributorId, snippetName: snippetAction.snippetName, context: snippetAction.context });
                 break;
             case ActionType.File:
                 let fileAction = (action as MockFileAction);
-                vscode.commands.executeCommand('vscode.open', fileAction.file.uri, { viewColumn: vscode.ViewColumn.Two });
+                vscode.commands.executeCommand('vscode.open', fileAction.uri, { viewColumn: vscode.ViewColumn.Two });
                 break;
         }
     }
 }
 
 abstract class MockAction implements IAction {
-    name: string = "";
-    title?: string = "";
-    _actionType?: ActionType = ActionType.Command;
+    actionType: ActionType;
 }
 
 class MockExecuteAction extends MockAction implements IExecuteAction {
-    performAction: () => Thenable<any>;
+    executeAction: () => Thenable<any>;
 
     constructor() {
         super();
-        this._actionType = ActionType.Execute;
-        this.performAction = () => { return Promise.resolve() }
+        this.actionType = ActionType.Execute;
+        this.executeAction = () => { return Promise.resolve() }
     }
 }
 
 class MockSnippetAction extends MockAction implements ISnippetAction {
-    snippet: ISnippet;
+    contributorId: string = "";
+    snippetName: string = "";
+    context: string = "";
 
     constructor() {
         super();
-        this._actionType = ActionType.Snippet;
-        this.snippet = { contributorId: "", context: "", snippetName: "" };
+        this.actionType = ActionType.Snippet;
     }
 }
 
 class MockCommandAction extends MockAction implements ICommandAction {
-    command: ICommand;
+    name: string;
+    params?: any[];
 
     constructor() {
         super();
-        this._actionType = ActionType.Command;
-        this.command = { name: "" };
+        this.actionType = ActionType.Command;
+        this.name = "";
     }
 }
 
 class MockFileAction extends MockAction implements IFileAction {
-    file: IFile;
+    uri: vscode.Uri;
 
     constructor() {
         super();
-        this._actionType = ActionType.File;
-        this.file = { uri: vscode.Uri.parse("") };
+        this.actionType = ActionType.File;
+        this.uri = vscode.Uri.parse("");
     }
 }
 
@@ -144,13 +145,16 @@ describe('vscode-events unit test', () => {
                 withExactArgs('workbench.action.openGlobalSettings', undefined).resolves();
             const commandOpenAction = new MockCommandAction();
             commandOpenAction.name = "Open";
-            commandOpenAction.command = { name: "workbench.action.openGlobalSettings" };
+            commandOpenAction.name = "workbench.action.openGlobalSettings";
 
-            const item = {
+            const item: IItem = {
                 id: "open-command",
                 title: "Open Command  - Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: commandOpenAction,
+                action1: {
+                    title: "Open",
+                    action: commandOpenAction
+                },
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
@@ -159,46 +163,48 @@ describe('vscode-events unit test', () => {
             }
 
             events.setBasAPI(mockBasAPI);
-            return events.performAction(item, 1);
+            return events.performAction(item.action1.action);
         });
         it("Snippet as ActionType", () => {
             commandsMock.expects("executeCommand").
                 withExactArgs("loadCodeSnippet", { contributorId: "saposs.vscode-food-snippet-contrib", snippetName: "snippet_1", context: { uri: "uri" } }).resolves();
 
             const snippetOpenAction: ISnippetAction = new MockSnippetAction();
-            snippetOpenAction.name = "Open";
-            snippetOpenAction.snippet = {
-                contributorId: "saposs.vscode-food-snippet-contrib",
-                snippetName: "snippet_1",
-                context: { uri: "uri" }
-            };
+            snippetOpenAction.contributorId = "SAPOSS.vscode-food-snippet-contrib";
+            snippetOpenAction.snippetName = "snippet_1";
+            snippetOpenAction.context = { uri: "uri" };
 
-            const item = {
+            const item: IItem = {
                 id: "open-snippet",
                 title: "Open Snippet  - snippet_1",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: snippetOpenAction,
+                action1: {
+                    title: "Open",
+                    action: snippetOpenAction
+                },
                 labels: [
                     {"Project Name": "cap3"},
                     {"Project Type": "CAP"},
                     {"Project Path": "/home/user/projects/cap3"}
                 ]
             }
-            return events.performAction(item, 1);
+            return events.performAction(item.action1.action);
         });
         it("File as ActionType", () => {
             const uri = vscode.Uri.parse("README");
             commandsMock.expects("executeCommand").
                 withExactArgs('vscode.open', uri, { viewColumn: vscode.ViewColumn.Two }).resolves();
             const openFileAction: IFileAction = new MockFileAction();
-            openFileAction.name = "Open";
-            openFileAction.file = { uri };
+            openFileAction.uri = uri;
 
-            const item = {
+            const item: IItem = {
                 id: "open-file",
                 title: "Open File",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: openFileAction,
+                action1: {
+                    title: "Open",
+                    action: openFileAction
+                },
                 labels: [
                     {"Project Name": "cap3"},
                     {"Project Type": "CAP"},
@@ -206,49 +212,53 @@ describe('vscode-events unit test', () => {
                 ]
             }
 
-            return events.performAction(item, 1);
+            return events.performAction(item.action1.action);
         });
         it("Execute as ActionType", () => {
             expect(executeAction.performAction());
 
             const openExecuteAction: IExecuteAction = new MockExecuteAction();
-            openExecuteAction.name = "Open";
-            openExecuteAction.performAction = () => {
+            openExecuteAction.executeAction = () => {
                 return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
             }
 
-            const item = {
+            const item: IItem = {
                 id: "open-execute",
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: openExecuteAction,
+                action1: {
+                    title: "Open",
+                    action: openExecuteAction
+                },
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
                     {"Project Path": "/home/user/projects/cap1"}
                 ]
             }
-            return events.performAction(item, 1);
+            return events.performAction(item.action1.action);
         });
     });
     describe("performAction - on failure", () => {
         it("action or actionType does not exist", () => {
             commandsMock.expects("executeCommand").never();
             const commandAction: ICommandAction = new MockCommandAction();
-            commandAction.name = "Open";
-            commandAction.command = { name: "workbench.action.openGlobalSettings" };
-            const item = {
+            commandAction.name = "workbench.action.openGlobalSettings";
+            const item: IItem = {
                 id: "open-command",
                 title: "Open Command  - Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-                action1: commandAction,
+                action1: {
+                    title: "Open",
+                    action: commandAction
+                },
                 labels: [
                     {"Project Name": "cap1"},
                     {"Project Type": "CAP"},
                     {"Project Path": "/home/user/projects/cap1"}
                 ]
             }
-            return events.performAction(undefined, 1);
+            return events.performAction(item.action1.action);
         });
     });
 });

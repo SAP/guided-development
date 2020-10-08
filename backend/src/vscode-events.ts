@@ -1,7 +1,7 @@
 import { AppEvents } from "./app-events";
 import { Contributors } from './contributors';
-import { ICollection, IItem } from './types/GuidedDev';
-import { bas } from "@sap-devx/bas-platform-types";
+import { ICollection, IItem, IItemContext, IItemAction } from './types';
+import { ActionType, bas, IAction, ICommandAction, IExecuteAction } from "@sap-devx/bas-platform-types";
 
 export class VSCodeEvents implements AppEvents {
   basAPI: any;
@@ -23,13 +23,19 @@ export class VSCodeEvents implements AppEvents {
     this.basAPI = basAPI;
   }
 
-  public async performAction(item: IItem, index: number): Promise<any> {
-    if (item) {
-      let action = item[index == 1 ? 'action1' : 'action2'];
-      if (action) {
-        this.basAPI?.actions?.performAction(action);
+  private getContext(item: IItem, index: number, contextId: string): IItemContext {
+    const action = (index === 1 ? item.action1 : item.action2);
+    if (action.contexts) {
+      for (const context of action.contexts) {
+        if (context.project === contextId) {
+          return context;
+        }
       }
     }
+  }
+
+  public async performAction(action: IAction): Promise<any> {
+    this.basAPI?.actions?.performAction(action);
   }
 
   public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {

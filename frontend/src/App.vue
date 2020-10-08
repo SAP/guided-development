@@ -57,8 +57,9 @@ export default {
   watch: {
   },
   methods: {
-    async onAction(itemFqid, index) {
-      await this.rpc.invoke("performAction", [itemFqid, index]);
+    async onAction(item, index, contextId) {
+      const itemFqid = item.fqid;
+      await this.rpc.invoke("performAction", [itemFqid, index, contextId]);
     },
     async showCollections(collections) {
       this.collections = collections;

@@ -1,7 +1,7 @@
 {
   "name": "@sap-devx/bas-platform-types",
   "publisher": "SAPOSS",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "author": "",
   "license": "Apache-2.0",
   "description": "An npm package that includes Business Application Studio declarations",
@@ -10,7 +10,7 @@
     "url": "https://github.com/SAP/guided-development.git",
     "directory": "bas-platform-types"
   },
-  "main": "./out/src/api",
+  "main": "./out/src/actions/interfaces",
   "types": "./out/src/api",
   "scripts": {
     "prep": "cd ../bas-platform && npm i && npm run compile",

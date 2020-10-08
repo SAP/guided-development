@@ -1,52 +1,81 @@
 <template>
   <div id="items-component">
     <v-expansion-panels dark focusable multiple>
-      <template v-for="(item, index) in items">
-        <v-expansion-panel v-if="isFiltered(item.fqid)" :key="index">
+      <template v-for="(contextualItem, index) in contextualItems">
+        <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index">
           <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
-              <a style="font-size:14px">{{item.title}}</a>
+              <a style="font-size:14px">{{contextualItem.item.title}}</a>
           </v-expansion-panel-header>
           <v-expansion-panel-content v-bind:class="{'headline':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="8" style="margin-left:20px">
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px">{{item.description}}</v-card-text>
-                  <v-card-text class="pa-0 my-6" style="font-size:12px">Item ID: {{item.fqid}}</v-card-text>
+                  <v-card-text class="pa-0 ma-0" style="font-size:12px">{{contextualItem.item.description}}</v-card-text>
+                  <v-card-text class="pa-0 my-6" style="font-size:12px">Item ID: {{contextualItem.item.fqid}}</v-card-text>
+                  <v-card-text v-if="contextualItem.context" class="pa-0 ma-0" style="font-size: 12px"
+                    >Project: {{ contextualItem.context.project }}</v-card-text
+                  >
                   <div v-if="false">
-                    <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="item.labels">Labels:</v-card-text>
-                    <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in item.labels" :key="index">
+                    <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="contextualItem.item.labels">Labels:</v-card-text>
+                    <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in contextualItem.item.labels" :key="index">
                       <v-card-text class="pa-0 ma-0" style="font-size:12px;text-indent:40px" v-for="(value, key) in label" :key="key">{{key}}: {{value}}</v-card-text>
                     </v-card-text>
                   </div>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-img v-if="item.image" style="cursor:pointer" :src="item.image.image" max-width="100%" @click="imageDialog = true">
-                    <v-icon v-if="item.image" style="position:absolute;bottom:0px;right:0px" @click="imageDialog = true">search</v-icon>
+                  <v-img v-if="contextualItem.item.image" style="cursor:pointer" :src="contextualItem.item.image.image" max-width="100%" @click="imageDialog = true">
+                    <v-icon v-if="contextualItem.item.image" style="position:absolute;bottom:0px;right:0px" @click="imageDialog = true">search</v-icon>
                   </v-img>
-                  <v-card-text v-if="item.image" align="left" class="mt-4 pb-0" style="font-size:14px;padding-left:0px"><b>Note</b></v-card-text>
-                  <v-card-text v-if="item.image" align="left" class="pa-0 ma-0" style="font-size:12px;padding-left:0px">{{item.image.note}}</v-card-text>
-                  <v-dialog v-model="imageDialog" max-width="40%">
+                  <v-card-text
+                    v-if="contextualItem.item.image"
+                    align="left"
+                    class="mt-4 pb-0"
+                    style="font-size: 14px; padding-left: 0px"
+                    ><b>Note</b></v-card-text
+                  >
+                  <v-card-text
+                    v-if="contextualItem.item.image"
+                    align="left"
+                    class="pa-0 ma-0"
+                    style="font-size: 12px; padding-left: 0px"
+                    >{{ contextualItem.item.image.note }}</v-card-text
+                  >
+                  <v-dialog
+                    v-model="contextualItem.item.imageDialog"
+                    max-width="40%"
+                  >
                     <v-card align="center" height="100%">
-                      <v-img v-if="item.image" :src="item.image.image" alt="" width="100%" height="100%" @click.stop="imageDialog = false">
-                        <v-icon style="position:absolute;top:0px;right:0px" @click.stop="imageDialog = false">clear</v-icon>
+                      <v-img
+                        v-if="contextualItem.item.image"
+                        :src="contextualItem.item.image.image"
+                        alt=""
+                        width="100%"
+                        height="100%"
+                        @click.stop="imageDialog = false"
+                      >
+                        <v-icon
+                          style="position: absolute; top: 0px; right: 0px"
+                          @click.stop="imageDialog = false"
+                          >clear</v-icon
+                        >
                       </v-img>
                     </v-card>
                   </v-dialog>
                 </v-col>
               </v-row>
               <v-row>
-                <v-col style="margin-left:20px">
+                <v-col style="margin-left: 20px">
                   <Items
-                      v-if="item.items"
-                      :items="item.items"
+                      v-if="contextualItem.item.items"
+                      :items="contextualItem.item.items"
                       :filter="filter"
                       :bColorFlag="!bColorFlag"
                       @action="onAction"
                   />
-                  <v-list-item-subtitle class="py-1" v-if="item.action1 && item.action1.title && !item.items">{{item.action1.title}}</v-list-item-subtitle>
-                  <v-btn small v-if="item.action1 && !item.items" @click="onAction(item.fqid, 1)">{{item.action1.name}}</v-btn>
-                  <v-list-item-subtitle class="py-1 mt-4" v-if="item.action2 && item.action2.title && !item.items">{{item.action2.title}}</v-list-item-subtitle>
-                  <v-btn small v-if="item.action2 && !item.items" @click="onAction(item.fqid, 2)">{{item.action2.name}}</v-btn>
+                  <v-list-item-subtitle class="py-1" v-if="contextualItem.item.action1 && contextualItem.item.action1.title && !contextualItem.item.items">{{contextualItem.item.action1.title}}</v-list-item-subtitle>
+                  <v-btn small v-if="contextualItem.item.action1 && !contextualItem.item.items" @click="onAction(contextualItem, 1)">{{contextualItem.item.action1.title}}</v-btn>
+                  <v-list-item-subtitle class="py-1 mt-4" v-if="contextualItem.item.action2 && contextualItem.item.action2.title && !contextualItem.item.items">{{contextualItem.item.action2.title}}</v-list-item-subtitle>
+                  <v-btn small v-if="contextualItem.item.action2 && !contextualItem.item.items" @click="onAction(contextualItem, 2)">{{contextualItem.item.action2.title}}</v-btn>
                 </v-col>
               </v-row>
             </v-container>
@@ -68,43 +97,68 @@ export default {
   },
   props: ["items", "filter", "bColorFlag"],
   methods: {
-    onAction(itemFqid, index) {
+    onAction(contextualItem, index) {
       // fire 'action' event
-      this.$emit("action", itemFqid, index);
+      let project;
+      if (contextualItem.context) {
+        project = contextualItem.context.project;
+      }
+      this.$emit("action", contextualItem.item, index, project);
     },
     isFiltered(itemFqid) {
       return this.filteredItems.has(itemFqid);
     },
   },
+  computed: {
+    contextualItems: function() {
+      const result = [];
+      for (const item of this.items) {
+        if (item.action1) {
+          if (item.action1.contexts) { // multiple contexts -- duplicate item
+            for (const context of item.action1.contexts) {
+              result.push({item, context});
+            }
+          } else { // no contexts -- show item only once
+            result.push({item, context: undefined});
+          }
+        } else { // no actions -- probably has subitems
+            result.push({item, context: undefined});
+        }
+      }
+      return result;
+    }
+  },
   watch: {
     filter: {
       handler: function () {
         this.filteredItems = new Set();
-        for (const item of this.items) {
-          let foundLabelMismatch = false;
-          for (const label of item.labels) {
-            const labelKey = Object.keys(label)[0];
-            const labelValue = Object.values(label)[0];
-            for (const [filterKey, filterValue] of this.filter) {
-              if (
-                filterKey === labelKey &&
-                filterValue !== labelValue &&
-                filterValue !== "__all"
-              ) {
-                foundLabelMismatch = true;
+        if (this.items) {
+          for (const item of this.items) {
+            let foundLabelMismatch = false;
+            for (const label of item.labels) {
+              const labelKey = Object.keys(label)[0];
+              const labelValue = Object.values(label)[0];
+              for (const [filterKey, filterValue] of this.filter) {
+                if (
+                  filterKey === labelKey &&
+                  filterValue !== labelValue &&
+                  filterValue !== "__all"
+                ) {
+                  foundLabelMismatch = true;
+                  break;
+                }
+              }
+              if (foundLabelMismatch) {
                 break;
               }
             }
-            if (foundLabelMismatch) {
-              break;
+            if (!foundLabelMismatch) {
+              this.filteredItems.add(item.fqid);
             }
-          }
-          if (!foundLabelMismatch) {
-            this.filteredItems.add(item.fqid);
           }
         }
       },
-      immediate: true
+      immediate: true,
     },
   },
 };
@@ -130,9 +184,9 @@ export default {
   opacity: 0 !important;
 }
 .v-application a {
-  color:var(--vscode-foreground, #cccccc) !important;
-  padding-left: 28px ;
-  padding-bottom: 8px ;
+  color: var(--vscode-foreground, #cccccc) !important;
+  padding-left: 28px;
+  padding-bottom: 8px;
 }
 .itemColor, .subItemColor {
   background-color: var(--vscode-editor-background, #1e1e1e) !important;
@@ -142,7 +196,7 @@ export default {
   text-transform: none;
 }
 .v-expansion-panel-header__icon {
-  position:absolute;
+  position: absolute;
 }
 .v-expansion-panel .v-icon,
 .v-expansion-panel-header__icon .v-icon {

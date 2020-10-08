@@ -6,10 +6,12 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
-import { CollectionType } from "../types/GuidedDev";
+import { CollectionType, IItem, IItemContext } from "../types";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
+
 import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+
 import * as api from "../api";
 
 class GuidedDevelopmentWebSocketServer {
@@ -19,7 +21,7 @@ class GuidedDevelopmentWebSocketServer {
 
   constructor() {
     this.appEvents = new ServerEvents();
-  	api.setSetData(this.appEvents, this.appEvents.setData);
+    api.setSetData(this.appEvents, this.appEvents.setData);
   }
 
   init() {
@@ -44,32 +46,33 @@ class GuidedDevelopmentWebSocketServer {
       const logger: AppLog = new ServerLog(this.rpc);
       const childLogger = { debug: () => { }, error: () => { }, fatal: () => { }, warn: () => { }, info: () => { }, trace: () => { }, getChildLogger: () => { return {} as IChildLogger; } };
       const collections = createCollections();
-      const items = createItems(collections);
-      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections, items);
+      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections);
 
       // demonstrate updating of items (mimics contributors calling the onChange callback)
       setTimeout(() => {
         collections[0].itemIds.push("saposs.vscode-contrib1.new");
 
-        const openAction = {
-          _actionType: "EXECUTE",
-          name: "Open",
-          performAction: () => {
+        const openAction: IExecuteAction = {
+          actionType: ActionType.Execute,
+          executeAction: () => {
             console.log("workbench.action.openGlobalSettings");
             return Promise.resolve();
           }
         }
 
-        const item = {
+        const item: IInternalItem = {
           id: "new",
           fqid: "saposs.vscode-contrib1.new",
-          title: "new item",
+          title: "New Item",
           description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
           image: {
             image: getImage(),
             note: "image note of new item"
           },
-          action: openAction,
+          action1: {
+            title: "Open",
+            action: openAction
+          },
           labels: [
             { "Project Name": "cap1" },
             { "Project Path": "/home/user/projects/cap1" },
@@ -84,51 +87,57 @@ class GuidedDevelopmentWebSocketServer {
   }
 }
 
-function createItems(collections: IInternalCollection[]): Map<string, IInternalItem> {
-  const items = new Map();
-  return items;
-}
-
 function createCollections(): IInternalCollection[] {
-  const openViaExecuteAction: IExecuteAction = {
-    _actionType: ActionType.Execute,
-    name: "Open",
-    title: "Open Global Settings (via execute)",
-    performAction: () => {
-    console.log("workbench.action.openGlobalSettings");
-    return Promise.resolve();
+  /**
+   * Actions
+   */
+  const myExecuteAction: IExecuteAction = {
+    actionType: ActionType.Execute,
+    executeAction: (params?: any[]) => {
+      console.log(`Performing execute action with params ${params}`);
+      return Promise.resolve();
+    }
   }
-}
 
   const openViaCommandAction: ICommandAction = {
-    _actionType: ActionType.Command,
-    name: "Open",
-    title: "Open Global Settings (via command)",
-    command: {
-      name: "workbench.action.openGlobalSettings"
-    }
+    actionType: ActionType.Command,
+    name: "workbench.action.openGlobalSettings"
   };
 
   const showInfoMessageAction: ICommandAction = {
-    _actionType: ActionType.Command,
-    name: "Show",
-    title: "Show info message",
-    command: {
-      name: "workbench.action.openGlobalSettings"
-    }
+    actionType: ActionType.Command,
+    name: "workbench.action.openGlobalSettings"
   };
 
   const snippet1Action: ISnippetAction = {
-    _actionType: ActionType.Snippet,
-    name: "Open",
-    title: "Open Snippet (via snippet)",
-    snippet: {
-      contributorId: "saposs.vscode-food-snippet-contrib", 
-      snippetName: "snippet_1", 
-      context: {uri: "uri"}                    
-    }
+    actionType: ActionType.Snippet,
+    contributorId: "SAPOSS.vscode-food-snippet-contrib",
+    snippetName: "snippet_1",
+    context: { uri: "uri" }
   }
 
+  /**
+   * Items
+   */
+  const item1: IInternalItem = {
+    id: "open-command",
+    fqid: "saposs.vscode-contrib2.open-command",
+    title: "Open Global Settings (via command)",
+    description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+    action1: {
+      title: "Open",
+      action: openViaCommandAction
+    },
+    labels: [
+      { "Project Name": "cap2" },
+      { "Project Path": "/home/user/projects/cap2" },
+      { "Project Type": "CAP" },
+    ],
+  };
+
+  /** 
+   * Collections
+   */
   const collections: IInternalCollection[] = [];
   let collection: IInternalCollection = {
     id: "collection1",
@@ -143,43 +152,54 @@ function createCollections(): IInternalCollection[] {
       {
         id: "open",
         fqid: "saposs.vscode-contrib1.open",
-        title: "Open Global Settings (via execute)",
+        title: "Execute a method",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         image: {
           image: getImage(),
           note: "image note of new item"
         },
-        action1: openViaExecuteAction,
+        action1: {
+          title: "Execute",
+          action: myExecuteAction,
+          contexts: [
+            {
+              project: "P1",
+              params: ["p1"]
+            },
+            {
+              project: "P2",
+              params: ["p2"]
+            }
+          ]
+        },
         labels: [
           { "Project Name": "cap1" },
           { "Project Path": "/home/user/projects/cap1" },
           { "Project Type": "CAP" },
-        ]
-      },
-      {
-        id: "open-command",
-        fqid: "saposs.vscode-contrib2.open-command",
-        title: "Open Global Settings (via command)",
-        description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        action1: openViaCommandAction,
-        labels: [
-          { "Project Name": "cap2" },
-          { "Project Path": "/home/user/projects/cap2" },
-          { "Project Type": "CAP" },
-        ]
+        ],
       },
       {
         id: "open-snippet",
         fqid: "SAPOSS.vscode-contrib3.open-snippet",
         title: "Open Snippet (via snippet)",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        action1: snippet1Action,
-        labels: [
-          {"Project Name": "cap3"},
-          {"Project Path": "/home/user/projects/cap3"},
-          {"Project Type": "CAP"},
-        ]
-      }
+        labels: [],
+        items:[{
+          id: "sub-open-snippet",
+          fqid: "SAPOSS.vscode-contrib3.sub-open-snippet",
+          title: "subitem1",
+          description: "",
+          action1: {
+            title: "Snippet",
+            action: snippet1Action
+          },
+          labels: [
+            { "Project Name": "cap3" },
+            { "Project Path": "/home/user/projects/cap3" },
+            { "Project Type": "CAP" },
+          ]
+          }]
+      },
     ]
   };
   collections.push(collection);
@@ -207,8 +227,14 @@ function createCollections(): IInternalCollection[] {
             fqid: "saposs.vscode-contrib2.open-command",
             title: "Open Global Settings (via command)",
             description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-            action1: openViaCommandAction,
-            action2: showInfoMessageAction,
+            action1: {
+              title: "Open via command",
+              action: openViaCommandAction
+            },
+            action2: {
+              title: "Show info message",
+              action: showInfoMessageAction
+            },
             labels: [
               { "Project Name": "cap2" },
               { "Project Path": "/home/user/projects/cap2" },

@@ -52,13 +52,11 @@
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
         "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
         "--extensionDevelopmentPath=${workspaceFolder}/contrib-cake",
-        "--extensionDevelopmentPath=${workspaceFolder}/contrib-oven",
     ],
       "outFiles": [
         "${workspaceFolder}/backend/out/**/*.js",
         "${workspaceFolder/bas-platform/out/**/*.js",
         "${workspaceFolder/contrib-cake/out/**/*.js",
-        "${workspaceFolder/contrib-oven/out/**/*.js",
       ],
       "preLaunchTask": "watch backend (webpack)"
     },
@@ -73,7 +71,7 @@
       "env": {
         "PORT": "8081"
       },
-      "preLaunchTask": "watch backend (tsc)"
+      // "preLaunchTask": "watch backend (tsc)"
     },
     {
       "name": "Platform: Sample action client",

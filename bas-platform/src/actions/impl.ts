@@ -1,50 +1,55 @@
 import { Uri } from "vscode";
-import { ActionType, IAction, ICommand, ICommandAction, IExecuteAction, IFile, IFileAction, ISnippet, ISnippetAction } from "./interfaces";
+import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "./interfaces";
 
-/** Specific action classes */
 export abstract class Action implements IAction {
-    name: string = "";
-    title?: string = "";
-    _actionType?: ActionType = ActionType.Command;
+    actionType: ActionType = ActionType.Command;
 }
 
+/** Specific action classes */
 export class ExecuteAction extends Action implements IExecuteAction {
-    performAction: () => Thenable<any>;
+    executeAction: (params?: any[]) => Thenable<any>;
+    params?: any[];
 
     constructor() {
         super();
-        this._actionType = ActionType.Execute;
-        this.performAction = () => { return Promise.resolve() }
+        this.actionType = ActionType.Execute;
+        this.params = [];
+        this.executeAction = (params?: any[]) => { return Promise.resolve() }
     }
 }
 
 export class CommandAction extends Action implements ICommandAction {
-    command: ICommand;
+    name: string;
+    params?: any[];
 
     constructor() {
         super();
-        this._actionType = ActionType.Command;
-        this.command = { name: "" };
+        this.actionType = ActionType.Command;
+        this.name = "";
+        this.params = [];
     }
 }
 
 export class SnippetAction extends Action implements ISnippetAction {
-    snippet: ISnippet;
+    contributorId: string;
+    snippetName: string;
+    context: any;
 
     constructor() {
         super();
-        this._actionType = ActionType.Snippet;
-        this.snippet = { contributorId: "", context: "", snippetName: "" };
+        this.actionType = ActionType.Snippet;
+        this.contributorId = "";
+        this.context = "";
+        this.snippetName = "";
     }
 }
 
 export class FileAction extends Action implements IFileAction {
-    file: IFile;
+    uri: Uri;
 
     constructor() {
         super();
-        this._actionType = ActionType.File;
-        this.file = { uri: Uri.parse("") };
+        this.actionType = ActionType.File;
+        this.uri = Uri.parse("");
     }
 }
-
