@@ -167,10 +167,10 @@ describe('vscode-events unit test', () => {
         });
         it("Snippet as ActionType", () => {
             commandsMock.expects("executeCommand").
-                withExactArgs("loadCodeSnippet", { contributorId: "SAPOSS.vscode-snippet-contrib", snippetName: "snippet_1", context: { uri: "uri" } }).resolves();
+                withExactArgs("loadCodeSnippet", { contributorId: "saposs.vscode-food-snippet-contrib", snippetName: "snippet_1", context: { uri: "uri" } }).resolves();
 
             const snippetOpenAction: ISnippetAction = new MockSnippetAction();
-            snippetOpenAction.contributorId = "SAPOSS.vscode-snippet-contrib";
+            snippetOpenAction.contributorId = "SAPOSS.vscode-food-snippet-contrib";
             snippetOpenAction.snippetName = "snippet_1";
             snippetOpenAction.context = { uri: "uri" };
 

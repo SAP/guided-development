@@ -11,13 +11,12 @@ describe('Items.vue', () => {
     });
 
     test('component name', () => {
-        wrapper = initComponent(Items, {items: [], filter: {}}, true)
+        wrapper = initComponent(Items, {items: [], filter: {}, bColorFlag: true}, true)
         expect(wrapper.name()).toBe('Items')
     })
 
     test('component props', () => {
-        wrapper = initComponent(Items, {items: [], filter: {}}, true)
-        expect(_.keys(wrapper.props())).toHaveLength(2)
+        wrapper = initComponent(Items, {items: [], filter: {}, bColorFlag: true}, true)
+        expect(_.keys(wrapper.props())).toHaveLength(3)
     })
-
 })

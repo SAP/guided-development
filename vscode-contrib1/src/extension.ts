@@ -45,7 +45,7 @@ function getItems(): Array<IItem> {
         title: "Open Global Settings",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'settings2.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of Open Global Settings"
         },
         action1: openSettingsAction,
@@ -85,10 +85,13 @@ function getItems(): Array<IItem> {
         title: "Show info message",
         description: "Shows a information message",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'info.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of Show info message"
         },
-        action1: showInfoMessageAction,
+        itemIds: [
+            "saposs.vscode-contrib1.open",
+            "saposs.vscode-contrib2.cfLogin"
+        ],
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
@@ -102,7 +105,7 @@ function getItems(): Array<IItem> {
         title: "Show items",
         description: "Shows list of items",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'items.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of Shows list of items"
         },
         itemIds: [

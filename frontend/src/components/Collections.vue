@@ -21,6 +21,7 @@
             v-if="collection.items"
             :items="collection.items"
             :filter="filter"
+            :bColorFlag="true"
             @action="onAction"
           />
         </div>
