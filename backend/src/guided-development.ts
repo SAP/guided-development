@@ -4,6 +4,8 @@ import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
+import { IItem, IItemAction, IItemContext } from "./types";
+import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
 
 export class GuidedDevelopment {
 
@@ -13,9 +15,8 @@ export class GuidedDevelopment {
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
   private collections: Array<IInternalCollection>;
-  private items: Map<String,IInternalItem>;
 
-  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[], items: Map<String,IInternalItem>) {
+  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[]) {
     this.rpc = rpc;
     if (!this.rpc) {
       throw new Error("rpc must be set");
@@ -31,7 +32,6 @@ export class GuidedDevelopment {
     this.rpc.registerMethod({ func: this.performAction, thisArg: this });
 
     this.collections = collections;
-    this.items = items;
     this.messages = messages;
   }
 
@@ -58,9 +58,43 @@ export class GuidedDevelopment {
     // TODO - console log: item does not exist
   }
 
-  private async performAction(itemFqid: string, index: number) {
+  private getContext(item: IItem, index: number, contextId: string): IItemContext {
+    const action: IItemAction = (index === 1 ? item.action1 : item.action2);
+    if (action && action.contexts) {
+      for (const context of action.contexts) {
+        if (context.project === contextId) {
+          return context;
+        }
+      }
+    }
+  }
+
+  private async performAction(itemFqid: string, index: number, contextId?: string) {
     const item: IInternalItem = this.getItem(itemFqid);
-    this.appEvents.performAction(item, index);
+    const context: IItemContext = this.getContext(item, index, contextId);
+
+    let itemAction: IItemAction;
+    let actionParameters: any[] = context?.params;
+    if (index === 1) {
+      itemAction = item.action1;
+    } else {
+      itemAction = item.action2;
+    }
+    if (itemAction) {
+      switch (itemAction.action.actionType) {
+        case ActionType.Command:
+          (itemAction.action as ICommandAction).params = actionParameters;
+          break;
+        case ActionType.Execute:
+          (itemAction.action as IExecuteAction).params = actionParameters;
+          break;
+        case ActionType.File:
+          break;
+        case ActionType.Snippet:
+          break;
+      }
+      this.appEvents.performAction(itemAction.action);
+    }
   }
 
   private async getState() {

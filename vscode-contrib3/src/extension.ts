@@ -83,7 +83,10 @@ function getItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
             note: "image note of Create project from template"
         },
-        action1: createAction,
+        action1: { 
+            name: "Create",
+            action: createAction
+        },
         labels: [
             {"Project Name": "cap1"},
             {"Project Type": "CAP"},
@@ -96,7 +99,10 @@ function getItems(): Array<IItem> {
         id: "open-snippet",
         title: "Open Snippet",
         description: "Open Snippet Tool",
-        action1: openSnippetAction,
+        action1: {
+            name: "Open",
+            action: openSnippetAction
+        },
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -109,7 +115,10 @@ function getItems(): Array<IItem> {
         id: "open-readme",
         title: "Open README File",
         description: "Open README File",
-        action1: openReadmeAction,
+        action1: {
+            name: "Open",
+            action: openReadmeAction
+        },
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -122,7 +131,10 @@ function getItems(): Array<IItem> {
         id: "generate-mta",
         title: "Generate MTA",
         description: "generate mta project",
-        action1: generateAction,
+        action1: {
+            name: "Generate",
+            action: generateAction
+        },
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
@@ -135,7 +147,10 @@ function getItems(): Array<IItem> {
         id: "build-mta",
         title: "Build MTA",
         description: "build mta project",
-        action1: buildAction,
+        action1: {
+            name: "Build",
+            action: buildAction
+        },
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
@@ -148,7 +163,10 @@ function getItems(): Array<IItem> {
         id: "deploy-mta",
         title: "Deploy MTA Archive",
         description: "deploy mta project",
-        action1: deployAction,
+        action1: {
+            name: "Deploy",
+            action: deployAction
+        },
         labels: [
             {"Project Name": "cap2"},
             {"Project Type": "CAP"},
@@ -161,7 +179,10 @@ function getItems(): Array<IItem> {
         id: "cf-set-orgspace",
         title: "Set CF Org And Space",
         description: "CF: Set Org and Space",
-        action1: cfSetAction,
+        action1: {
+            name: "Set",
+            action: cfSetAction
+        },
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -174,7 +195,10 @@ function getItems(): Array<IItem> {
         id: "cf-select-space",
         title: "Select CF Space",
         description: "CF: Select a space from your allowed spaces",
-        action1: cfSelectAction,
+        action1: {
+            name: "Select",
+            action: cfSelectAction
+        },
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -187,7 +211,10 @@ function getItems(): Array<IItem> {
         id: "cf-targets-create",
         title: "Create new target Cloud Foundry",
         description: "CF: Create new target Cloud Foundry",
-        action1: cfCreateAction,
+        action1: {
+            name: "Create",
+            action: cfCreateAction
+        },
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -200,7 +227,10 @@ function getItems(): Array<IItem> {
         id: "cf-targets-reload",
         title: "CF: Reload targets tree",
         description: "CF: Reload targets tree",
-        action1: cfReloadAction,
+        action1: {
+            name: "Reload",
+            action: cfReloadAction
+        },
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -213,7 +243,10 @@ function getItems(): Array<IItem> {
         id: "cf-target-set",
         title: "Set Current target Cloud Foundry",
         description: "CF: Set Current target Cloud Foundry",
-        action1: cfSetTargetAction,
+        action1: {
+            name: "Set",
+            action: cfSetTargetAction
+        },
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -226,7 +259,10 @@ function getItems(): Array<IItem> {
         id: "cf-target-delete",
         title: "Delete target Cloud Foundry",
         description: "CF: Delete target Cloud Foundry",
-        action1: cfDeleteAction,
+        action1: {
+            name: "Delete",
+            action: cfDeleteAction
+        },
         labels: [
             {"Project Name": "cap3"},
             {"Project Type": "CAP"},
@@ -245,58 +281,43 @@ export async function activate(context: vscode.ExtensionContext) {
     extensionPath = context.extensionPath;
 
     createAction = new basAPI.actions.CommandAction();
-    createAction.name = "Create";
-    createAction.command = {name: "sapwebide.showProjectTemplates"};
+    createAction.name = "sapwebide.showProjectTemplates";
     
     openSnippetAction = new basAPI.actions.SnippetAction();
-    openSnippetAction.name = "Open";
-    openSnippetAction.snippet = {
-        contributorId: "saposs.vscode-food-snippet-contrib", 
-        snippetName: "snippet_1", 
-        context: {}                    
-    };
+    //  TODO: why actionType exposed ?? --> openSnippetAction.actionType
+    openSnippetAction.contributorId = "saposs.vscode-food-snippet-contrib";
+    openSnippetAction.snippetName = "snippet_1";
+    openSnippetAction.context = {}
 
     cfDeleteAction = new basAPI.actions.CommandAction();
-    cfDeleteAction.name = "Delete";
-    cfDeleteAction.command = { name: "cf.target.delete" };
+    cfDeleteAction.name = "cf.target.delete";
 
     generateAction = new basAPI.actions.CommandAction();
-    generateAction.name = "Generate";
-    generateAction.command = { name: "sapwebide.showProjectTemplates" };
+    generateAction.name = "sapwebide.showProjectTemplates";
     
     buildAction = new basAPI.actions.CommandAction();
-    buildAction.name = "Build";
-    buildAction.command = { name: "extension.mtaBuildCommand" };
+    buildAction.name = "extension.mtaBuildCommand";
 
     deployAction = new basAPI.actions.CommandAction();
-    deployAction.name = "Deploy";
-    deployAction.command = { name: "extension.mtarDeployCommand" };
+    deployAction.name = "extension.mtarDeployCommand";
 
     cfSetAction = new basAPI.actions.CommandAction();
-    cfSetAction.name = "Set";
-    cfSetAction.command = { name: "cf.set.orgspace" };
+    cfSetAction.name = "cf.set.orgspace";
 
     cfSelectAction = new basAPI.actions.CommandAction();
-    cfSelectAction.name = "Select";
-    cfSelectAction.command = { name: "cf.select.space" };
+    cfSelectAction.name = "cf.select.space";
 
     cfCreateAction = new basAPI.actions.CommandAction();
-    cfCreateAction.name = "Create";
-    cfCreateAction.command = { name: "cf.targets.create" };
+    cfCreateAction.name = "cf.targets.create";
     
     cfReloadAction = new basAPI.actions.CommandAction();
-    cfReloadAction.name = "Reload";
-    cfReloadAction.command = { name: "cf.targets.reload" };
+    cfReloadAction.name = "cf.targets.reload";
 
     cfSetTargetAction = new basAPI.actions.CommandAction();
-    cfSetTargetAction.name = "Set";
-    cfSetTargetAction.command = { name: "cf.target.set" };
+    cfSetTargetAction.name = "cf.target.set";
 
     openReadmeAction = new basAPI.actions.FileAction();
-    openReadmeAction.name = "Open";
-    openReadmeAction.file = {
-        uri: getFileUriFromWorkspace("README.md")
-    };
+    openReadmeAction.uri = getFileUriFromWorkspace("README.md");
 
     basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
         managerAPI.setData(EXT_ID, getCollections(), getItems());

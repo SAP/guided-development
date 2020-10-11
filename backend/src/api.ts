@@ -1,4 +1,4 @@
-import { ICollection, IItem, ManagerAPI } from './types/GuidedDev';
+import { ICollection, IItem, ManagerAPI } from './types';
 
 let _setData: any;
 let _thisArg: any;

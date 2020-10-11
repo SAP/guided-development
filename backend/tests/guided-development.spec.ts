@@ -10,8 +10,9 @@ import { AppEvents } from '../src/app-events';
 import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
-import { IItem, ICollection, CollectionType } from "../src/types/GuidedDev";
+import { IItem, ICollection, CollectionType } from "../src/types";
 import { IInternalCollection, IInternalItem } from "./Collection";
+import { IAction } from "@sap-devx/bas-platform-types";
 
 describe('guidedDevelopment unit test', () => {
     let sandbox: any;
@@ -22,7 +23,7 @@ describe('guidedDevelopment unit test', () => {
     let appEventsMock: any;
 
     class TestEvents implements AppEvents {
-        public performAction(item: IItem, index: number): Promise<any> {
+        public performAction(action: IAction): Promise<any> {
             return;
         }
         public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
@@ -96,7 +97,7 @@ describe('guidedDevelopment unit test', () => {
     const rpc = new TestRpc();
     const outputChannel = new TestOutputChannel();
     const appEvents = new TestEvents();
-    const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {}, [], new Map());
+    const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {}, []);
 
     let itemIds = ["saposs.contrib1.create","saposs.contrib1.open","saposs.contrib2.delete"];
     let items: Map<String,IInternalItem>;
@@ -127,7 +128,7 @@ describe('guidedDevelopment unit test', () => {
 
     it("constructor", () => {
         try {
-            new GuidedDevelopment(undefined, appEvents,  outputChannel, testLogger, {}, [], new Map());
+            new GuidedDevelopment(undefined, appEvents,  outputChannel, testLogger, {}, []);
             fail("contructor should throw an exception");
         } catch (error) {
             expect(error.message).to.be.equal("rpc must be set");

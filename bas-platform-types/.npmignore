@@ -1,1 +1,3 @@
-!out
+/out/src/*
+!/out/src/api.d.ts
+!/out/src/actions/

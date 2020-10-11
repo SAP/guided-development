@@ -59,9 +59,9 @@ export default {
     }
   },
   methods: {
-    onAction(itemFqid, index) {
+    onAction(item, index, contextId) {
       // fire 'action' event
-      this.$emit("action", itemFqid, index);
+      this.$emit("action", item, index, contextId);
     },
     onFilter(e) {
       const labelObj = JSON.parse(e);

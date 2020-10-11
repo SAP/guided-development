@@ -1,22 +1,25 @@
 import * as vscode from "vscode";
-import { ActionType, IAction } from "./interfaces";
-import { Action, CommandAction, ExecuteAction, FileAction, SnippetAction } from "./impl";
+import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "./interfaces";
 
 export async function _performAction(action: IAction): Promise<any> {
   if (action) {
-    switch ((action as Action)._actionType) {
+    switch ((action as IAction).actionType) {
       case ActionType.Command:
-        let commandAction = (action as CommandAction);
-        return vscode.commands.executeCommand(commandAction.command.name, commandAction.command.params);
+        let commandAction = (action as ICommandAction);
+        return vscode.commands.executeCommand(commandAction.name, commandAction.params);
       case ActionType.Execute:
-        let executeAction = (action as ExecuteAction);
-        return executeAction.performAction();
+        let executeAction = (action as IExecuteAction);
+        if (executeAction.params) {
+          return executeAction.executeAction(executeAction.params);
+        } else {
+          return executeAction.executeAction();
+        }
       case ActionType.Snippet:
-        let snippetAction = (action as SnippetAction);
-        return vscode.commands.executeCommand("loadCodeSnippet", { contributorId: snippetAction.snippet.contributorId, snippetName: snippetAction.snippet.snippetName, context: snippetAction.snippet.context });
+        let snippetAction = (action as ISnippetAction);
+        return vscode.commands.executeCommand("loadCodeSnippet", { contributorId: snippetAction.contributorId, snippetName: snippetAction.snippetName, context: snippetAction.context });
       case ActionType.File:
-        let fileAction = (action as FileAction);
-        return vscode.commands.executeCommand('vscode.open', fileAction.file.uri, {viewColumn: vscode.ViewColumn.Two});
+        let fileAction = (action as IFileAction);
+        return vscode.commands.executeCommand('vscode.open', fileAction.uri, {viewColumn: vscode.ViewColumn.Two});
     }
   }
 }

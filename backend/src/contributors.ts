@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import { IInternalItem, IInternalCollection } from "./Collection";
-import { IItem, ICollection } from './types/GuidedDev';
+import { IItem, ICollection } from './types';
 
 export class Contributors {
     private onChangedCallback: (collections: Array<IInternalCollection>) => void;
@@ -36,10 +36,6 @@ export class Contributors {
         }
 
         return _.sortBy(collections, ['type']);
-    }
-
-    public getItems(): Map<string, IInternalItem> {
-        return this.itemsMap;
     }
 
     private static activateExtension(extension: vscode.Extension<any>): void {
@@ -97,16 +93,27 @@ export class Contributors {
     private initCollectionItems() {
         for (const collections of this.collectionsMap.values()) {
             for (const collection of collections) {
-                collection.items = [];
-                for (const itemId of collection.itemIds) {
-                    const item: IInternalItem = this.itemsMap.get(itemId.toLocaleLowerCase());
-                    if (item) {
-                        collection.items.push(item);
-                        this.initSubItems(item);
-                    }
-                }
+                // TODO: handle context for subitems
+                // TODO: handle duplicates?
+                collection.items = this.getItems(collection);
             }
         }
+    }
+
+    private getItems(collection: IInternalCollection): IInternalItem[] {
+        const result: IInternalItem[] = [];
+
+        for (const itemId of collection.itemIds) {
+            const item = this.itemsMap.get(itemId.toLocaleLowerCase());
+            if (item) {
+                this.initSubItems(item);
+                result.push(item);
+            } else {
+                console.error(`Could not find item id ${itemId}`)
+            }
+        }
+
+        return result;
     }
 
     private initSubItems(item: IInternalItem) {

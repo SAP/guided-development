@@ -87,7 +87,10 @@ function getInitialItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
             note: "image note of create-grocery-list"
         },
-        action1: groceryListAction,
+        action1: {
+            name: "Create Grocery List",
+            action: groceryListAction
+        },
         labels: [
             { "Project Type": "create-grocery-list" }
         ]
@@ -101,7 +104,11 @@ function getInitialItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
             note: "image note of foodq-restaurant"
         },
-        action1: foodqAction,
+        action1: {
+            title: "Order from restaurant",
+            name: "Order",
+            action: foodqAction
+        },
         labels: [
             { "Project Type": "foodq-restaurant" }
         ]
@@ -132,7 +139,10 @@ function getInitialItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
             note: "image note of foodq-restaurant"
         },
-        action1: michelin3StarsAction,
+        action1: {
+            name: "3 Stars Michelin restaurants",
+            action: michelin3StarsAction
+        },
         labels: [
             { "Project Type": "foodq-restaurant" }
         ]
@@ -146,7 +156,10 @@ function getInitialItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
             note: "image note of foodq-restaurant"
         },
-        action1: michelin2StarsAction,
+        action1: {
+            name: "2 Stars Michelin restaurants",
+            action: michelin2StarsAction
+        },
         labels: [
             { "Project Type": "foodq-restaurant" }
         ]
@@ -193,23 +206,17 @@ export async function activate(context: vscode.ExtensionContext) {
 
 function createGuidedDevActions(basAPI: typeof bas) {
     foodqAction = new basAPI.actions.ExecuteAction()
-    foodqAction.name = "Order from restaurant"
-    foodqAction.performAction = () => {
+    foodqAction.executeAction = () => {
         return vscode.commands.executeCommand("loadYeomanUI", { filter: { type: "foodq" } });
 	};
     groceryListAction = new basAPI.actions.SnippetAction()
-    groceryListAction.name = "Create Grocery List"
-    groceryListAction.snippet = {
-        contributorId: EXT_ID, 
-        snippetName: "snippet_1", 
-        context: {}                    
-    };
-    michelin3StarsAction = new basAPI.actions.FileAction()
-    michelin3StarsAction.name = "3 Stars Michelin restaurants"
-    michelin3StarsAction.file = {uri: vscode.Uri.parse("https://guide.michelin.com/en/restaurants/3-stars-michelin")};
-    michelin2StarsAction = new basAPI.actions.FileAction()
-    michelin2StarsAction.name = "2 Stars Michelin restaurants"
-    michelin2StarsAction.file = {uri: vscode.Uri.parse("https://guide.michelin.com/en/restaurants/2-stars-michelin")};
+    groceryListAction.contributorId = EXT_ID;
+    groceryListAction.snippetName = "snippet_1";
+    groceryListAction.context = {};
+    michelin3StarsAction = new basAPI.actions.FileAction();
+    michelin3StarsAction.uri = vscode.Uri.parse("https://guide.michelin.com/en/restaurants/3-stars-michelin");
+    michelin2StarsAction = new basAPI.actions.FileAction();
+    michelin2StarsAction.uri = vscode.Uri.parse("https://guide.michelin.com/en/restaurants/2-stars-michelin");
 }
 
 function createFileSystemWatcher(globPattern: vscode.GlobPattern, managerAPI: ManagerAPI) {
