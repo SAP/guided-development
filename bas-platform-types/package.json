@@ -1,7 +1,7 @@
 {
   "name": "@sap-devx/bas-platform-types",
   "publisher": "SAPOSS",
-  "version": "0.0.7",
+  "version": "0.0.9",
   "author": "",
   "license": "Apache-2.0",
   "description": "An npm package that includes Business Application Studio declarations",
@@ -13,7 +13,7 @@
   "main": "./out/src/actions/interfaces",
   "types": "./out/src/api",
   "scripts": {
-    "prep": "cd ../bas-platform && npm i && npm run compile",
+    "prep": "npm i && cd ../bas-platform && npm i && npm run compile",
     "copy": "ncp ../bas-platform/out out",
     "prepublishOnly": "npm run prep && npm run copy"
   },

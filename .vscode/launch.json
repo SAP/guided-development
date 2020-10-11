@@ -71,7 +71,7 @@
       "env": {
         "PORT": "8081"
       },
-      // "preLaunchTask": "watch backend (tsc)"
+      "preLaunchTask": "watch backend (tsc)"
     },
     {
       "name": "Platform: Sample action client",

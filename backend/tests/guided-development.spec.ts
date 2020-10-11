@@ -10,7 +10,7 @@ import { AppEvents } from '../src/app-events';
 import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
-import { IItem, ICollection, CollectionType } from "./types";
+import { IItem, ICollection, CollectionType } from "../src/types";
 import { IInternalCollection, IInternalItem } from "./Collection";
 import { IAction } from "@sap-devx/bas-platform-types";
 

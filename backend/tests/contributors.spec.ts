@@ -11,7 +11,7 @@ const testVscode = {
 
 mockVscode(testVscode, "src/contributors.ts");
 import { Contributors } from "../src/contributors";
-import { IItem } from "./types";
+import { IItem } from "../src/types";
 
 describe('Contributors unit test', () => {
     let sandbox: any;

@@ -73,9 +73,9 @@
                       @action="onAction"
                   />
                   <v-list-item-subtitle class="py-1" v-if="contextualItem.item.action1 && contextualItem.item.action1.title && !contextualItem.item.items">{{contextualItem.item.action1.title}}</v-list-item-subtitle>
-                  <v-btn small v-if="contextualItem.item.action1 && !contextualItem.item.items" @click="onAction(contextualItem, 1)">{{contextualItem.item.action1.title}}</v-btn>
+                  <v-btn small v-if="contextualItem.item.action1 && !contextualItem.item.items" @click="onAction(contextualItem, 1)">{{contextualItem.item.action1.name}}</v-btn>
                   <v-list-item-subtitle class="py-1 mt-4" v-if="contextualItem.item.action2 && contextualItem.item.action2.title && !contextualItem.item.items">{{contextualItem.item.action2.title}}</v-list-item-subtitle>
-                  <v-btn small v-if="contextualItem.item.action2 && !contextualItem.item.items" @click="onAction(contextualItem, 2)">{{contextualItem.item.action2.title}}</v-btn>
+                  <v-btn small v-if="contextualItem.item.action2 && !contextualItem.item.items" @click="onAction(contextualItem, 2)">{{contextualItem.item.action2.name}}</v-btn>
                 </v-col>
               </v-row>
             </v-container>
@@ -103,7 +103,8 @@ export default {
       if (contextualItem.context) {
         project = contextualItem.context.project;
       }
-      this.$emit("action", contextualItem.item, index, project);
+      let item = contextualItem.item ? contextualItem.item : contextualItem;
+      this.$emit("action", item, index, project);
     },
     isFiltered(itemFqid) {
       return this.filteredItems.has(itemFqid);

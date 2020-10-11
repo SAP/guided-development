@@ -14,21 +14,14 @@ export enum CollectionType {
     Extension
 }
 
-interface ICommandActionParams {
-    params?: any[];
-}
-
-interface ISnippetActionParams {
-    snippetName?: string;
-}
-
 export interface IItemContext {
     project: string;
     params?: any[];
 }
 
-export interface IItemAction<> {
-    title: string;
+export interface IItemAction {
+    name: string;
+    title?: string;
     action: IAction;
     contexts?: IItemContext[];
 }

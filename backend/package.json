@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -115,6 +115,7 @@
 		"lint:fix": "eslint . --ext .ts,.tsx --cache --fix"
 	},
 	"dependencies": {
+		"@sap-devx/bas-platform-types": "0.0.9",
 		"@sap-devx/webview-rpc": "^0.2.2",
 		"@sap-devx/yeoman-ui-types": "0.0.1",
 		"@vscode-logging/logger": "1.1.0",

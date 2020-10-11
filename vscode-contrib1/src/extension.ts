@@ -48,8 +48,16 @@ function getItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of Open Global Settings"
         },
-        action1: openSettingsAction,
-        action2: showMessageAction,
+        action1: {
+            name: "Open",
+            title: "Open Settings",
+            action: openSettingsAction
+        },
+        action2: {
+            name: "Show",
+            title: "Show Message",
+            action: showMessageAction
+        },
         labels: [
             {"Project Name": "cap1"},
             {"Project Type": "CAP"},
@@ -62,7 +70,11 @@ function getItems(): Array<IItem> {
         id: "clone",
         title: "Cloning code-snippet repository",
         description: "A VSCode extension that provides a simple way to add code snippets..",
-        action1: cloneAction,
+        action1: {
+            name: "Clone",
+            title: "Cloning Repository",
+            action: cloneAction
+        },
         labels: []
     };
     items.push(item);
@@ -71,7 +83,10 @@ function getItems(): Array<IItem> {
         id: "open-command",
         title: "Open Command  - Global Settings",
         description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-        action1: openGlobalSettingsAction,
+        action1: { 
+            name: "Open",
+            action: openGlobalSettingsAction
+        },
         labels: [
             {"Project Name": "cap1"},
             {"Project Type": "CAP"},
@@ -130,34 +145,25 @@ export async function activate(context: vscode.ExtensionContext) {
     extensionPath = context.extensionPath;
 
     openSettingsAction = new basAPI.actions.ExecuteAction();
-    openSettingsAction.name = "Open"
-    openSettingsAction.title = "Open Settings";
-    openSettingsAction.performAction = () => {
+    openSettingsAction.executeAction  = () => {
         return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
     };
 
     showMessageAction = new basAPI.actions.ExecuteAction();
-    showMessageAction.name = "Show";
-    showMessageAction.title = "Show Message";
-    showMessageAction.performAction = () => {
+    showMessageAction.executeAction  = () => {
         return vscode.window.showInformationMessage("Hello from Open Global Settings item");
     };
 
     cloneAction = new basAPI.actions.ExecuteAction();
-    cloneAction.name = "Clone"
-    cloneAction.title = "Cloning Repository";
-    cloneAction.performAction = () => {
+    cloneAction.executeAction  = () => {
         return vscode.commands.executeCommand("git.clone", "https://github.com/SAP/code-snippet.git");
     };
 
     openGlobalSettingsAction = new basAPI.actions.CommandAction();
-    openGlobalSettingsAction.name = "Open"
-    openGlobalSettingsAction.command = {name: "workbench.action.openGlobalSettings"};
+    openGlobalSettingsAction.name = "workbench.action.openGlobalSettings";
 
     showInfoMessageAction = new basAPI.actions.ExecuteAction();
-    showInfoMessageAction.name = "Show";
-    showInfoMessageAction.title = "Show info message";
-    showInfoMessageAction.performAction = () => {
+    showInfoMessageAction.executeAction = () => {
         return vscode.window.showInformationMessage("Hello from guided development item");
     };
     

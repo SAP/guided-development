@@ -42,7 +42,7 @@ function initActions(basAPI: typeof bas) {
         }
     };
     bakeItemAction = {
-        title: "Bake",
+        name: "Bake",
         action: bakeAction,
         contexts: []
     };
@@ -112,7 +112,7 @@ function getInitialItems(): Array<IItem> {
             note: "image note of eat-cake"
         },
         action1: {
-            title: "Eat",
+            name: "Eat",
             action: eatAction
         },
         labels: [
@@ -126,7 +126,7 @@ function getInitialItems(): Array<IItem> {
         title: "Buy Ingredients",
         description: "Buy relevant ingredeients for your cake",
         action1: {
-            title: "Buy",
+            name: "Buy",
             action: buyAction
         },
         labels: []
@@ -138,7 +138,7 @@ function getInitialItems(): Array<IItem> {
         title: "Mix Ingredients",
         description: "Mix ingredeients according to recipe",
         action1: {
-            title: "Mix",
+            name: "Mix",
             action: mixAction
         },
         labels: []
@@ -163,7 +163,7 @@ function getInitialItems(): Array<IItem> {
             note: "image note of pour-mix"
         },
         action1: {
-            title: "Pour",
+            name: "Pour",
             action: pourAction
         },
         labels: []

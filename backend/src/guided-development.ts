@@ -89,12 +89,8 @@ export class GuidedDevelopment {
           (itemAction.action as IExecuteAction).params = actionParameters;
           break;
         case ActionType.File:
-          (itemAction.action as IFileAction).uri = actionParameters[0];
           break;
         case ActionType.Snippet:
-          (itemAction.action as ISnippetAction).contributorId = actionParameters[0];
-          (itemAction.action as ISnippetAction).snippetName = actionParameters[1];
-          (itemAction.action as ISnippetAction).context = actionParameters[2];
           break;
       }
       this.appEvents.performAction(itemAction.action);

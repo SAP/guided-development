@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import { Action } from "./impl";
 
 export enum ActionType {
     Execute = "EXECUTE",
@@ -10,7 +9,7 @@ export enum ActionType {
 }
 
 export interface IAction {
-    actionType: ActionType;
+    actionType: ActionType | undefined;
 }
 
 export interface ICommandAction extends IAction {

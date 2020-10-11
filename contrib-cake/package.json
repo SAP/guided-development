@@ -30,11 +30,9 @@
 		"test": "node ./out/test/runTest.js",
 		"package": "vsce package ."
 	},
-	"dependenciesX": {
-		"@sap-devx/bas-platform-types": "0.0.6",
-		"@sap-devx/guided-development-types": "0.0.2"
-	},
 	"dependencies": {
+		"@sap-devx/bas-platform-types": "0.0.9",
+		"@sap-devx/guided-development-types": "0.0.8",
 		"comment-json": "2.1.0",
 		"datauri": "^2.0.0"
 	},

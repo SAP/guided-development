@@ -1,10 +1,9 @@
 import * as vscode from "vscode";
 import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "./interfaces";
-import { Action, CommandAction, ExecuteAction, FileAction, SnippetAction } from "./impl";
 
 export async function _performAction(action: IAction): Promise<any> {
   if (action) {
-    switch ((action as Action).actionType) {
+    switch ((action as IAction).actionType) {
       case ActionType.Command:
         let commandAction = (action as ICommandAction);
         return vscode.commands.executeCommand(commandAction.name, commandAction.params);

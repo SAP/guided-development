@@ -41,7 +41,7 @@ export async function activate(context: vscode.ExtensionContext) {
         description: "This is my first item",
         labels: [],
         action1: {
-            title: "Execute a Command",
+            name: "Execute a Command",
             action: myAction
         }
     }

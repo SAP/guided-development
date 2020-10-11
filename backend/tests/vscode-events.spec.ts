@@ -152,7 +152,8 @@ describe('vscode-events unit test', () => {
                 title: "Open Command  - Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
                 action1: {
-                    title: "Open",
+                    title: "Open title",
+                    name: "Open",
                     action: commandOpenAction
                 },
                 labels: [
@@ -170,7 +171,7 @@ describe('vscode-events unit test', () => {
                 withExactArgs("loadCodeSnippet", { contributorId: "saposs.vscode-food-snippet-contrib", snippetName: "snippet_1", context: { uri: "uri" } }).resolves();
 
             const snippetOpenAction: ISnippetAction = new MockSnippetAction();
-            snippetOpenAction.contributorId = "SAPOSS.vscode-food-snippet-contrib";
+            snippetOpenAction.contributorId = "saposs.vscode-food-snippet-contrib";
             snippetOpenAction.snippetName = "snippet_1";
             snippetOpenAction.context = { uri: "uri" };
 
@@ -179,7 +180,7 @@ describe('vscode-events unit test', () => {
                 title: "Open Snippet  - snippet_1",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
                 action1: {
-                    title: "Open",
+                    name: "Open",
                     action: snippetOpenAction
                 },
                 labels: [
@@ -202,7 +203,7 @@ describe('vscode-events unit test', () => {
                 title: "Open File",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
                 action1: {
-                    title: "Open",
+                    name: "Open",
                     action: openFileAction
                 },
                 labels: [
@@ -227,7 +228,7 @@ describe('vscode-events unit test', () => {
                 title: "Open Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
                 action1: {
-                    title: "Open",
+                    name: "Open",
                     action: openExecuteAction
                 },
                 labels: [
@@ -249,7 +250,7 @@ describe('vscode-events unit test', () => {
                 title: "Open Command  - Global Settings",
                 description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
                 action1: {
-                    title: "Open",
+                    name: "Open",
                     action: commandAction
                 },
                 labels: [
@@ -258,7 +259,7 @@ describe('vscode-events unit test', () => {
                     {"Project Path": "/home/user/projects/cap1"}
                 ]
             }
-            return events.performAction(item.action1.action);
+            return events.performAction(undefined);
         });
     });
 });

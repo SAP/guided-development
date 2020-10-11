@@ -30,7 +30,11 @@ function getItems(): IItem[] {
         id: "cf-login",
         title: "Cloud Foundry Login",
         description: "Login to Cloud Foundry (cf)",
-        action1: cfLoginAction,
+        action1: { 
+            name: "Login",
+            title: "Cloud Foundry Login",
+            action: cfLoginAction
+        },
         labels: []
     };
     items.push(item);
@@ -59,9 +63,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
 
     cfLoginAction = new basAPI.actions.CommandAction();
-    cfLoginAction.name = "Login";
-    cfLoginAction.title = "Cloud Foundry Login";
-    cfLoginAction.command = {name: "cf.login"};
+    cfLoginAction.name = "cf.login";
 
     basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
         managerAPI.setData(EXT_ID, getCollections(), getItems());

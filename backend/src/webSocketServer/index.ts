@@ -70,7 +70,8 @@ class GuidedDevelopmentWebSocketServer {
             note: "image note of new item"
           },
           action1: {
-            title: "Open",
+            title: "Open Title",
+            name: "Open",
             action: openAction
           },
           labels: [
@@ -125,7 +126,7 @@ function createCollections(): IInternalCollection[] {
     title: "Open Global Settings (via command)",
     description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
     action1: {
-      title: "Open",
+      name: "Open",
       action: openViaCommandAction
     },
     labels: [
@@ -159,7 +160,7 @@ function createCollections(): IInternalCollection[] {
           note: "image note of new item"
         },
         action1: {
-          title: "Execute",
+          name: "Execute",
           action: myExecuteAction,
           contexts: [
             {
@@ -190,7 +191,8 @@ function createCollections(): IInternalCollection[] {
           title: "subitem1",
           description: "",
           action1: {
-            title: "Snippet",
+            title: "Snippet Action Title",
+            name: "Snippet",
             action: snippet1Action
           },
           labels: [
@@ -228,11 +230,11 @@ function createCollections(): IInternalCollection[] {
             title: "Open Global Settings (via command)",
             description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
             action1: {
-              title: "Open via command",
+              name: "Open via command",
               action: openViaCommandAction
             },
             action2: {
-              title: "Show info message",
+              name: "Show info message",
               action: showInfoMessageAction
             },
             labels: [

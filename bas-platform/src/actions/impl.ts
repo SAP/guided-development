@@ -1,8 +1,8 @@
 import { Uri } from "vscode";
 import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "./interfaces";
 
-export abstract class Action implements IAction {
-    actionType: ActionType = ActionType.Command;
+abstract class Action implements IAction {
+    actionType: ActionType | undefined;
 }
 
 /** Specific action classes */
