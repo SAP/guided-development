@@ -99,12 +99,7 @@ export default {
   methods: {
     onAction(contextualItem, index) {
       // fire 'action' event
-      let project;
-      if (contextualItem.context) {
-        project = contextualItem.context.project;
-      }
-      let item = contextualItem.item ? contextualItem.item : contextualItem;
-      this.$emit("action", item, index, project);
+      this.$emit("action", contextualItem, index);
     },
     isFiltered(itemFqid) {
       return this.filteredItems.has(itemFqid);
