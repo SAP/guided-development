@@ -1,4 +1,5 @@
-import { IAction } from "@sap-devx/bas-platform-types";
+import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction,
+         CommandActionParams, ExecuteActionParams, SnippetActionParams, FileActionParams } from "@sap-devx/bas-platform-types";
 
 export interface ICollection {
     id: string;
@@ -14,25 +15,30 @@ export enum CollectionType {
     Extension
 }
 
-export interface IItemContext {
+export interface IItemContext<T> {
     project: string;
-    params?: any[];
+    params?: T;
 }
 
-export interface IItemAction {
+export interface IItemAction<T, K extends IAction> {
     name: string;
     title?: string;
-    action: IAction;
-    contexts?: IItemContext[];
+    action: K;
+    contexts?: IItemContext<T>[];
 }
+
+export type ItemAction = IItemAction<CommandActionParams, ICommandAction> |
+IItemAction<ExecuteActionParams, IExecuteAction> |
+IItemAction<SnippetActionParams, ISnippetAction> |
+IItemAction<FileActionParams, IFileAction>;
 
 export interface IItem {
     id: string;
     title: string;
     description: string;
     image?: IImage;
-    action1?: IItemAction;
-    action2?: IItemAction;
+    action1?: ItemAction;
+    action2?: ItemAction;
     itemIds?: Array<string>;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];

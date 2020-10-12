@@ -4,7 +4,7 @@ import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
-import { IItem, IItemAction, IItemContext } from "./types";
+import { ItemAction, IItemContext } from "./types";
 import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
 
 export class GuidedDevelopment {
@@ -58,11 +58,11 @@ export class GuidedDevelopment {
     // TODO - console log: item does not exist
   }
 
-  private async performAction(itemFqid: string, index: number, context?: IItemContext) {
+  private async performAction(itemFqid: string, index: number, context?: IItemContext<any>) {
     const item: IInternalItem = this.getItem(itemFqid);
 
-    let itemAction: IItemAction;
-    let actionParameters: any[] = context?.params;
+    let itemAction: ItemAction;
+    let actionParameters: any = context?.params;
     if (index === 1) {
       itemAction = item.action1;
     } else {
@@ -78,7 +78,7 @@ export class GuidedDevelopment {
             (itemAction.action as IExecuteAction).params = actionParameters;
             break;
           case ActionType.File:
-            (itemAction.action as IFileAction).uri = actionParameters[0];
+            (itemAction.action as IFileAction).uri = actionParameters;
             break;
           case ActionType.Snippet:
             (itemAction.action as ISnippetAction).context = actionParameters;

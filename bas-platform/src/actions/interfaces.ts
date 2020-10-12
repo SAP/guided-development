@@ -8,26 +8,31 @@ export enum ActionType {
     Snippet = "SNIPPET"
 }
 
+export type CommandActionParams = any [];
+export type ExecuteActionParams = any [];
+export type SnippetActionParams = any;
+export type FileActionParams = vscode.Uri;
+
 export interface IAction {
     actionType: ActionType | undefined;
 }
 
+export interface IExecuteAction extends IAction {
+    executeAction: (params?: ExecuteActionParams) => Thenable<any>;
+    params?: ExecuteActionParams;
+}
+
 export interface ICommandAction extends IAction {
     name: string;
-    params?: any[];
+    params?: CommandActionParams;
 }
 
 export interface ISnippetAction extends IAction {
     contributorId: string;
     snippetName: string;
-    context: any;
+    context: SnippetActionParams;
 }
 
 export interface IFileAction extends IAction {
-    uri: vscode.Uri;
-}
-
-export interface IExecuteAction extends IAction {
-    executeAction: (params?: any[]) => Thenable<any>;
-    params?: any[];
+    uri: FileActionParams;
 }
