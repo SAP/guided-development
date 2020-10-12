@@ -58,20 +58,8 @@ export class GuidedDevelopment {
     // TODO - console log: item does not exist
   }
 
-  private getContext(item: IItem, index: number, contextId: string): IItemContext {
-    const action: IItemAction = (index === 1 ? item.action1 : item.action2);
-    if (action && action.contexts) {
-      for (const context of action.contexts) {
-        if (context.project === contextId) {
-          return context;
-        }
-      }
-    }
-  }
-
-  private async performAction(itemFqid: string, index: number, contextId?: string) {
+  private async performAction(itemFqid: string, index: number, context?: IItemContext) {
     const item: IInternalItem = this.getItem(itemFqid);
-    const context: IItemContext = this.getContext(item, index, contextId);
 
     let itemAction: IItemAction;
     let actionParameters: any[] = context?.params;
@@ -81,17 +69,21 @@ export class GuidedDevelopment {
       itemAction = item.action2;
     }
     if (itemAction) {
-      switch (itemAction.action.actionType) {
-        case ActionType.Command:
-          (itemAction.action as ICommandAction).params = actionParameters;
-          break;
-        case ActionType.Execute:
-          (itemAction.action as IExecuteAction).params = actionParameters;
-          break;
-        case ActionType.File:
-          break;
-        case ActionType.Snippet:
-          break;
+      if (actionParameters) {
+        switch (itemAction.action.actionType) {
+          case ActionType.Command:
+            (itemAction.action as ICommandAction).params = actionParameters;
+            break;
+          case ActionType.Execute:
+            (itemAction.action as IExecuteAction).params = actionParameters;
+            break;
+          case ActionType.File:
+            (itemAction.action as IFileAction).uri = actionParameters[0];
+            break;
+          case ActionType.Snippet:
+            (itemAction.action as ISnippetAction).context = actionParameters;
+            break;
+        }
       }
       this.appEvents.performAction(itemAction.action);
     }
