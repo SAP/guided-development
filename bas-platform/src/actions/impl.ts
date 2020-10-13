@@ -1,5 +1,6 @@
 import { Uri } from "vscode";
-import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "./interfaces";
+import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction,
+    CommandActionParams, ExecuteActionParams, SnippetActionParams, FileActionParams } from "./interfaces";
 
 abstract class Action implements IAction {
     actionType: ActionType | undefined;
@@ -7,20 +8,20 @@ abstract class Action implements IAction {
 
 /** Specific action classes */
 export class ExecuteAction extends Action implements IExecuteAction {
-    executeAction: (params?: any[]) => Thenable<any>;
-    params?: any[];
+    executeAction: (params?: ExecuteActionParams) => Thenable<any>;
+    params?: ExecuteActionParams;
 
     constructor() {
         super();
         this.actionType = ActionType.Execute;
+        this.executeAction = (params?: ExecuteActionParams) => { return Promise.resolve() }
         this.params = [];
-        this.executeAction = (params?: any[]) => { return Promise.resolve() }
     }
 }
 
 export class CommandAction extends Action implements ICommandAction {
     name: string;
-    params?: any[];
+    params?: CommandActionParams;
 
     constructor() {
         super();
@@ -33,19 +34,19 @@ export class CommandAction extends Action implements ICommandAction {
 export class SnippetAction extends Action implements ISnippetAction {
     contributorId: string;
     snippetName: string;
-    context: any;
+    context: SnippetActionParams;
 
     constructor() {
         super();
         this.actionType = ActionType.Snippet;
         this.contributorId = "";
-        this.context = "";
         this.snippetName = "";
+        this.context = "";
     }
 }
 
 export class FileAction extends Action implements IFileAction {
-    uri: Uri;
+    uri: FileActionParams;
 
     constructor() {
         super();

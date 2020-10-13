@@ -40,8 +40,8 @@
 	},
 	"dependencies": {
 		"@sap-devx/code-snippet-types": "0.0.6",
-		"@sap-devx/bas-platform-types": "0.0.9",
-		"@sap-devx/guided-development-types": "0.0.8",
+		"@sap-devx/bas-platform-types": "0.0.10",
+		"@sap-devx/guided-development-types": "0.0.12",
 		"datauri": "^2.0.0",
 		"lodash": "^4.17.15",
 		"comment-json": "2.1.0",

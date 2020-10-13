@@ -6,7 +6,7 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
-import { CollectionType, IItem, IItemContext } from "../types";
+import { CollectionType } from "../types";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
 

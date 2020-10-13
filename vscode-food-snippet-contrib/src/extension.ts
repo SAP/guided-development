@@ -87,9 +87,13 @@ function getInitialItems(): Array<IItem> {
             image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
             note: "image note of create-grocery-list"
         },
-        action1: {
+        action1:  {
             name: "Create Grocery List",
-            action: groceryListAction
+            action: groceryListAction,
+            contexts: [{
+                project: "myProj",
+                context: {}
+            }]
         },
         labels: [
             { "Project Type": "create-grocery-list" }
