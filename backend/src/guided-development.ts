@@ -4,7 +4,7 @@ import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
-import { ItemAction, IItemContext } from "./types";
+import { ItemAction, IItemContext, IItemCommandContext, IItemExecuteContext, IItemFileContext, IItemSnippetContext } from "./types";
 import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
 
 export class GuidedDevelopment {
@@ -58,30 +58,41 @@ export class GuidedDevelopment {
     // TODO - console log: item does not exist
   }
 
-  private async performAction(itemFqid: string, index: number, context?: IItemContext<any>) {
+  private async performAction(itemFqid: string, index: number, context?: IItemContext) {
     const item: IInternalItem = this.getItem(itemFqid);
 
     let itemAction: ItemAction;
-    let actionParameters: any = context?.params;
     if (index === 1) {
       itemAction = item.action1;
     } else {
       itemAction = item.action2;
     }
     if (itemAction) {
-      if (actionParameters) {
+      if (context) {
         switch (itemAction.action.actionType) {
           case ActionType.Command:
-            (itemAction.action as ICommandAction).params = actionParameters;
+            let commandActionParameters: any = (context as IItemCommandContext)?.params;
+            if (commandActionParameters) {
+              (itemAction.action as ICommandAction).params = commandActionParameters;
+            }
             break;
           case ActionType.Execute:
-            (itemAction.action as IExecuteAction).params = actionParameters;
+            let executeActionParameters: any = (context as IItemExecuteContext)?.params;
+            if (executeActionParameters) {
+              (itemAction.action as IExecuteAction).params = executeActionParameters;
+            }
             break;
           case ActionType.File:
-            (itemAction.action as IFileAction).uri = actionParameters;
+            let fileActionUri: any = (context as IItemFileContext)?.uri;
+            if (fileActionUri) {
+              (itemAction.action as IFileAction).uri = fileActionUri;
+            }
             break;
           case ActionType.Snippet:
-            (itemAction.action as ISnippetAction).context = actionParameters;
+            let snippetActionContext: any = (context as IItemSnippetContext)?.context;
+            if (snippetActionContext) {
+              (itemAction.action as ISnippetAction).context = snippetActionContext;
+            }
             break;
         }
       }

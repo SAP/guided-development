@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { ICollection, CollectionType, IItem, ManagerAPI, IItemAction, IItemContext } from '@sap-devx/guided-development-types';
-import { bas, IExecuteAction, ExecuteActionParams } from '@sap-devx/bas-platform-types';
+import { ICollection, CollectionType, IItem, ManagerAPI, IItemExecuteAction, IItemExecuteContext } from '@sap-devx/guided-development-types';
+import { bas, IExecuteAction } from '@sap-devx/bas-platform-types';
 // @ts-ignore
 import * as datauri from "datauri";
 
@@ -17,7 +17,7 @@ let eatAction: IExecuteAction,
     bakeAction: IExecuteAction,
     pourAction: IExecuteAction
 
-let bakeItemAction: IItemAction<ExecuteActionParams, IExecuteAction>;
+let bakeItemAction: IItemExecuteAction;
     
 function initActions(basAPI: typeof bas) {
     eatAction = new basAPI.actions.ExecuteAction()
@@ -91,7 +91,7 @@ function getCollections(): ICollection[] {
 function getItems(): Array<IItem> {
     bakeItemAction.contexts = [];
     for (const project of projectsMap) {
-        const context: IItemContext<ExecuteActionParams> = {
+        const context: IItemExecuteContext = {
             project: project[1],
             params: [project[0]]
         }

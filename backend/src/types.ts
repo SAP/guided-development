@@ -15,22 +15,53 @@ export enum CollectionType {
     Extension
 }
 
-export interface IItemContext<T> {
+export interface IItemContext {
     project: string;
-    params?: T;
 }
 
-export interface IItemAction<T, K extends IAction> {
+export interface IItemAction {
     name: string;
     title?: string;
-    action: K;
-    contexts?: IItemContext<T>[];
+    action: IAction;
+    contexts?: IItemContext[];
 }
 
-export type ItemAction = IItemAction<CommandActionParams, ICommandAction> |
-IItemAction<ExecuteActionParams, IExecuteAction> |
-IItemAction<SnippetActionParams, ISnippetAction> |
-IItemAction<FileActionParams, IFileAction>;
+export interface IItemCommandContext extends IItemContext {
+    params?: CommandActionParams;
+}
+export interface IItemCommandAction extends IItemAction {
+    action: ICommandAction;
+    contexts?: IItemCommandContext[];
+}
+
+export interface IItemExecuteContext extends IItemContext {
+    params?: ExecuteActionParams;
+}
+export interface IItemExecuteAction extends IItemAction {
+    action: IExecuteAction;
+    contexts?: IItemExecuteContext[];
+}
+
+export interface IItemSnippetContext extends IItemContext {
+    context?: SnippetActionParams;
+}
+export interface IItemSnippetAction extends IItemAction {
+    action: ISnippetAction;
+    contexts?: IItemSnippetContext[];
+}
+
+export interface IItemFileContext extends IItemContext {
+    uri?: FileActionParams;
+}
+export interface IItemFileAction extends IItemAction {
+    action: IFileAction;
+    contexts?: IItemFileContext[];
+}
+
+export type ItemAction = IItemCommandAction |
+IItemExecuteAction |
+IItemSnippetAction |
+IItemFileAction;
 
 export interface IItem {
     id: string;
