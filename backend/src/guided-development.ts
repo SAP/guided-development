@@ -4,7 +4,7 @@ import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
-import { ItemAction, IItemContext, IItemCommandContext, IItemExecuteContext, IItemFileContext, IItemSnippetContext } from "./types";
+import { ItemAction, ItemContext, IItemCommandContext, IItemExecuteContext, IItemFileContext, IItemSnippetContext } from "./types";
 import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
 
 export class GuidedDevelopment {
@@ -58,7 +58,7 @@ export class GuidedDevelopment {
     // TODO - console log: item does not exist
   }
 
-  private async performAction(itemFqid: string, index: number, context?: IItemContext) {
+  private async performAction(itemFqid: string, index: number, context?: ItemContext) {
     const item: IInternalItem = this.getItem(itemFqid);
 
     let itemAction: ItemAction;

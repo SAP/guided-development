@@ -32,7 +32,7 @@
 	},
 	"dependencies": {
 		"@sap-devx/bas-platform-types": "0.0.10",
-		"@sap-devx/guided-development-types": "0.0.10",
+		"@sap-devx/guided-development-types": "0.0.12",
 		"comment-json": "2.1.0",
 		"datauri": "^2.0.0",
 		"lodash": "^4.17.15"

@@ -15,11 +15,11 @@ export enum CollectionType {
     Extension
 }
 
-export interface IItemContext {
+interface IItemContext {
     project: string;
 }
 
-export interface IItemAction {
+interface IItemAction {
     name: string;
     title?: string;
     action: IAction;
@@ -62,6 +62,11 @@ export type ItemAction = IItemCommandAction |
 IItemExecuteAction |
 IItemSnippetAction |
 IItemFileAction;
+
+export type ItemContext = IItemCommandContext |
+IItemExecuteContext |
+IItemSnippetContext |
+IItemFileContext;
 
 export interface IItem {
     id: string;
