@@ -18,6 +18,9 @@ export const bas = {
                         resolve(extension?.exports as T);
                     }
                 }, 500);
+            } else {
+                console.info(`Detected ${extensionId} is active`);
+                resolve(extension?.exports as T);
             }
         });
     
