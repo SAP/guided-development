@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -25,14 +25,14 @@
 	"keywords": [
 		"guided",
 		"development",
-		"guide ",
-		"developer ",
+		"guide",
+		"developer",
 		"tool",
 		"sap"
 	],
 	"activationEvents": [
 		"onCommand:loadGuidedDevelopment",
-		"onWebviewPanel:GuidedDevelopment"
+		"onWebviewPanel:guidedDevelopment"
 	],
 	"main": "./dist/extension",
 	"contributes": {

@@ -84,7 +84,7 @@ function getInitialItems(): Array<IItem> {
         title: "Grocery List",
         description: "create grocery list",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of create-grocery-list"
         },
         action1:  {
@@ -105,7 +105,7 @@ function getInitialItems(): Array<IItem> {
         title: "Foodq Restaurant",
         description: "Bon appetite",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of foodq-restaurant"
         },
         action1: {
@@ -123,7 +123,7 @@ function getInitialItems(): Array<IItem> {
         title: "Michelin Restaurants",
         description: "Bon appetite",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of michelin-restaurants"
         },
         itemIds: [
@@ -140,7 +140,7 @@ function getInitialItems(): Array<IItem> {
         title: "Michelin Restaurants 3 stars",
         description: "Bon appetite",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of foodq-restaurant"
         },
         action1: {
@@ -157,7 +157,7 @@ function getInitialItems(): Array<IItem> {
         title: "Michelin Restaurants 2 stars",
         description: "Bon appetite",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'project from template.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
             note: "image note of foodq-restaurant"
         },
         action1: {

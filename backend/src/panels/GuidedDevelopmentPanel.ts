@@ -1,6 +1,4 @@
 import * as _ from 'lodash';
-import * as path from 'path';
-import * as os from "os";
 import * as vscode from 'vscode';
 import { GuidedDevelopment } from "../guided-development";
 import { RpcExtension } from '@sap-devx/webview-rpc/out.ext/rpc-extension';
@@ -11,7 +9,7 @@ import { AppEvents } from "../app-events";
 import { VSCodeEvents } from '../vscode-events';
 import { AbstractWebviewPanel } from './AbstractWebviewPanel';
 import { Contributors } from "../contributors";
-import { IInternalItem, IInternalCollection } from "../Collection";
+import { IInternalCollection } from "../Collection";
 
 export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public static GUIDED_DEVELOPMENT = "Guided Development";
@@ -26,9 +24,6 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 		super.setWebviewPanel(webViewPanel);
 
 		this.collections = Contributors.getInstance().getCollections();
-		if (_.isNil(this.collections)) {
-			return vscode.window.showErrorMessage("Can not find guided-development.");
-		}
 
 		this.messages = backendMessages;
 
