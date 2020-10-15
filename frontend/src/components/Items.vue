@@ -41,7 +41,7 @@
                     >{{ contextualItem.item.image.note }}</v-card-text
                   >
                   <v-dialog
-                    v-model="contextualItem.item.imageDialog"
+                    v-model="imageDialog"
                     max-width="40%"
                   >
                     <v-card align="center" height="100%">
