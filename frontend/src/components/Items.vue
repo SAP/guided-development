@@ -5,16 +5,14 @@
         <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index">
           <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
               <a style="font-size:14px">{{contextualItem.item.title}}</a>
+              <div hidden>Item ID: {{contextualItem.item.fqid}}</div>
+              <div hidden v-if="contextualItem.context">Project: {{contextualItem.context.project}}</div>
           </v-expansion-panel-header>
           <v-expansion-panel-content v-bind:class="{'headline':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="8" style="margin-left:20px">
                   <v-card-text class="pa-0 ma-0" style="font-size:12px">{{contextualItem.item.description}}</v-card-text>
-                  <v-card-text class="pa-0 my-6" style="font-size:12px">Item ID: {{contextualItem.item.fqid}}</v-card-text>
-                  <v-card-text v-if="contextualItem.context" class="pa-0 ma-0" style="font-size: 12px"
-                    >Project: {{ contextualItem.context.project }}</v-card-text
-                  >
                   <div v-if="false">
                     <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="contextualItem.item.labels">Labels:</v-card-text>
                     <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in contextualItem.item.labels" :key="index">
@@ -23,44 +21,10 @@
                   </div>
                 </v-col>
                 <v-col cols="6" md="3">
-                  <v-img v-if="contextualItem.item.image" style="cursor:pointer" :src="contextualItem.item.image.image" max-width="100%" @click="imageDialog = true">
-                    <v-icon v-if="contextualItem.item.image" style="position:absolute;bottom:0px;right:0px" @click="imageDialog = true">search</v-icon>
-                  </v-img>
-                  <v-card-text
-                    v-if="contextualItem.item.image"
-                    align="left"
-                    class="mt-4 pb-0"
-                    style="font-size: 14px; padding-left: 0px"
-                    ><b>Note</b></v-card-text
-                  >
-                  <v-card-text
-                    v-if="contextualItem.item.image"
-                    align="left"
-                    class="pa-0 ma-0"
-                    style="font-size: 12px; padding-left: 0px"
-                    >{{ contextualItem.item.image.note }}</v-card-text
-                  >
-                  <v-dialog
-                    v-model="imageDialog"
-                    max-width="40%"
-                  >
-                    <v-card align="center" height="100%">
-                      <v-img
-                        v-if="contextualItem.item.image"
-                        :src="contextualItem.item.image.image"
-                        alt=""
-                        width="100%"
-                        height="100%"
-                        @click.stop="imageDialog = false"
-                      >
-                        <v-icon
-                          style="position: absolute; top: 0px; right: 0px"
-                          @click.stop="imageDialog = false"
-                          >clear</v-icon
-                        >
-                      </v-img>
-                    </v-card>
-                  </v-dialog>
+                  <ImageDlg
+                      v-if="contextualItem.item.image"
+                      :image="contextualItem.item.image"
+                  />
                 </v-col>
               </v-row>
               <v-row>
@@ -87,7 +51,12 @@
 </template>
 
 <script>
+import ImageDlg from "./ImageDlg.vue";
+
 export default {
+  components: {
+    ImageDlg
+  },
   name: "Items",
   data() {
     return {
@@ -194,11 +163,7 @@ export default {
 .v-expansion-panel-header__icon {
   position: absolute;
 }
-.v-expansion-panel .v-icon,
 .v-expansion-panel-header__icon .v-icon {
-  color: var(--vscode-foreground, #cccccc) !important;
-}
-.v-icon--link.material-icons.theme--light {
   color: var(--vscode-foreground, #cccccc) !important;
 }
 .v-card.v-sheet {

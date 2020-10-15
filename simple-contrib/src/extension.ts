@@ -37,8 +37,8 @@ export async function activate(context: vscode.ExtensionContext) {
     const itemId: string = "1";
     const myItem: IItem = {
         id: itemId,
-        title: "My Simple Item",
-        description: "This is my first item",
+        title: "Simple Item",
+        description: "This is an example of a simple item.",
         labels: [],
         action1: {
             name: "Execute a Command",
@@ -54,8 +54,8 @@ export async function activate(context: vscode.ExtensionContext) {
      */
     const myCollection: ICollection = {
         id: "a",
-        title: "My Simple Collection",
-        description: "This is my first colletion",
+        title: "Simple Collection",
+        description: "This is an example of a simple collection.",
         type: CollectionType.Extension,
         itemIds: [`${EXT_ID}.${itemId}`]
     }
