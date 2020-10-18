@@ -5,7 +5,7 @@ import { bas, IExecuteAction } from '@sap-devx/bas-platform-types';
 // @ts-ignore
 import * as datauri from "datauri";
 
-const EXT_ID = "saposs.contrib-cake";
+const EXT_ID = "saposs.vscode-contrib-cake";
 
 const projectsMap: Map<string, any> = new Map();
 
@@ -108,7 +108,7 @@ function getInitialItems(): Array<IItem> {
         title: "Eat Cake",
         description: "You're done!! The cake is ready to be enjoyed as the perfect dessert.",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'cake1.jpg')),
+            image: getImage(path.join(extensionPath, 'resources', 'cake.png')),
             note: "We recommend to eat this cake together with vanilla ice-cream."
         },
         action1: {
@@ -149,6 +149,10 @@ function getInitialItems(): Array<IItem> {
         id: "bake",
         title: "Bake your Cake",
         description: "Pre-heat the oven. Leave the cake inside the oven for 45 minutes at a high temperature.",
+        image: {
+            image: getImage(path.join(extensionPath, 'resources', 'chief.png')),
+            note: "Don’t open the oven 25 times as the cake bakes. This lets in cool air and the drastic temperature change causes the rising cake to sink."
+        },
         action1: bakeItemAction,
         labels: []
     };
@@ -159,7 +163,7 @@ function getInitialItems(): Array<IItem> {
         title: "Pour Mix into Pan",
         description: "Pour the mix into a pan that was previously oiled.",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'info.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'cook.png')),
             note: "You can add chocolate sprinkles on top."
         },
         action1: {

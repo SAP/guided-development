@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { bas, ICommandAction } from "@sap-devx/bas-platform-types";
 import { ICollection, CollectionType, IItem, ManagerAPI } from "@sap-devx/guided-development-types";
 
-const EXT_ID = "SAPOSS.simple-contrib";
+const EXT_ID = "SAPOSS.vscode-simple-contrib";
 
 export async function activate(context: vscode.ExtensionContext) {
     /**
