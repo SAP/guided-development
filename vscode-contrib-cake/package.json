@@ -1,6 +1,6 @@
 {
-	"name": "simple-contrib",
-	"displayName": "simple-contrib",
+	"name": "vscode-contrib-cake",
+	"displayName": "vscode-contrib-cake",
 	"description": "",
 	"version": "0.0.1",
 	"publisher": "SAPOSS",
@@ -10,7 +10,7 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SAP/guided-development",
-		"directory": "simple-contrib"
+		"directory": "vscode-contrib-cake"
 	},
 	"categories": [
 		"Other"
@@ -26,19 +26,31 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile",
+		"test": "node ./out/test/runTest.js",
 		"package": "vsce package ."
 	},
+	"dependencies": {
+		"@sap-devx/bas-platform-types": "0.0.10",
+		"@sap-devx/guided-development-types": "0.0.12",
+		"comment-json": "2.1.0",
+		"datauri": "^2.0.0"
+	},
 	"devDependencies": {
+		"@types/comment-json": "1.1.1",
+		"@types/fs-extra": "5.0.5",
+		"@types/glob": "^7.1.1",
+		"@types/lodash": "^4.14.150",
+		"@types/mocha": "^5.2.7",
 		"@types/node": "^12.11.7",
 		"@types/vscode": "^1.40.0",
+		"glob": "^7.1.5",
+		"mocha": "^6.2.2",
 		"typescript": "^3.9.7",
-		"vsce": "^1.69.0"
+		"vsce": "^1.69.0",
+		"vscode-test": "^1.2.2"
 	},
 	"extensionDependencies": [
 		"SAPOSS.bas-platform"
-	],
-	"dependencies": {
-		"@sap-devx/bas-platform-types": "0.0.10",
-		"@sap-devx/guided-development-types": "0.0.12"
-	}
+	]
 }
