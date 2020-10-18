@@ -7,7 +7,7 @@ import * as path from 'path';
 import { ConfigHelper } from "./configHelper";
 const datauri = require("datauri");
 
-const EXT_ID = "saposs.vscode-food-snippet-contrib";
+const EXT_ID = "saposs.vscode-snippet-food-contrib";
 const foodqCollectionMap: Map<string, ICollection> = new Map(); // key is dirname; value is collection
 const foodqItemsMap: Map<string, Array<string>> = new Map(); // key is dirname; value is array of item ids
 let extensionPath: string;

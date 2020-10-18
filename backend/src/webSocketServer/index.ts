@@ -112,7 +112,7 @@ function createCollections(): IInternalCollection[] {
 
   const snippet1Action: ISnippetAction = {
     actionType: ActionType.Snippet,
-    contributorId: "SAPOSS.vscode-food-snippet-contrib",
+    contributorId: "SAPOSS.vscode-snippet-food-contrib",
     snippetName: "snippet_1",
     context: { uri: "uri" }
   }

@@ -285,7 +285,7 @@ export async function activate(context: vscode.ExtensionContext) {
     
     openSnippetAction = new basAPI.actions.SnippetAction();
     //  TODO: why actionType exposed ?? --> openSnippetAction.actionType
-    openSnippetAction.contributorId = "saposs.vscode-food-snippet-contrib";
+    openSnippetAction.contributorId = "saposs.vscode-snippet-food-contrib";
     openSnippetAction.snippetName = "snippet_1";
     openSnippetAction.context = {}
 

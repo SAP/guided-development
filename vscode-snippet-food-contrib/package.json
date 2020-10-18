@@ -1,6 +1,6 @@
 {
-	"name": "vscode-food-snippet-contrib",
-	"displayName": "vscode-food-snippet-contrib",
+	"name": "vscode-snippet-food-contrib",
+	"displayName": "vscode-snippet-food-contrib",
 	"description": "",
 	"version": "0.0.2",
 	"publisher": "saposs",
@@ -10,7 +10,7 @@
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/SAP/guided-development",
-		"directory": "vscode-food-snippet-contrib"
+		"directory": "vscode-snippet-food-contrib"
 	},
 	"extensionDependencies": [
 		"saposs.code-snippet",
