@@ -1,5 +1,5 @@
 import { ISnippet } from '@sap-devx/code-snippet-types';
-import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development-types';
+import { ICollection, CollectionType, IItem, ManagerAPI, IItemExecuteAction, IItemExecuteContext } from '@sap-devx/guided-development-types';
 import { bas, IExecuteAction, ISnippetAction, IFileAction } from '@sap-devx/bas-platform-types';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
@@ -12,6 +12,7 @@ const foodqCollectionMap: Map<string, ICollection> = new Map(); // key is dirnam
 const foodqItemsMap: Map<string, Array<string>> = new Map(); // key is dirname; value is array of item ids
 let extensionPath: string;
 
+let foodqItemAction: IItemExecuteAction;
 let foodqAction: IExecuteAction;
 let michelin3StarsAction: IFileAction;
 let michelin2StarsAction: IFileAction;
@@ -19,7 +20,7 @@ let groceryListAction: ISnippetAction;
 let foodqCollectionTemplate: ICollection = {
     id: "collection2",
     title: "Restaurants",
-    description: "Review list of restaurants. You can take-away, delivery, order a place. if there is a foodq.json file in your workspace",
+    description: "Find your desired restaurant from the options below. You can order take-away, delivery, or reserve a table. (The options rely on the 'foodq.json' file in your workspace.)",
     type: CollectionType.Scenario,
     itemIds: [
         `${EXT_ID}.foodq-restaurant`,
@@ -33,7 +34,7 @@ function getCollections(): ICollection[] {
     let collection: ICollection = {
         id: "collection1",
         title: "Create Grocery List",
-        description: "This is a tool to create grocery list",
+        description: "This is a tool to create a grocery list",
         type: CollectionType.Scenario,
         itemIds: [
             `${EXT_ID}.create-grocery-list`
@@ -81,11 +82,11 @@ function getInitialItems(): Array<IItem> {
 	let item: IItem;
     item = {
         id: "create-grocery-list",
-        title: "Grocery List",
-        description: "create grocery list",
+        title: "Populate List",
+        description: "Select the items you need to buy from the options provided. This list is saved so that you can reuse it every time you go shopping. This saves you time and money.",
         image: {
             image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
-            note: "image note of create-grocery-list"
+            note: "Our products are always fresh and of the best quality."
         },
         action1:  {
             name: "Create Grocery List",
@@ -102,17 +103,13 @@ function getInitialItems(): Array<IItem> {
     items.push(item);
     item = {
         id: "foodq-restaurant",
-        title: "Foodq Restaurant",
-        description: "Bon appetite",
+        title: "FoodQ",
+        description: "Order your favorite dishes from the FoodQ restaurant.",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
-            note: "image note of foodq-restaurant"
+            image: getImage(path.join(extensionPath, 'resources', 'SAP.png')),
+            note: "You can sit at the restaurant or we can deliver the food to your home."
         },
-        action1: {
-            title: "Order from restaurant",
-            name: "Order",
-            action: foodqAction
-        },
+        action1: foodqItemAction,
         labels: [
             { "Project Type": "foodq-restaurant" }
         ]
@@ -121,9 +118,9 @@ function getInitialItems(): Array<IItem> {
     item = {
         id: "michelin-restaurants",
         title: "Michelin Restaurants",
-        description: "Bon appetite",
+        description: "Treat yourself to a first-class experience at our Michelin restaurants.",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'Michelin.png')),
             note: "image note of michelin-restaurants"
         },
         itemIds: [
@@ -137,14 +134,14 @@ function getInitialItems(): Array<IItem> {
 	items.push(item);
     item = {
         id: "michelin-restaurants-3stars",
-        title: "Michelin Restaurants 3 stars",
-        description: "Bon appetite",
+        title: "3-Star Michelin Restaurants",
+        description: "The Michelin guide defines 3-star restaurants as \"exceptional cuisine that is worth a special journey\". So embark in that journey and come enjoy the food.",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
-            note: "image note of foodq-restaurant"
+            image: getImage(path.join(extensionPath, 'resources', 'Michelin-3-stars.png')),
+            note: "Currently, there are 137 restaurants with 3 Michelin stars."
         },
         action1: {
-            name: "3 Stars Michelin restaurants",
+            name: "3-Star Michelin Restaurants",
             action: michelin3StarsAction
         },
         labels: [
@@ -154,14 +151,14 @@ function getInitialItems(): Array<IItem> {
 	items.push(item);
     item = {
         id: "michelin-restaurants-2stars",
-        title: "Michelin Restaurants 2 stars",
-        description: "Bon appetite",
+        title: "2-Star Michelin Restaurants",
+        description: "The Michelin guide defines 2-star restaurants as \"excellent cooking that is worth a detour\". Select one of the restaurants in this list of a guaranteed delicious meal.",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
-            note: "image note of foodq-restaurant"
+            image: getImage(path.join(extensionPath, 'resources', 'Michelin-2-stars.png')),
+            note: "Currently, there are 382 restaurants with 2 Michelin stars."
         },
         action1: {
-            name: "2 Stars Michelin restaurants",
+            name: "2-Star Michelin Restaurants",
             action: michelin2StarsAction
         },
         labels: [
@@ -189,7 +186,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				getMessages() {
 					return {
 						title: "Create Grocery List",
-						description: "Stay organized with a grocery list to avoid buying items you don’t really need.",
+						description: "Create an organized grocery list to avoid buying items you don't really need.",
 						applyButton: "Create"
 					};
 				},
@@ -221,6 +218,14 @@ function createGuidedDevActions(basAPI: typeof bas) {
     michelin3StarsAction.uri = vscode.Uri.parse("https://guide.michelin.com/en/restaurants/3-stars-michelin");
     michelin2StarsAction = new basAPI.actions.FileAction();
     michelin2StarsAction.uri = vscode.Uri.parse("https://guide.michelin.com/en/restaurants/2-stars-michelin");
+
+    foodqItemAction = {
+        title: "Your food is only one click away.",
+        name: "Order",
+        action: foodqAction,
+        contexts: []
+    };
+
 }
 
 function createFileSystemWatcher(globPattern: vscode.GlobPattern, managerAPI: ManagerAPI) {
@@ -272,10 +277,16 @@ function createFileSystemWatcher(globPattern: vscode.GlobPattern, managerAPI: Ma
 function addFoodqCollection(dirPath: string): void {
     const name = path.parse(dirPath).name;
 
+    const context: IItemExecuteContext = {
+        project: name,
+        params: [dirPath]
+    }
+    foodqItemAction.contexts?.push(context);
+
     // clone collection template
     const collection: ICollection = JSON.parse(JSON.stringify(foodqCollectionTemplate));
     collection.id = `foodq-${name}`;
-    collection.title = `FoodQ Restaurant (${name})`;
+    collection.title = `Available Restaurants (${name})`;
     for (const index in collection.itemIds) {
         collection.itemIds[index] = `${collection.itemIds[index]}-${name}`;
     }
@@ -309,7 +320,7 @@ async function createCodeSnippetWorkspaceEdit(answers: any, context: any) {
 	const config = {
 		fruits: answers.fruits,
 		grains: answers.grains,
-		diary: answers.diary,
+		dairy: answers.dariy,
 	};
 	configurations['configurations'].push(config)
 
@@ -330,19 +341,20 @@ function createCodeSnippetQuestions(context: any) : any[] {
     questions.push(
 		{
 		  guiOptions: {
-			hint: "Select the fruits you want to add."
+			hint: "Add your favorite fruit and vegetables to the list."
 		  },
 		  type: "checkbox",
 		  name: "fruits",
-		  message: "Fruits",
+		  message: "Fruit and Vegetables",
 		  choices: [
-			'Bannana',
-			'Orange'
+			'Banana',
+			'Orange',
+			'Carrot'
 		  ]
 		},
 		{
 			guiOptions: {
-			  hint: "Select the grains you want to add."
+			  hint: "Add your favorite grains to the list."
 			},
 			type: "checkbox",
 			name: "grains",
@@ -355,25 +367,25 @@ function createCodeSnippetQuestions(context: any) : any[] {
 		  },
 		  {
 			guiOptions: {
-			  hint: "Select the diary you want to add."
+			  hint: "Stay healthy by selecting dairy products"
 			},
 			type: "checkbox",
-			name: "diary",
-			message: "Diary",
+			name: "dairy",
+			message: "Dairy",
 			choices: [
 			  'Milk',
-			  'Yougurt',
+			  'Yogurt',
 			  'Cheese'
 			]
 		  },
 		{
 		  guiOptions: {
-			hint: "Select the path to your grocery list.",
+			hint: "Select the folder to which you want to save the grocery list.",
 			type: "folder-browser",
 		  },
 		  type: "input",
 		  name: "path",
-		  message: "grocery list target folder",
+		  message: "Target Folder",
 		  default: "/home/user/projects"
 		}
 	  );

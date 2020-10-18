@@ -22,23 +22,23 @@ let bakeItemAction: IItemExecuteAction;
 function initActions(basAPI: typeof bas) {
     eatAction = new basAPI.actions.ExecuteAction()
     eatAction.executeAction = () => {
-        return vscode.window.showInformationMessage("The cake was delicious!!!");
+        return vscode.window.showInformationMessage("You are now ready to bake a cake.");
     };
     buyAction = new basAPI.actions.ExecuteAction();
     buyAction.executeAction = () => {
-        return vscode.window.showInformationMessage("You bought all required ingredients");
+        return vscode.window.showInformationMessage("The ingredients will be delivered to your house.");
     };
     mixAction = new basAPI.actions.ExecuteAction();
     mixAction.executeAction = () => {
-        return vscode.window.showInformationMessage("The cake mix is ready");
+        return vscode.window.showInformationMessage("Make sure there are no lumps in the mix.");
     };
 
     bakeAction = new basAPI.actions.ExecuteAction();
     bakeAction.executeAction = (params) => {
         if (params && params.length > 0) {
-            return vscode.window.showInformationMessage(`The cake is ready (${params})`);
+            return vscode.window.showInformationMessage(`Check if the cake is ready using a toothpick. (${params})`);
         } else {
-            return vscode.window.showInformationMessage(`The cake is ready`);
+            return vscode.window.showInformationMessage(`Check if the cake is ready using a toothpick.`);
         }
     };
     bakeItemAction = {
@@ -49,7 +49,7 @@ function initActions(basAPI: typeof bas) {
 
     pourAction = new basAPI.actions.ExecuteAction();
     pourAction.executeAction = () => {
-        return vscode.window.showInformationMessage("The cake mix was poured into the pan");
+        return vscode.window.showInformationMessage("We recommend you use a round pan.");
     };
 }
 
@@ -59,7 +59,7 @@ function getCollections(): ICollection[] {
     const noBakeCollection = {
         id: "collection1",
         title: "Make a No Bake Cake",
-        description: "This is a recipe for making a no-bake cake",
+        description: "This is a recipe for making a no-bake cake.",
         type: CollectionType.Scenario,
         itemIds: [
             `${EXT_ID}.buy-ingredients`,
@@ -106,10 +106,10 @@ function getInitialItems(): Array<IItem> {
     let item: IItem = {
         id: "eat-cake",
         title: "Eat Cake",
-        description: "Bon appetite",
+        description: "You're done!! The cake is ready to be enjoyed as the perfect dessert.",
         image: {
             image: getImage(path.join(extensionPath, 'resources', 'cake1.jpg')),
-            note: "image note of eat-cake"
+            note: "We recommend to eat this cake together with vanilla ice-cream."
         },
         action1: {
             name: "Eat",
@@ -124,7 +124,7 @@ function getInitialItems(): Array<IItem> {
     item = {
         id: "buy-ingredients",
         title: "Buy Ingredients",
-        description: "Buy relevant ingredeients for your cake",
+        description: "For this cake you will need dark chocolate, flour, and eggs.",
         action1: {
             name: "Buy",
             action: buyAction
@@ -136,7 +136,7 @@ function getInitialItems(): Array<IItem> {
     item = {
         id: "mix-ingredients",
         title: "Mix Ingredients",
-        description: "Mix ingredeients according to recipe",
+        description: "Add the dry ingredients to a bowl, then add the liquid ingredients and mix them together.",
         action1: {
             name: "Mix",
             action: mixAction
@@ -147,8 +147,8 @@ function getInitialItems(): Array<IItem> {
 
     item = {
         id: "bake",
-        title: "Bake your cake",
-        description: "Bake your cake",
+        title: "Bake your Cake",
+        description: "Pre-heat the oven. Leave the cake inside the oven for 45 minutes at a high temperature.",
         action1: bakeItemAction,
         labels: []
     };
@@ -157,10 +157,10 @@ function getInitialItems(): Array<IItem> {
     item = {
         id: "pour-mix",
         title: "Pour Mix into Pan",
-        description: "Pour the cake mix into the pan",
+        description: "Pour the mix into a pan that was previously oiled.",
         image: {
             image: getImage(path.join(extensionPath, 'resources', 'info.png')),
-            note: "image note of pour-mix"
+            note: "You can add chocolate sprinkles on top."
         },
         action1: {
             name: "Pour",
