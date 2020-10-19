@@ -8,8 +8,7 @@ import { ConfigHelper } from "./configHelper";
 const datauri = require("datauri");
 
 const EXT_ID = "saposs.vscode-snippet-food-contrib";
-const foodqCollectionMap: Map<string, ICollection> = new Map(); // key is dirname; value is collection
-const foodqItemsMap: Map<string, Array<string>> = new Map(); // key is dirname; value is array of item ids
+const projectsMap: Map<string, any> = new Map();
 let extensionPath: string;
 
 let foodqItemAction: IItemExecuteAction;
@@ -42,39 +41,24 @@ function getCollections(): ICollection[] {
     };
     collections.push(collection);
 
-    for (const collection of foodqCollectionMap.values()) {
-        collections.push(collection);
+    if (projectsMap.size > 0) {
+        collections.push(foodqCollectionTemplate);
     }
 
     return collections;
 }
 
 function getItems(): Array<IItem> {
-    const initialItems: Array<IItem> = getInitialItems();
-    const items: Array<IItem> = [];
-
-    for (const mapEntry of foodqItemsMap) {
-        const dirname = mapEntry[0];
-        const name = path.parse(dirname).name;
-
-        for (const itemId of mapEntry[1]) {
-            const origItem = initialItems.find(value => itemId.includes(`${EXT_ID}.${value.id}`));
-            if (origItem) {
-                const clonedItem: IItem = _.clone(origItem);
-                clonedItem.id = `${origItem.id}-${name}`;
-                clonedItem.labels = [
-                    { "Project Name": name },
-                    { "Project Type": "foodq-restaurant" },
-                    { "Project Path": dirname }
-                ]
-        
-                items.push(clonedItem);
-            }
+    foodqItemAction.contexts = [];
+    for (const project of projectsMap) {
+        const context: IItemExecuteContext = {
+            project: project[1],
+            params: [project[0]]
         }
+        foodqItemAction.contexts?.push(context);
     }
+    return getInitialItems();
 
-    items.push(...initialItems);
-    return items;
 }
 
 function getInitialItems(): Array<IItem> {
@@ -85,7 +69,7 @@ function getInitialItems(): Array<IItem> {
         title: "Populate List",
         description: "Select the items you need to buy from the options provided. This list is saved so that you can reuse it every time you go shopping. This saves you time and money.",
         image: {
-            image: getImage(path.join(extensionPath, 'resources', 'artboard.png')),
+            image: getImage(path.join(extensionPath, 'resources', 'list.png')),
             note: "Our products are always fresh and of the best quality."
         },
         action1:  {
@@ -207,8 +191,8 @@ export async function activate(context: vscode.ExtensionContext) {
 
 function createGuidedDevActions(basAPI: typeof bas) {
     foodqAction = new basAPI.actions.ExecuteAction()
-    foodqAction.executeAction = () => {
-        return vscode.commands.executeCommand("loadYeomanUI", { filter: { type: "foodq" } });
+    foodqAction.executeAction = (params) => {
+        return vscode.commands.executeCommand("loadYeomanUI", { filter: { type: "foodq" }, data: { folder: _.get(params, "[0]") } });
 	};
     groceryListAction = new basAPI.actions.SnippetAction()
     groceryListAction.contributorId = EXT_ID;
@@ -235,13 +219,13 @@ function createFileSystemWatcher(globPattern: vscode.GlobPattern, managerAPI: Ma
 
         for (const folder of e.removed) {
             console.dir(`${folder.uri.path} removed from workspace`);
-            removeFoodqCollection(folder.uri.path);
+            removeFoodqProject(folder.uri.path);
             managerAPI.setData(EXT_ID, getCollections(), getItems());
         }
 
         for (const folder of e.added) {
             console.dir(`${folder.uri.path} added to workspace`);
-            addFoodqCollection(folder.uri.path);
+            addFoodqPoject(folder.uri.path);
             managerAPI.setData(EXT_ID, getCollections(), getItems());
         }
     });
@@ -249,7 +233,7 @@ function createFileSystemWatcher(globPattern: vscode.GlobPattern, managerAPI: Ma
     vscode.workspace.findFiles(globPattern).then((uris) => {
         for (const uri of uris) {
             console.log(`found ${uri.path} on activation`);
-            addFoodqCollection(path.dirname(uri.path));
+            addFoodqPoject(path.dirname(uri.path));
             managerAPI.setData(EXT_ID, getCollections(), getItems());
         }
     });
@@ -257,13 +241,13 @@ function createFileSystemWatcher(globPattern: vscode.GlobPattern, managerAPI: Ma
     const watcher = vscode.workspace.createFileSystemWatcher(globPattern);
     watcher.onDidDelete((e) => {
         console.log(`${e.path} deleted`);
-        removeFoodqCollection(path.dirname(e.path));
+        removeFoodqProject(path.dirname(e.path));
         managerAPI.setData(EXT_ID, getCollections(), getItems());
     });
 
     watcher.onDidCreate((e) => {
         console.log(`${e.path} created`);
-        addFoodqCollection(path.dirname(e.path));
+        addFoodqPoject(path.dirname(e.path));
         managerAPI.setData(EXT_ID, getCollections(), getItems());
     });
 
@@ -274,31 +258,14 @@ function createFileSystemWatcher(globPattern: vscode.GlobPattern, managerAPI: Ma
     });
 }
 
-function addFoodqCollection(dirPath: string): void {
+function addFoodqPoject(dirPath: string): void {
     const name = path.parse(dirPath).name;
-
-    const context: IItemExecuteContext = {
-        project: name,
-        params: [dirPath]
-    }
-    foodqItemAction.contexts?.push(context);
-
-    // clone collection template
-    const collection: ICollection = JSON.parse(JSON.stringify(foodqCollectionTemplate));
-    collection.id = `foodq-${name}`;
-    collection.title = `Available Restaurants (${name})`;
-    for (const index in collection.itemIds) {
-        collection.itemIds[index] = `${collection.itemIds[index]}-${name}`;
-    }
-    foodqCollectionMap.set(dirPath, collection);
-    foodqItemsMap.set(dirPath, collection.itemIds);
+    projectsMap.set(dirPath, name);
 }
 
-function removeFoodqCollection(dirPath: string): void {
-    foodqCollectionMap.delete(dirPath);
-    foodqItemsMap.delete(dirPath);
+function removeFoodqProject(dirPath: string): void {
+    projectsMap.delete(dirPath);
 }
-
 
 async function createCodeSnippetWorkspaceEdit(answers: any, context: any) {
 	let outputFile: string;
@@ -364,8 +331,8 @@ function createCodeSnippetQuestions(context: any) : any[] {
 			  'Pasta',
 			  'Rice'
 			]
-		  },
-		  {
+		},
+		{
 			guiOptions: {
 			  hint: "Stay healthy by selecting dairy products"
 			},
@@ -377,7 +344,7 @@ function createCodeSnippetQuestions(context: any) : any[] {
 			  'Yogurt',
 			  'Cheese'
 			]
-		  },
+		},
 		{
 		  guiOptions: {
 			hint: "Select the folder to which you want to save the grocery list.",
@@ -387,8 +354,42 @@ function createCodeSnippetQuestions(context: any) : any[] {
 		  name: "path",
 		  message: "Target Folder",
 		  default: "/home/user/projects"
-		}
-	  );
+        },
+		{
+            guiOptions: {
+                hint: "Do you want the groceries delivered to your home?",
+            },
+            type: "confirm",
+            name: "isDelivery",
+            message: "Delivery",
+            default: false
+        },
+        {
+            guiOptions: {
+                hint: "Provide the address for delivery.",
+            },
+            type: "input",
+            name: "address",
+            message: "Address",
+            when: function (answers: any) {
+              return answers.isDelivery;
+            }
+        },
+        {
+            guiOptions: {
+                hint: "Provide your phone number.",
+            },
+            type: "input",
+            name: "phoneNumber",
+            message: "Phone Number",
+            when: function (answers: any) {
+              return answers.isDelivery;
+            },
+            validate: function (value: any) {
+                return value.match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im) ? true : "Enter valid phone number.";
+              }
+          }
+      );
   
     return questions;
 }
