@@ -285,9 +285,11 @@ async function createCodeSnippetWorkspaceEdit(answers: any, context: any) {
 	const configurations = await ConfigHelper.readFile(docUri.fsPath);
 
 	const config = {
-		fruits: answers.fruits,
-		grains: answers.grains,
-		dairy: answers.dariy,
+		groceries: answers.groceries,
+		path: answers.path,
+		isDelivery: answers.isDelivery,
+		address: answers.address,
+		phoneNumber: answers.phoneNumber
 	};
 	configurations['configurations'].push(config)
 
@@ -308,42 +310,22 @@ function createCodeSnippetQuestions(context: any) : any[] {
     questions.push(
 		{
 		  guiOptions: {
-			hint: "Add your favorite fruit and vegetables to the list."
+			hint: "Add your favorite groceries to the list."
 		  },
 		  type: "checkbox",
-		  name: "fruits",
-		  message: "Fruit and Vegetables",
+		  name: "groceries",
+		  message: "Groceries",
 		  choices: [
 			'Banana',
 			'Orange',
-			'Carrot'
-		  ]
-		},
-		{
-			guiOptions: {
-			  hint: "Add your favorite grains to the list."
-			},
-			type: "checkbox",
-			name: "grains",
-			message: "Grains",
-			choices: [
-			  'Bread',
-			  'Pasta',
-			  'Rice'
-			]
-		},
-		{
-			guiOptions: {
-			  hint: "Stay healthy by selecting dairy products"
-			},
-			type: "checkbox",
-			name: "dairy",
-			message: "Dairy",
-			choices: [
-			  'Milk',
-			  'Yogurt',
-			  'Cheese'
-			]
+			'Carrot',
+			'Bread',
+			'Pasta',
+			'Rice',
+			'Milk',
+			'Yogurt',
+			'Cheese'
+      ]
 		},
 		{
 		  guiOptions: {
