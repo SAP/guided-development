@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -64,7 +64,7 @@
 				{
 					"command": "guidedDevelopment.toggleOutput",
 					"group": "navigation",
-					"when": "guidedDevelopment.Focused"
+					"when": "false"
 				}
 			]
 		},
