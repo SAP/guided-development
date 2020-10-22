@@ -67,7 +67,20 @@ function getInitialItems(): Array<IItem> {
     item = {
         id: "create-grocery-list",
         title: "Populate List",
-        description: "Select the items you need to buy from the options provided. This list is saved so that you can reuse it every time you go shopping. This saves you time and money.",
+        description: "Select the items you need to buy from the options provided.<br>\
+        This list is saved so that you can reuse it every time you go shopping. This saves you time and money.<br>\
+        We bring our groceries from across the country, thus helping the local farmers and making sure the products are fresh and straight from the fields.<br>\
+        It is a well known fact that creating a grocery list helps you not only to buy only the items you need, but it also acts as a reminder of the things you usually buy so that even if you were not aware you needed to select a certain item, when you see it on the list, a memory will be triggered and you can select it.<br>\
+        To select items for your grocery cart:<br>\
+        <ol>\
+        <li>Click <b>Create Grocery List</b>.<br>\
+        The grocery list is opened in a new tab next to this one.</li>\
+        <li>Select the checkboxes next to the items you need.</li>\
+        <li>Enter the target folder to define where you want to save your grocery list.</li>\
+        <li>Specify if you need delivery.</li>\
+        <li>If you need delivery, add your address and phone number.</li>\
+        <li>Click <b>Create</b>.</li>\
+        </ol>",
         image: {
             image: getImage(path.join(extensionPath, 'resources', 'list.png')),
             note: "Our products are always fresh and of the best quality."
@@ -88,7 +101,11 @@ function getInitialItems(): Array<IItem> {
     item = {
         id: "foodq-restaurant",
         title: "FoodQ",
-        description: "Order your favorite dishes from the FoodQ restaurant.",
+        description: "Order your favorite dishes from the FoodQ restaurant.<br>\
+        FoodQ is our restaurant of choice. It has a mix of all the dishes that we like most from other restaurants. You can have Asian, fast food, Mexican, Italian, or even a bit of all. Our dishes are large and tasty. We make sure our suppliers use the best raw materials and that the food is brought to you in a visually attractive way.<br>\
+        We have received very good customer feedback. The people who eat at FoodQ are recurring customers, they tend to order from us at least twice a week. We would like to think they feel it as their family restaurant, the food they eat to feel at home.<br>\
+        We ensure a speedy delivery so that the food gets to your house still warm from our kitchens!<br>\
+        So click <b>Order</b>, pick out your favorite food, and we'll take care of the rest.",
         image: {
             image: getImage(path.join(extensionPath, 'resources', 'SAP.png')),
             note: "You can sit at the restaurant or we can deliver the food to your home."
@@ -102,7 +119,8 @@ function getInitialItems(): Array<IItem> {
     item = {
         id: "michelin-restaurants",
         title: "Michelin Restaurants",
-        description: "Treat yourself to a first-class experience at our Michelin restaurants.",
+        description: "Treat yourself to a first-class experience at our Michelin restaurants.<br>\
+        Michelin restaurants are defined by being listed in the Michelin Guides. Michelin Guides (are a series of guide books published by the French tire company Michelin for more than a century. The term normally refers to the annually published Michelin Red Guide, the oldest European hotel and restaurant reference guide, which awards up to three Michelin stars for excellence to a select few establishments. The acquisition or loss of a star can have dramatic effects on the success of a restaurant. Michelin also publishes a series of general guides to cities, regions, and countries, the Green Guides.",
         image: {
             image: getImage(path.join(extensionPath, 'resources', 'Michelin.png')),
             note: "image note of michelin-restaurants"
@@ -325,7 +343,7 @@ function createCodeSnippetQuestions(context: any) : any[] {
 			'Milk',
 			'Yogurt',
 			'Cheese'
-      ]
+		  ]
 		},
 		{
 		  guiOptions: {
