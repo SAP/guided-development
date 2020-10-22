@@ -12,7 +12,9 @@
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="8" style="margin-left:20px">
-                  <v-card-text class="pa-0 ma-0" style="font-size:12px">{{contextualItem.item.description}}</v-card-text>
+                  <v-card-text class="pa-0 ma-0" style="font-size:12px">
+                    <span v-html="contextualItem.item.description"></span>
+                  </v-card-text>
                   <div v-if="false">
                     <v-card-text class="pa-0 ma-0" style="font-size:12px" v-if="contextualItem.item.labels">Labels:</v-card-text>
                     <v-card-text class="pa-0 ma-0" style="font-size:12px" v-for="(label,index) in contextualItem.item.labels" :key="index">

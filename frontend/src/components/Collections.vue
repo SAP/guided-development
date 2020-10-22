@@ -1,6 +1,6 @@
 <template>
   <v-container id="collections-component">
-    <v-row>
+    <v-row v-if="false">
       <v-col :cols="4" v-for="(label, index) in labels" :key=index>
         <v-select
           hide-details="auto"
