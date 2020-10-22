@@ -172,14 +172,14 @@ function getInitialItems(): Array<IItem> {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
+    extensionPath = context.extensionPath;
+    
     const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
-    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
-
-	extensionPath = context.extensionPath;
-
-    createGuidedDevActions(basAPI);
-    createFileSystemWatcher("**/foodq.json", managerAPI);
-    managerAPI.setData(EXT_ID, getCollections(), getItems());
+    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
+        createGuidedDevActions(basAPI);
+        createFileSystemWatcher("**/foodq.json", managerAPI);
+        managerAPI.setData(EXT_ID, getCollections(), getItems());
+    });
 
     const api = {
 		getCodeSnippets(context: any) {

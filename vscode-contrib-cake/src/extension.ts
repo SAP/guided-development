@@ -198,14 +198,19 @@ function removeBakeCollection(dirPath: string): void {
 }
 
 export async function activate(context: vscode.ExtensionContext) {
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
-    initActions(basAPI);
-
-    const managerAPI: ManagerAPI = await basAPI.getExtensionAPI("SAPOSS.guided-development");
-
     extensionPath = context.extensionPath;
-    console.log(`[Extension ${EXT_ID}] Activated`);
 
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
+        initActions(basAPI);
+        createFileSystemWatcher("**/bake.json", managerAPI);
+        managerAPI.setData(EXT_ID, getCollections(), getItems());
+    });
+
+    console.log(`[Extension ${EXT_ID}] Activated`);
+}
+
+function createFileSystemWatcher(globPattern: vscode.GlobPattern, managerAPI: ManagerAPI) {
     vscode.workspace.onDidChangeWorkspaceFolders((e) => {
         // when first folder is added to the workspace, the extension is reactivated, so we could let the find files upon activation handle this use-case
         // when last folder removed from workspace, the extension is reactivated, so we could let the find files upon activation handle this use-case
@@ -223,7 +228,7 @@ export async function activate(context: vscode.ExtensionContext) {
         }
     });
 
-    const watcher = vscode.workspace.createFileSystemWatcher("**/bake.json");
+    const watcher = vscode.workspace.createFileSystemWatcher(globPattern);
     watcher.onDidDelete((e) => {
         console.log(`${e.path} deleted`);
         removeBakeCollection(path.dirname(e.path));
@@ -242,15 +247,13 @@ export async function activate(context: vscode.ExtensionContext) {
         // managerAPI.setData(EXT_ID, getCollections(), getItems());
     });
 
-    vscode.workspace.findFiles("**/bake.json").then((uris) => {
+    vscode.workspace.findFiles(globPattern).then((uris) => {
         for (const uri of uris) {
             console.log(`found ${uri.path} on activation`);
             addBakeCollection(path.dirname(uri.path));
             managerAPI.setData(EXT_ID, getCollections(), getItems());
         }
     });
-
-    managerAPI.setData(EXT_ID, getCollections(), getItems());
 }
 
 function getImage(imagePath: string): string {
