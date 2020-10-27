@@ -12,8 +12,8 @@ function performScheduledActions() {
             console.log(`performing action ${action.name} of type ${action.constructor.name}`)
             _performAction(action);
         }
+        actionsSettings.update("actions", []);
     }
-    actionsSettings.update("actions", []);
 }
 
 export async function activate(context: vscode.ExtensionContext) {
