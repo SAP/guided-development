@@ -7,7 +7,7 @@ const subscriptions: Array<vscode.Disposable>= [];
 function performScheduledActions() {
     const actionsSettings = vscode.workspace.getConfiguration();
     let actionsList: any[] | undefined = actionsSettings.get("actions");
-    if (actionsList) {
+    if (actionsList && actionsList.length > 0) {
         for (const action of actionsList) {
             console.log(`performing action ${action.name} of type ${action.constructor.name}`)
             _performAction(action);
