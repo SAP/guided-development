@@ -21,6 +21,7 @@ describe('guidedDevelopment unit test', () => {
     let loggerMock: any;
     let rpcMock: any;
     let appEventsMock: any;
+    let guidedDevMock: any;
 
     class TestEvents implements AppEvents {
         public performAction(action: IAction): Promise<any> {
@@ -116,6 +117,7 @@ describe('guidedDevelopment unit test', () => {
         rpcMock = sandbox.mock(rpc);
         loggerMock = sandbox.mock(testLogger);
         appEventsMock = sandbox.mock(appEvents);
+        guidedDevMock = sandbox.mock(guidedDevelopment);
     });
 
     afterEach(() => {
@@ -124,6 +126,7 @@ describe('guidedDevelopment unit test', () => {
         rpcMock.verify();
         loggerMock.verify();
         appEventsMock.verify();
+        guidedDevMock.verify();
     });
 
     it("constructor", () => {
@@ -140,73 +143,163 @@ describe('guidedDevelopment unit test', () => {
         expect(state).to.deep.equal({});
     });
 
-    it("setCollections", async () => {
-        const collection1: IInternalCollection = {
-            id: "id1",
-            title: "title1",
-            description: "description1",
-            itemIds: [],
-            type: CollectionType.Platform,
-            items: []
-        };
-        await guidedDevelopment["setCollections"]([collection1]);
-        expect(guidedDevelopment["collections"]).to.have.length(1);
+    describe("setCollections", () => {
+        it("set collections1", async () => {
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: []
+            };
+            await guidedDevelopment["setCollections"]([collection1]);
+            expect(guidedDevelopment["collections"]).to.have.length(1);
+        });
     });
 
-    it("getItem", async () => {
-        const fqid1 = "extName1.extPublisher1.id1";
-        const item1: IInternalItem = {
-            id: "id1",
-            fqid: fqid1,
-            description: "description1",
-            title: "title1",
-            labels: []
-        };
-
-        const fqid2 = "extName1.extPublisher1.id2";
-        const item2: IInternalItem = {
-            id: "id2",
-            fqid: fqid2,
-            description: "description2",
-            title: "title2",
-            labels: [],
-            items: [item1]
-        };
-
-        const collection1: IInternalCollection = {
-            id: "id1",
-            title: "title1",
-            description: "description1",
-            itemIds: [],
-            type: CollectionType.Platform,
-            items: [item2]
-        };
-        await guidedDevelopment["setCollections"]([collection1]);
-        const foundItem = guidedDevelopment["getItem"](fqid2);
-        expect(foundItem.fqid).to.equal(fqid2);
-
-        const foundSubItem = guidedDevelopment["getItem"](fqid1);
-        expect(foundSubItem.fqid).to.equal(fqid1);
+    describe("getItem", () => {
+        it("return subItem", async () => {
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                labels: []
+            };
+            const fqid2 = "extName1.extPublisher1.id2";
+            const item2: IInternalItem = {
+                id: "id2",
+                fqid: fqid2,
+                description: "description2",
+                title: "title2",
+                labels: [],
+                items: [item1]
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item2]
+            };
+            await guidedDevelopment["setCollections"]([collection1]);
+            const foundItem = guidedDevelopment["getItem"](fqid2);
+            expect(foundItem.fqid).to.equal(fqid2);
+            const foundSubItem = guidedDevelopment["getItem"](fqid1);
+            expect(foundSubItem.fqid).to.equal(fqid1);
+        });
     });
 
-    describe.skip("onFrontendReady", () => {
+    describe("onFrontendReady", () => {
         it("flow is successfull", async () => {
-            rpcMock.expects("invoke").withArgs("showPrompt").resolves(
-                {actionName: "actionName"},
-                {actionTemplate: "OData action"},
-                {actionType: "Create entity"});
+        rpcMock.expects("invoke").withExactArgs("showCollections", [[{
+            description: "description1",
+            id: "id1",
+            itemIds: [],
+            items: [{
+                description: "description2",
+                fqid: "extName1.extPublisher1.id2",
+                id: "id2",
+                items: [{
+                    description: "description1",
+                    fqid: "extName1.extPublisher1.id1",
+                    id: "id1",
+                    labels: [],
+                    title: "title1"
+                }],
+                labels: [],
+                title: "title2"
+            }],
+            title: "title1",
+            type: 0
+            }]]);
+            await guidedDevelopment["onFrontendReady"]();
+        });
+        
+        it.skip("rpc throws error", async () => {
+            const errorMessage = "rpc failed";
+            rpcMock.expects("invoke").withExactArgs("showCollections").returns(errorMessage);
+            guidedDevMock.expects("getErrorInfo").withExactArgs(errorMessage).returns(errorMessage);
+            loggerMock.expects("error").withExactArgs(errorMessage);
+            const res = guidedDevelopment["logError"](errorMessage);
+            // guidedDevelopment["errorMessage"] = errorMessage;
+
             await guidedDevelopment["onFrontendReady"]();
         });
     });
 
-    it("toggleOutput", () => {
-        const res = guidedDevelopment["toggleOutput"]();
-        expect(res).to.be.false;
+    describe("toggleOutput", () => {
+        it("output is false", () => {
+            const res = guidedDevelopment["toggleOutput"]();
+            expect(res).to.be.false;
+        });
     });
 
-    it("getErrorInfo", () => {
-        const errorInfo = "Error Info";
-        const res = guidedDevelopment["getErrorInfo"](errorInfo);
-        expect(res).to.be.equal(errorInfo);
+    describe("getErrorInfo", () => {
+        it("message is string error", () => {
+            const errorInfo = "Error Info";
+            const res = guidedDevelopment["getErrorInfo"](errorInfo);
+            expect(res).to.be.equal(errorInfo);
+        });
+        it("message error from parametr", () => {
+            const error: any = {
+                name: "name",
+                message: "message",
+                stack: "stack"
+            }
+            const res = guidedDevelopment["getErrorInfo"](error);
+            expect(res).to.be.equal(`name: ${error.name}\n message: ${error.message}\n stack: ${error.stack}\n string: ${error.toString()}\n`);
+        });
+        it("without error message as parameter", () => {
+            const res = guidedDevelopment["getErrorInfo"]();
+            expect(res).to.be.equal(``);
+        });
+    });
+
+    describe.skip("performAction", () => {
+        it("execute command action, index 1", async () => {
+            const executeCommand = "workbench.action.openGlobalSettings";
+            const executeOpenAction: any = {
+                name: "Open",
+                params: "workbench.action.openGlobalSettings"
+            }
+            const commandOpenAction: any = {
+                name: "Open",
+                params: "workbench.action.openGlobalSettings"
+            }
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action1: {
+                    title: "Open title",
+                    name: "Open",
+                    action: commandOpenAction
+                },
+                // action2: {
+                //     title: "Open title",
+                //     name: "Open",
+                //     action: executeOpenAction
+                // },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+            await guidedDevelopment["setCollections"]([collection1]);
+            // const foundSubItem = guidedDevelopment["getItem"](fqid1);
+            // expect(foundSubItem.fqid).to.equal(fqid1);
+            await guidedDevelopment["performAction"](fqid1,1);
+        });
     });
 });

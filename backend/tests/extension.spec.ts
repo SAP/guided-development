@@ -3,7 +3,9 @@ import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
 import { mockVscode } from "./mockUtil";
-import { Contributors } from "../src/contributors"
+import { Contributors } from "../src/contributors";
+import { VSCodeEvents } from "../src/vscode-events";
+import { bas } from '@sap-devx/bas-platform-types';
 
 const oRegisteredCommands = {};
 const testVscode = {
@@ -16,6 +18,9 @@ const testVscode = {
     },
     window: {
         registerWebviewPanelSerializer: () => true
+    },
+    extensions: {
+        getExtension:(path: string) => Promise.resolve()
     }
 };
 mockVscode(testVscode, "src/extension.ts");
@@ -24,10 +29,14 @@ import * as loggerWrapper from "../src/logger/logger-wrapper";
 
 describe('extension unit test', () => {
     let sandbox: any;
+    let events: VSCodeEvents;
     let commandsMock: any;
     let windowMock: any;
     let workspaceMock: any;
     let loggerWrapperMock: any;
+    let contributorsMock: any;
+    let eventMock: any;
+    let vscodeEventMock: any;
     const testContext: any = { 
         subscriptions: [], 
         extensionPath: "testExtensionpath", 
@@ -47,6 +56,10 @@ describe('extension unit test', () => {
         commandsMock = sandbox.mock(testVscode.commands);
         windowMock = sandbox.mock(testVscode.window);
         workspaceMock = sandbox.mock(testVscode.workspace);
+        eventMock = sandbox.mock(testVscode.extensions);
+        contributorsMock = sandbox.mock(Contributors);
+        events = VSCodeEvents.getInstance();
+        vscodeEventMock = sandbox.mock(events);
     });
 
     afterEach(() => {
@@ -54,19 +67,22 @@ describe('extension unit test', () => {
         commandsMock.verify();
         windowMock.verify();
         workspaceMock.verify();
+        eventMock.verify();
+        contributorsMock.verify();
+        vscodeEventMock.verify();
     });
 
     describe('activate', () => {
-        it.skip("commands registration", () => {
-            const contributorsMock = sandbox.mock(Contributors);
-            contributorsMock.expects("getContributors");
+        it("commands registration", () => {
+            // contributorsMock.expects("getContributors");
             loggerWrapperMock.expects("createExtensionLoggerAndSubscribeToLogSettingsChanges");
             loggerWrapperMock.expects("getLogger").once();
+            const res: typeof bas = eventMock.expects("getExtension").withExactArgs("SAPOSS.bas-platform")?.exports;
+            vscodeEventMock.expects("setBasAPI").withExactArgs(res);
             extension.activate(testContext);
             expect(_.size(_.keys(oRegisteredCommands))).to.be.equal(2);
             expect( _.get(oRegisteredCommands, "loadGuidedDevelopment")).to.be.not.undefined;
             expect(_.get(oRegisteredCommands, "guidedDevelopment.toggleOutput")).to.be.not.undefined;
-            contributorsMock.verify();
         });
 
         it("logger failure on extenion activation", () => {
