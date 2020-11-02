@@ -1,7 +1,5 @@
-import * as mocha from "mocha";
+import * as vscode from "vscode";
 import * as sinon from "sinon";
-const datauri = require("datauri"); // eslint-disable-line @typescript-eslint/no-var-requires
-import * as fsextra from "fs-extra";
 import { expect } from "chai";
 import * as _ from "lodash";
 import { GuidedDevelopment } from "../src/guided-development";
@@ -10,18 +8,23 @@ import { AppEvents } from '../src/app-events';
 import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
-import { IItem, ICollection, CollectionType } from "../src/types";
+import { IItem, ICollection, CollectionType, IItemExecuteContext, IItemCommandContext, IItemFileContext, IItemSnippetContext } from "../src/types";
 import { IInternalCollection, IInternalItem } from "./Collection";
-import { IAction } from "@sap-devx/bas-platform-types";
+import { ActionType, CommandActionParams, ExecuteActionParams, FileActionParams, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+
+const testVscode = {
+    extensions: {
+        getExtension:(path: string) => Promise.resolve()
+    }
+};
 
 describe('guidedDevelopment unit test', () => {
     let sandbox: any;
-    let fsExtraMock: any;
-    let datauriMock: any;
     let loggerMock: any;
     let rpcMock: any;
     let appEventsMock: any;
     let guidedDevMock: any;
+    let eventMock: any;
 
     class TestEvents implements AppEvents {
         public performAction(action: IAction): Promise<any> {
@@ -100,11 +103,13 @@ describe('guidedDevelopment unit test', () => {
     const appEvents = new TestEvents();
     const guidedDevelopment: GuidedDevelopment = new GuidedDevelopment(rpc, appEvents, outputChannel, testLogger, {}, []);
 
-    let itemIds = ["saposs.contrib1.create","saposs.contrib1.open","saposs.contrib2.delete"];
-    let items: Map<String,IInternalItem>;
-
     before(() => {
         sandbox = sinon.createSandbox();
+        _.set(vscode, "Uri.parse", (path: string) => {
+            return {
+                fsPath: path
+            };
+        });
     });
 
     after(() => {
@@ -112,21 +117,19 @@ describe('guidedDevelopment unit test', () => {
     });
 
     beforeEach(() => {
-        fsExtraMock = sandbox.mock(fsextra);
-        datauriMock = sandbox.mock(datauri);
         rpcMock = sandbox.mock(rpc);
         loggerMock = sandbox.mock(testLogger);
         appEventsMock = sandbox.mock(appEvents);
         guidedDevMock = sandbox.mock(guidedDevelopment);
+        eventMock = sandbox.mock(testVscode.extensions);
     });
 
     afterEach(() => {
-        fsExtraMock.verify();
-        datauriMock.verify();
         rpcMock.verify();
         loggerMock.verify();
         appEventsMock.verify();
         guidedDevMock.verify();
+        eventMock.verify();
     });
 
     it("constructor", () => {
@@ -155,6 +158,7 @@ describe('guidedDevelopment unit test', () => {
             };
             await guidedDevelopment["setCollections"]([collection1]);
             expect(guidedDevelopment["collections"]).to.have.length(1);
+            expect(guidedDevelopment["collections"]).to.have.members([collection1]);
         });
     });
 
@@ -219,14 +223,23 @@ describe('guidedDevelopment unit test', () => {
             await guidedDevelopment["onFrontendReady"]();
         });
         
-        it.skip("rpc throws error", async () => {
+        it("rpc throws error", async () => {
             const errorMessage = "rpc failed";
-            rpcMock.expects("invoke").withExactArgs("showCollections").returns(errorMessage);
-            guidedDevMock.expects("getErrorInfo").withExactArgs(errorMessage).returns(errorMessage);
-            loggerMock.expects("error").withExactArgs(errorMessage);
-            const res = guidedDevelopment["logError"](errorMessage);
-            // guidedDevelopment["errorMessage"] = errorMessage;
+            rpcMock.expects("invoke").throws(new Error(errorMessage));
+            guidedDevMock.expects("getErrorInfo");
+            loggerMock.expects("error");
+            await guidedDevelopment["onFrontendReady"]();
+        });
 
+        it("rpc throws error with ptefix message", async () => {
+            const errorMessage = "rpc failed";
+            const prefix = "prefix message: "
+
+            rpcMock.expects("invoke").throws(new Error(errorMessage));
+            guidedDevelopment["logError"](errorMessage, prefix);
+            guidedDevMock.expects("getErrorInfo");
+            loggerMock.expects("error");
+            
             await guidedDevelopment["onFrontendReady"]();
         });
     });
@@ -259,17 +272,52 @@ describe('guidedDevelopment unit test', () => {
         });
     });
 
-    describe.skip("performAction", () => {
-        it("execute command action, index 1", async () => {
-            const executeCommand = "workbench.action.openGlobalSettings";
-            const executeOpenAction: any = {
-                name: "Open",
-                params: "workbench.action.openGlobalSettings"
-            }
-            const commandOpenAction: any = {
-                name: "Open",
-                params: "workbench.action.openGlobalSettings"
-            }
+    describe("performAction", () => {
+        class testExecuteItemContext implements IItemExecuteContext {
+            params?: ExecuteActionParams;
+            project: string;
+        }
+        class testCommandItemContext implements IItemExecuteContext {
+            params?: ExecuteActionParams;
+            project: string;
+        }
+        class testSnippetItemContext implements IItemSnippetContext {
+            context?: any;
+            project: string;
+        }
+        class testFileItemContext implements IItemFileContext {
+            project: string;
+            uri?: vscode.Uri;
+        }
+        class testExecuteItemAction implements IExecuteAction {
+            executeAction: (params?: ExecuteActionParams) => Thenable<any>;
+            params?: ExecuteActionParams;
+            actionType: ActionType;
+        }
+        class testCommandItemAction implements ICommandAction {
+            name: string;
+            params?: CommandActionParams;
+            actionType: ActionType;
+        }
+        class testSnippetItemAction implements ISnippetAction {
+            contributorId: string;
+            snippetName: string;
+            context: any;
+            actionType: ActionType;
+        }
+        class testFileItemAction implements IFileAction {
+            actionType: ActionType;
+            uri: FileActionParams;
+        }
+
+        it("no context", async () => {
+            let action = new testExecuteItemAction();
+            action.executeAction = () => {
+                console.log("action");
+                return Promise.resolve();
+            };
+            action.actionType = ActionType.Execute;
+
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
                 id: "id1",
@@ -279,13 +327,8 @@ describe('guidedDevelopment unit test', () => {
                 action1: {
                     title: "Open title",
                     name: "Open",
-                    action: commandOpenAction
+                    action: action
                 },
-                // action2: {
-                //     title: "Open title",
-                //     name: "Open",
-                //     action: executeOpenAction
-                // },
                 labels: []
             };
             const collection1: IInternalCollection = {
@@ -296,10 +339,310 @@ describe('guidedDevelopment unit test', () => {
                 type: CollectionType.Platform,
                 items: [item1]
             };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action1.action);
             await guidedDevelopment["setCollections"]([collection1]);
-            // const foundSubItem = guidedDevelopment["getItem"](fqid1);
-            // expect(foundSubItem.fqid).to.equal(fqid1);
             await guidedDevelopment["performAction"](fqid1,1);
+        });
+
+        it("execute command action, with context, index 1", async () => {
+            let context: IItemExecuteContext;
+            context = new testExecuteItemContext();
+            context.project = "project";
+            context.params = ["params"];
+
+            let action = new testExecuteItemAction();
+            action.executeAction = () => {
+                console.log("action");
+                return Promise.resolve();
+            };
+            action.actionType = ActionType.Execute;
+
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action1: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action1.action);
+            await guidedDevelopment["setCollections"]([collection1]);
+            await guidedDevelopment["performAction"](fqid1,1, context);
+        });
+
+        it("execute command action - without context", async () => {
+            let action = new testExecuteItemAction();
+            action.executeAction = () => {
+                console.log("workbench.action.openGlobalSettings");
+                return Promise.resolve();
+            };
+            action.actionType = ActionType.Execute;
+
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action1: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action1.action);
+            await guidedDevelopment["setCollections"]([collection1]);
+            await guidedDevelopment["performAction"](fqid1,1, new testExecuteItemContext());
+        });
+
+        it("command action, with context, index 2", async () => {
+            let context: IItemCommandContext;
+            context = new testCommandItemContext();
+            context.project = "project";
+            context.params = ["params"];
+
+            let action = new testCommandItemAction();
+            action.params = ["param"];
+            action.actionType = ActionType.Command;
+            action.name = "Open"
+
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action2: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action2.action);
+            await guidedDevelopment["setCollections"]([collection1]);
+            await guidedDevelopment["performAction"](fqid1,2, context);
+        });
+
+        it("command action - without context", async () => {
+            let action = new testCommandItemAction();
+            action.params = ["param"];
+            action.actionType = ActionType.Command;
+            action.name = "Open"
+
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action2: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action2.action);
+            await guidedDevelopment["setCollections"]([collection1]);
+            await guidedDevelopment["performAction"](fqid1,2, new testCommandItemContext());
+        });
+
+        it("Snippet tool action, with context, 2 actions", async () => {
+            let context: IItemSnippetContext;
+            context = new testSnippetItemContext();
+            context.project = "project";
+            context.context = "context";
+
+            let action = new testSnippetItemAction();
+            action.snippetName = "snippet";
+            action.contributorId = "contributorId";
+            action.context = "context";
+            action.actionType = ActionType.Snippet;
+
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action1: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                action2: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action1.action);
+            await guidedDevelopment["setCollections"]([collection1]);
+            await guidedDevelopment["performAction"](fqid1,1, context);
+        });
+
+        it("Snippet tool action - without context", async () => {
+            let action = new testSnippetItemAction();
+            action.snippetName = "snippet";
+            action.contributorId = "contributorId";
+            action.context = "context";
+            action.actionType = ActionType.Snippet;
+
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action1: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                action2: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action1.action);
+            await guidedDevelopment["setCollections"]([collection1]);
+            await guidedDevelopment["performAction"](fqid1,1, new testSnippetItemContext());
+        });
+
+        it("File, with uri as context", async () => {
+            let context: IItemFileContext;
+            context = new testFileItemContext();
+            context.uri = vscode.Uri.parse("");
+            context.project = "project";
+
+            let action = new testFileItemAction();
+            action.actionType = ActionType.File;
+
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action1: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action1.action);
+            await guidedDevelopment["setCollections"]([collection1]);
+            await guidedDevelopment["performAction"](fqid1,1, context);
+        });
+
+        it("File, without uri", async () => {
+            let context: IItemFileContext;
+            context = new testFileItemContext();
+            context.project = "project";
+
+            let action = new testFileItemAction();
+            action.actionType = ActionType.File;
+
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                fqid: fqid1,
+                description: "description1",
+                title: "title1",
+                action1: {
+                    title: "Open title",
+                    name: "Open",
+                    action: action
+                },
+                labels: []
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item1]
+            };
+
+            appEventsMock.expects("performAction").withExactArgs(item1.action1.action);
+            await guidedDevelopment["setCollections"]([collection1]);
+            await guidedDevelopment["performAction"](fqid1,1, context);
         });
     });
 });
