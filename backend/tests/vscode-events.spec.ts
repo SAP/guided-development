@@ -1,12 +1,12 @@
 import * as vscode from "vscode";
-import * as mocha from "mocha";
 import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
+import { Contributors } from "../src/contributors";
 import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType } from "@sap-devx/bas-platform-types";
 
 import { VSCodeEvents } from "../src/vscode-events";
-import { IItem } from "./types";
+import { CollectionType, ICollection, IItem } from "../src/types";
 
 function mockPerformAction(action: IAction, options?: any): void {
     if (action) {
@@ -97,7 +97,9 @@ describe('vscode-events unit test', () => {
     let commandsMock: any;
     let workspaceMock: any;
     let eventsMock: any;
-
+    let contributorsMock: any;
+    let contribInstance: any;
+    
     const executeAction = {
         performAction: () => {
             return vscode.commands.executeCommand("workbench.action.openGlobalSettings");
@@ -130,6 +132,8 @@ describe('vscode-events unit test', () => {
         commandsMock = sandbox.mock(vscode.commands);
         workspaceMock = sandbox.mock(vscode.workspace);
         eventsMock = sandbox.mock(events);
+        contribInstance = Contributors.getInstance();
+        contributorsMock = sandbox.mock(contribInstance);
     });
 
     afterEach(() => {
@@ -137,6 +141,7 @@ describe('vscode-events unit test', () => {
         eventsMock.verify();
         commandsMock.verify();
         workspaceMock.verify();
+        contributorsMock.verify();
     });
 
     describe("performAction - on success", () => {
@@ -260,6 +265,27 @@ describe('vscode-events unit test', () => {
                 ]
             }
             return events.performAction(undefined);
+        });
+    });
+
+    describe("setData", () => {
+        it("contributor set data", () => {
+            const item1: IItem = {
+                id: "id1",
+                description: "description1",
+                title: "title1",
+                labels: []
+            };
+            const collection1: ICollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+            };
+
+            contributorsMock.expects("setData").withExactArgs("extensionId", [collection1], [item1]);
+            events.setData("extensionId", [collection1], [item1]);
         });
     });
 });
