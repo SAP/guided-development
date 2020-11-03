@@ -1,6 +1,7 @@
 [![CircleCI](https://circleci.com/gh/SAP/guided-development.svg?style=svg)](https://circleci.com/gh/SAP/guided-development)
 ![GitHub license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/guided-development)](https://api.reuse.software/info/github.com/SAP/guided-development)
+[![dependentbot](https://api.dependabot.com/badges/status?host=github&repo=SAP/guided-development)](https://dependabot.com/)
 
 # Guided Development
 
