@@ -1,7 +1,6 @@
 import {initComponent, destroy} from '../Utils'
 import Items from '../../src/components/Items.vue'
 import _ from 'lodash'
-// import { set } from 'vue/types/umd'
 
 let wrapper
 
