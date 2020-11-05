@@ -195,6 +195,38 @@ describe('guidedDevelopment unit test', () => {
             const foundSubItem = guidedDevelopment["getItem"](fqid1);
             expect(foundSubItem.fqid).to.equal(fqid1);
         });
+
+        it("fqid does not exists in subItem", async () => {
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                description: "description1",
+                title: "title1",
+                labels: []
+            };
+            const fqid2 = "extName1.extPublisher1.id2";
+            const item2: IInternalItem = {
+                id: "id2",
+                fqid: fqid2,
+                description: "description2",
+                title: "title2",
+                labels: [],
+                items: [item1]
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item2]
+            };
+            await guidedDevelopment["setCollections"]([collection1]);
+            const foundItem = guidedDevelopment["getItem"](fqid2);
+            expect(foundItem.fqid).to.equal(fqid2);
+            const foundItem2 = guidedDevelopment["getItem"]("fsdfsdfdfd");
+            expect(foundItem2).to.be.undefined;
+        });
     });
 
     describe("onFrontendReady", () => {
@@ -209,7 +241,6 @@ describe('guidedDevelopment unit test', () => {
                 id: "id2",
                 items: [{
                     description: "description1",
-                    fqid: "extName1.extPublisher1.id1",
                     id: "id1",
                     labels: [],
                     title: "title1"
