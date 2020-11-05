@@ -39,11 +39,6 @@ jobs: # a collection of steps
           path: frontend/coverage
           destination: frontend-coverage
       - run:
-          command: cat ./frontend/coverage/lcov.info | ./backend/node_modules/.bin/coveralls
-          environment:
-            COVERALLS_SERVICE_NAME: circle-ci
-            COVERALLS_GIT_BRANCH: ${CIRCLE_BRANCH}
-      - run:
           name: build backend
           working_directory: backend
           command: npm run backend
@@ -67,6 +62,11 @@ jobs: # a collection of steps
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
           path: backend/reports/coverage/lcov-report
           destination: backend-coverage
+      - run:
+          command: cat ./frontend/coverage/lcov.info | ./backend/node_modules/.bin/coveralls
+          environment:
+            COVERALLS_SERVICE_NAME: circle-ci
+            COVERALLS_GIT_BRANCH: ${CIRCLE_BRANCH}
       - run:
           command: cat ./backend/reports/coverage/lcov.info | ./backend/node_modules/.bin/coveralls
           environment:
