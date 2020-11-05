@@ -61,13 +61,21 @@ jobs: # a collection of steps
       - store_artifacts: # special step to save test results as as artifact
           # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/ 
           path: backend/reports/coverage/lcov-report
-          destination: backend-coverage  
+          destination: backend-coverage
       - run:
-          name: Merge coverage and report to coveralls
-          command: ./backend/node_modules/.bin/lcov-result-merger './{frontend/coverage/lcov.info,./backend/reports/coverage/lcov.info}' | ./backend/node_modules/.bin/coveralls
+          name: send backend coverage
+          command: cat ./backend/reports/coverage/lcov.info | ./backend/node_modules/.bin/coveralls
           environment:
             COVERALLS_SERVICE_NAME: circle-ci
             COVERALLS_GIT_BRANCH: ${CIRCLE_BRANCH}   
+            COVERALLS_SERVICE_NUMBER: ${CIRCLE_BUILD_NUM}
+      - run:
+          name: send frontend coverage
+          command: cat ./frontend/coverage/lcov.info | ./backend/node_modules/.bin/coveralls
+          environment:
+            COVERALLS_SERVICE_NAME: circle-ci
+            COVERALLS_GIT_BRANCH: ${CIRCLE_BRANCH}   
+            COVERALLS_SERVICE_NUMBER: ${CIRCLE_BUILD_NUM}
       - run:
           name: Define environment variable with lastest commit's message
           command: |
