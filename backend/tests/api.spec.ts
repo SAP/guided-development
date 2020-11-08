@@ -69,7 +69,7 @@ describe('api unit test', () => {
             }
             api.setSetData(_thisArg, _setData);
             api["managerApi"].setData(extensionId,[collection1],[item1, item2]);
-            expect(api["managerApi"]).to.be.not.undefined;
+            expect(api["managerApi"].setData).contains(() => _setData);
         });
 
     });

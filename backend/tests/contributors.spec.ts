@@ -178,44 +178,9 @@ describe('Contributors unit test', () => {
                 items: [item1, item2]
             };
 
-            Contributors.getInstance().setData(extensionId, [collection1], [item1, item2]);
-            const items = Contributors.getInstance()["getItems"](collection1);
-            expect(items).to.have.length(2);
-        });
-
-        it("collection has invalid itemId", () => {
-            const itemId1 = "id1";
-            const itemId2 = "id2";
-            const extensionId = "extId";
-            const fqid1 = `${extensionId}.${itemId1}`;
-            const fqid2 = `${extensionId}.${itemId2}`;
-
-            const item1: IInternalItem = {
-                id: itemId1,
-                fqid: fqid1,
-                description: "description1",
-                title: "title1",
-                labels: [],
-            };
-            const item2: IInternalItem = {
-                id: itemId2,
-                fqid: fqid2,
-                description: "description2",
-                title: "title2",
-                labels: [],
-            };
-            const collection1: IInternalCollection = {
-                id: "id1",
-                title: "title1",
-                description: "description1",
-                itemIds: [fqid1, fqid2],
-                type: CollectionType.Platform,
-                items: [item1, item2]
-            };
-
             Contributors.getInstance().registerOnChangedCallback({}, ([collection1]) => {});
-            Contributors.getInstance().setData(extensionId, [collection1], [item1, item2]);
 
+            Contributors.getInstance().setData(extensionId, [collection1], [item1, item2]);
             const items = Contributors.getInstance()["getItems"](collection1);
             expect(items).to.have.length(2);
         });
@@ -246,8 +211,8 @@ describe('Contributors unit test', () => {
                 itemIds: ["itemId1"],
                 labels: []
             };
-            const res = Contributors.getInstance()["initSubItems"](item1);
-            expect(res).to.be.undefined;
+            Contributors.getInstance()["initSubItems"](item1);
+            expect(Contributors.getInstance()["itemsMap"].get("itemId1".toLowerCase())).to.be.undefined;
         });
     });
 
