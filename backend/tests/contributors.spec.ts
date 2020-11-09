@@ -178,6 +178,8 @@ describe('Contributors unit test', () => {
                 items: [item1, item2]
             };
 
+            Contributors.getInstance().registerOnChangedCallback({}, ([collection1]) => {});
+
             Contributors.getInstance().setData(extensionId, [collection1], [item1, item2]);
             const items = Contributors.getInstance()["getItems"](collection1);
             expect(items).to.have.length(2);
@@ -200,9 +202,31 @@ describe('Contributors unit test', () => {
         });
     });
 
+    describe('initSubItems', () => {
+        it("item has a subitem that does not exist", () => {
+            const item1: IItem = {
+                id: "id1",
+                description: "description1",
+                title: "title1",
+                itemIds: ["itemId1"],
+                labels: []
+            };
+            Contributors.getInstance()["initSubItems"](item1);
+            expect(Contributors.getInstance()["itemsMap"].get("itemId1".toLowerCase())).to.be.undefined;
+        });
+    });
+
     describe('activateExtension', () => {
         it("extension isn't activate", () => {
             consoleMock.expects("error");
+            Contributors["activateExtension"](testVscode.Extension);
+        });
+
+        it("extension is active", () => {
+            testVscode.Extension = {
+                isActive: true
+            }
+            consoleMock.expects("error").never();
             Contributors["activateExtension"](testVscode.Extension);
         });
     });
