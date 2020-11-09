@@ -196,7 +196,7 @@ describe('guidedDevelopment unit test', () => {
             expect(foundSubItem.fqid).to.equal(fqid1);
         });
 
-        it(" wrong fqid or item doesn't exist", async () => {
+        it("subItem doen't contain fqid or item doesn't exist", async () => {
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
                 id: "id1",
@@ -222,7 +222,7 @@ describe('guidedDevelopment unit test', () => {
                 items: [item2]
             };
             await guidedDevelopment["setCollections"]([collection1]);
-            const foundItem = guidedDevelopment["getItem"]("blablabla");
+            const foundItem = guidedDevelopment["getItem"](fqid1);
             expect(foundItem).to.be.undefined;
         });
     });
