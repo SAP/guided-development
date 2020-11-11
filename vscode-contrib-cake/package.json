@@ -2,7 +2,7 @@
 	"name": "vscode-contrib-cake",
 	"displayName": "vscode-contrib-cake",
 	"description": "",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "SAPOSS",
 	"engines": {
 		"vscode": "^1.44.2"
@@ -16,9 +16,7 @@
 		"Other"
 	],
 	"main": "./out/extension.js",
-	"activationEvents": [
-		"*"
-	],
+	"activationEvents": [],
 	"BASContributes": {
 		"guided-development": {}
 	},
