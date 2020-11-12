@@ -16,7 +16,7 @@ export async function _performAction(action: IAction): Promise<any> {
         }
       case ActionType.Snippet:
         let snippetAction = (action as ISnippetAction);
-        return vscode.commands.executeCommand("loadCodeSnippet", { contributorId: snippetAction.contributorId, snippetName: snippetAction.snippetName, context: snippetAction.context });
+        return vscode.commands.executeCommand("loadCodeSnippet", { viewColumn: vscode.ViewColumn.Two, contributorId: snippetAction.contributorId, snippetName: snippetAction.snippetName, context: snippetAction.context });
       case ActionType.File:
         let fileAction = (action as IFileAction);
         return vscode.commands.executeCommand('vscode.open', fileAction.uri, {viewColumn: vscode.ViewColumn.Two});
