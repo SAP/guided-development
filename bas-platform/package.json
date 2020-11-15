@@ -2,11 +2,11 @@
 	"name": "bas-platform",
 	"displayName": "BAS Platform Extension",
 	"description": "SAP Business Application Studio platform extension",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"publisher": "SAPOSS",
 	"license": "Apache-2.0",
 	"engines": {
-		"vscode": "^1.44.2"
+		"vscode": "^1.44.2" 
 	},
 	"repository": {
 		"type": "git",
@@ -39,11 +39,14 @@
 		"test": "node ./out/test/runTest.js",
 		"package": "vsce package ."
 	},
+	"dependencies": {
+		"lodash": "^4.17.20"
+	},
 	"devDependencies": {
+		"@types/lodash": "^4.14.165",
 		"@types/vscode": "^1.40.0",
 		"typescript": "^3.9.7",
 		"vsce": "^1.69.0",
 		"vscode-test": "^1.2.2"
-	},
-	"dependencies": {}
+	}
 }
