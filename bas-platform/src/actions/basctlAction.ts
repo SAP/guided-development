@@ -12,28 +12,31 @@ let basctlServer: net.Server;
 function _addBasctlAction(socket: net.Socket) {
     //const openExternal = new bas.actions.ExecuteAction();
     //openExternal.executeAction = async () => {
-        socket.on("data", dataBuffer => {
-            let data;
-            try {
-                const strData = _.toString(dataBuffer);
-                vscode.window.showInformationMessage("Client string - " + strData);
-                data = JSON.parse(strData);
-                vscode.window.showInformationMessage("Client data.url - " + data.url);
-            } catch (error) {
-                const errorMessage = _.get(error, "stack", _.get(error, "message", "failed to parse data"));
-                vscode.window.showErrorMessage(errorMessage);
-                return;
-            }
+    socket.on("data", dataBuffer => {
+        const data: any = getRequestData(dataBuffer);
 
-            if (data.command === "open") {
-                vscode.window.showInformationMessage("got open command with url - " + data.url);
-                const uri = vscode.Uri.parse(data.url, true);
-                vscode.env.openExternal(uri);
-            }
-        });
-   // }
+        if (data.command === "open") {
+            const uri = vscode.Uri.parse(data.url, true);
+            vscode.env.openExternal(uri);
+        }
+    });
+    // }
 
     //bas.actions.performAction(openExternal);
+}
+
+function getRequestData(dataBuffer: any) {
+    try {
+        return JSON.parse(_.toString(dataBuffer));
+    } catch (error) {
+        showErrorMessage(error, "failed to parse basctl request data");
+        return {};
+    }
+}
+
+function showErrorMessage(error: any, defaultError: string) {
+    const errorMessage = _.get(error, "stack", _.get(error, "message", defaultError));
+    vscode.window.showErrorMessage(errorMessage);
 }
 
 export function closeBasctlServer() {
@@ -48,8 +51,7 @@ function createBasctlServer() {
             _addBasctlAction(socket);
         }).listen(SOCKETFILE);
     } catch (error) {
-        const errorMessage = _.get(error, "stack", _.get(error, "message", "failed to start basctl server"));
-        vscode.window.showErrorMessage(errorMessage);
+        showErrorMessage(error, "failed to start basctl server");
     }
 }
 
