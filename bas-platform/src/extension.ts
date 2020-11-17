@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import { bas } from './api';
 import { _performAction } from "./actions/performer";
-import { startBasctlServer, closeBasctlServer } from './actions/basctlAction';
+import { startBasctlServer, closeBasctlServer } from './actions/basctlServer';
 
 const subscriptions: Array<vscode.Disposable> = [];
 

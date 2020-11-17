@@ -2,40 +2,34 @@ import * as vscode from 'vscode';
 import * as net from 'net';
 import * as fs from 'fs';
 import * as _ from 'lodash';
-// import { bas } from '../api';
 
 const SOCKETFILE = '/extbin/basctlSocket';
 
 let basctlServer: net.Server;
 
 
-function _addBasctlAction(socket: net.Socket) {
-    //const openExternal = new bas.actions.ExecuteAction();
-    //openExternal.executeAction = async () => {
-    socket.on("data", dataBuffer => {
+function handleRequest(socket: net.Socket) {
+    socket.on('data', dataBuffer => {
         const data: any = getRequestData(dataBuffer);
 
-        if (data.command === "open") {
+        if (data.command === 'open') {
             const uri = vscode.Uri.parse(data.url, true);
             vscode.env.openExternal(uri);
         }
     });
-    // }
-
-    //bas.actions.performAction(openExternal);
 }
 
 function getRequestData(dataBuffer: any) {
     try {
         return JSON.parse(_.toString(dataBuffer));
     } catch (error) {
-        showErrorMessage(error, "failed to parse basctl request data");
+        showErrorMessage(error, 'failed to parse basctl request data');
         return {};
     }
 }
 
 function showErrorMessage(error: any, defaultError: string) {
-    const errorMessage = _.get(error, "stack", _.get(error, "message", defaultError));
+    const errorMessage = _.get(error, 'stack', _.get(error, 'message', defaultError));
     vscode.window.showErrorMessage(errorMessage);
 }
 
@@ -48,10 +42,10 @@ export function closeBasctlServer() {
 function createBasctlServer() {
     try {
         basctlServer = net.createServer(socket => {
-            _addBasctlAction(socket);
+            handleRequest(socket);
         }).listen(SOCKETFILE);
     } catch (error) {
-        showErrorMessage(error, "failed to start basctl server");
+        showErrorMessage(error, 'basctl server error');
     }
 }
 
@@ -62,7 +56,7 @@ export function startBasctlServer() {
         } else {
             fs.unlink(SOCKETFILE, err => {
                 if (err) {
-                    throw new Error(err.message);
+                    throw new Error(err.stack);
                 }
                 createBasctlServer();
             });
