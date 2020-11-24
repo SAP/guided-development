@@ -12,7 +12,7 @@ function handleRequest(socket: net.Socket) {
     socket.on('data', dataBuffer => {
         const data: any = getRequestData(dataBuffer);
 
-        if (data.command === 'openBrowser') {
+        if (data.command === 'openExternal') {
             const uri = vscode.Uri.parse(data.url, true);
             vscode.env.openExternal(uri);
         }
