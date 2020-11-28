@@ -20,7 +20,7 @@ let eatAction: IExecuteAction,
 let bakeItemAction: IItemExecuteAction;
     
 function initActions(basAPI: typeof bas) {
-    eatAction = new basAPI.actions.ExecuteAction()
+    eatAction = new basAPI.actions.ExecuteAction();
     eatAction.executeAction = () => {
         return vscode.window.showInformationMessage("You are now ready to bake a cake.");
     };
