@@ -37,7 +37,7 @@ export class GuidedDevelopment {
 
   public setCollections(collections: Array<IInternalCollection>) {
     this.collections = collections;
-    const response: any = this.rpc.invoke("showCollections", [this.collections]);
+    this.rpc.invoke("showCollections", [this.collections]);
   }
 
   private getItem(itemFqid: string): IInternalItem {
