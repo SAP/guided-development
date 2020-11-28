@@ -1,5 +1,6 @@
 [![CircleCI](https://circleci.com/gh/SAP/guided-development.svg?style=svg)](https://circleci.com/gh/SAP/guided-development)
 [![Coverage Status](https://coveralls.io/repos/github/SAP/guided-development/badge.svg?branch=master)](https://coveralls.io/github/SAP/guided-development?branch=master)
+[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/SAP/guided-development.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SAP/guided-development/context:javascript)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 ![GitHub license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/guided-development)](https://api.reuse.software/info/github.com/SAP/guided-development)
