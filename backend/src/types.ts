@@ -1,4 +1,4 @@
-import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction,
+import { IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction,
          CommandActionParams, ExecuteActionParams, SnippetActionParams, FileActionParams } from "@sap-devx/bas-platform-types";
 
 export interface ICollection {

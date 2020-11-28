@@ -309,7 +309,7 @@ async function createCodeSnippetWorkspaceEdit(answers: any, context: any) {
 		address: answers.address,
 		phoneNumber: answers.phoneNumber
 	};
-	configurations['configurations'].push(config)
+	configurations['configurations'].push(config);
 
 	const we = new vscode.WorkspaceEdit();
 	we.createFile(docUri, { ignoreIfExists: true });

@@ -287,7 +287,7 @@ export async function activate(context: vscode.ExtensionContext) {
     //  TODO: why actionType exposed ?? --> openSnippetAction.actionType
     openSnippetAction.contributorId = "saposs.vscode-snippet-food-contrib";
     openSnippetAction.snippetName = "snippet_1";
-    openSnippetAction.context = {}
+    openSnippetAction.context = {};
 
     cfDeleteAction = new basAPI.actions.CommandAction();
     cfDeleteAction.name = "cf.target.delete";
