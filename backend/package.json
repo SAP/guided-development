@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.13", 
+	"version": "0.0.14", 
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -118,7 +118,7 @@
 		"@sap-devx/bas-platform-types": "0.0.10",
 		"@sap-devx/webview-rpc": "^0.2.2",
 		"@sap-devx/yeoman-ui-types": "0.0.1",
-		"@vscode-logging/logger": "1.1.0",
+		"@vscode-logging/logger": "1.2.1",
 		"chalk": "^4.0.0",
 		"datauri": "^2.0.0",
 		"fs-extra": "^8.1.0",
