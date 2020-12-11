@@ -2,9 +2,10 @@
 	"name": "bas-platform",
 	"displayName": "BAS Platform Extension",
 	"description": "SAP Business Application Studio platform extension",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"publisher": "SAPOSS",
 	"license": "Apache-2.0",
+	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.44.2"
 	},

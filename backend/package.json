@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.14", 
+	"version": "0.0.15", 
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -15,7 +15,7 @@
 	"bugs": {
 		"url": "https://github.com/SAP/guided-development/issues"
 	},
-	"icon": "Wizard_logo.png",
+	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.39.2"
 	},

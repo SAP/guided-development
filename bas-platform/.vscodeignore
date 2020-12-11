@@ -3,6 +3,7 @@
 out/test/**
 src/**
 .gitignore
+!icon.png
 vsc-extension-quickstart.md
 **/tsconfig.json
 **/tslint.json
