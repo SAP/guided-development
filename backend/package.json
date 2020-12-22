@@ -121,7 +121,7 @@
 		"@sap-devx/yeoman-ui-types": "0.0.1",
 		"@vscode-logging/logger": "1.2.1",
 		"chalk": "^4.0.0",
-		"datauri": "^2.0.0",
+		"datauri": "^3.0.0",
 		"fs-extra": "^8.1.0",
 		"humanize-string": "^1.0.2",
 		"lodash": "^4.17.15",
