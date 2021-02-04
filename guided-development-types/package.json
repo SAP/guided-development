@@ -18,7 +18,7 @@
     "prepublishOnly": "npm run prep && npm run copy"
   },
   "devDependencies": {
-    "@sap-devx/bas-platform-types": "0.0.10",
+    "@sap-devx/bas-platform-types": "0.0.13",
     "ncp": "^2.0.0"
   }
 }

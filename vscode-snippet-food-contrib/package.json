@@ -37,7 +37,7 @@
 		"package": "vsce package ."
 	},
 	"dependencies": {
-		"@sap-devx/bas-platform-types": "0.0.10",
+		"@sap-devx/bas-platform-types": "0.0.13",
 		"@sap-devx/code-snippet-types": "0.0.6",
 		"@sap-devx/guided-development-types": "0.0.12",
 		"comment-json": "2.1.0",

@@ -12,12 +12,10 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-simple-contrib",
     ],
       "outFiles": [
         "${workspaceFolder}/backend/out/**/*.js",
-        "${workspaceFolder/bas-platform/out/**/*.js",
         "${workspaceFolder/vscode-simple-contrib/out/**/*.js",
       ],
       "preLaunchTask": "watch backend (webpack)"
@@ -29,14 +27,12 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib1",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib2",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib3",
     ],
       "outFiles": [
         "${workspaceFolder}/backend/out/**/*.js",
-        "${workspaceFolder/bas-platform/out/**/*.js",
         "${workspaceFolder/vscode-contrib1/out/**/*.js",
         "${workspaceFolder/vscode-contrib2/out/**/*.js",
         "${workspaceFolder/vscode-contrib3/out/**/*.js"
@@ -50,12 +46,10 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-contrib-cake",
       ],
       "outFiles": [
         "${workspaceFolder}/backend/out/**/*.js",
-        "${workspaceFolder/bas-platform/out/**/*.js",
         "${workspaceFolder/vscode-contrib-cake/out/**/*.js",
       ],
       "preLaunchTask": "watch backend (webpack)"
@@ -67,12 +61,10 @@
       "runtimeExecutable": "${execPath}",
       "args": [
         "--extensionDevelopmentPath=${workspaceFolder}/backend",
-        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
         "--extensionDevelopmentPath=${workspaceFolder}/vscode-snippet-food-contrib",
       ],
       "outFiles": [
         "${workspaceFolder}/backend/out/**/*.js",
-        "${workspaceFolder/bas-platform/out/**/*.js",
         "${workspaceFolder/vscode-snippet-food-contrib/out/**/*.js",
       ],
       "preLaunchTask": "watch backend (webpack)"
@@ -89,21 +81,6 @@
         "PORT": "8081"
       },
       "preLaunchTask": "watch backend (tsc)"
-    },
-    {
-      "name": "Platform: Sample action client",
-      "type": "extensionHost",
-      "request": "launch",
-      "runtimeExecutable": "${execPath}",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}/bas-platform",
-        "--extensionDevelopmentPath=${workspaceFolder}/sample-action-client",
-    ],
-      "outFiles": [
-        "${workspaceFolder}/bas-platfom/out/**/*.js",
-        "${workspaceFolder/sample-action-client/out/**/*.js",
-      ],
-      "preLaunchTask": "watch bas-platform"
     },
     {
       "name": "Client: chrome (8080)",
