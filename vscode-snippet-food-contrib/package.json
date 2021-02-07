@@ -14,7 +14,7 @@
 	},
 	"extensionDependencies": [
 		"saposs.code-snippet",
-		"SAPOSS.bas-platform"
+		"SAPOSS.app-studio-toolkit"
 	],
 	"BASContributes": {
 		"guided-development": {}
@@ -37,9 +37,9 @@
 		"package": "vsce package ."
 	},
 	"dependencies": {
-		"@sap-devx/bas-platform-types": "0.0.13",
+		"@sap-devx/app-studio-toolkit-types": "0.0.1",
 		"@sap-devx/code-snippet-types": "0.0.6",
-		"@sap-devx/guided-development-types": "0.0.12",
+		"@sap-devx/guided-development-types": "0.0.13",
 		"comment-json": "2.1.0",
 		"datauri": "^2.0.0",
 		"fs-extra": "7.0.1",

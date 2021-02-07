@@ -1,4 +1,4 @@
-import { IAction } from "@sap-devx/bas-platform-types";
+import { IAction } from "@sap-devx/app-studio-toolkit-types";
 import { ICollection, IItem } from "./types";
 
 export interface AppEvents {
