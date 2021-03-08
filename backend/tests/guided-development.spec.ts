@@ -10,7 +10,7 @@ import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
 import { IItem, ICollection, CollectionType, IItemExecuteContext, IItemCommandContext, IItemFileContext, IItemSnippetContext } from "../src/types";
 import { IInternalCollection, IInternalItem } from "./Collection";
-import { ActionType, CommandActionParams, ExecuteActionParams, FileActionParams, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+import { ActionType, CommandActionParams, ExecuteActionParams, FileActionParams, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 const testVscode = {
     extensions: {

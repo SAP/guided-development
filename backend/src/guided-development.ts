@@ -5,7 +5,7 @@ import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
 import { ItemAction, ItemContext, IItemCommandContext, IItemExecuteContext, IItemFileContext, IItemSnippetContext } from "./types";
-import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 export class GuidedDevelopment {
 
