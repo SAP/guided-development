@@ -5,7 +5,7 @@ import * as _ from "lodash";
 import { mockVscode } from "./mockUtil";
 import { Contributors } from "../src/contributors";
 import { VSCodeEvents } from "../src/vscode-events";
-import { bas } from '@sap-devx/bas-platform-types';
+import { bas } from '@sap-devx/app-studio-toolkit-types';
 
 const oRegisteredCommands = {};
 const testVscode = {
@@ -77,7 +77,7 @@ describe('extension unit test', () => {
             // contributorsMock.expects("getContributors");
             loggerWrapperMock.expects("createExtensionLoggerAndSubscribeToLogSettingsChanges");
             loggerWrapperMock.expects("getLogger").once();
-            const res: typeof bas = eventMock.expects("getExtension").withExactArgs("SAPOSS.bas-platform")?.exports;
+            const res: typeof bas = eventMock.expects("getExtension").withExactArgs("SAPOSS.app-studio-toolkit")?.exports;
             vscodeEventMock.expects("setBasAPI").withExactArgs(res);
             extension.activate(testContext);
             expect(_.size(_.keys(oRegisteredCommands))).to.be.equal(2);
