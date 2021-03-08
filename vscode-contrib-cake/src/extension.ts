@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import { ICollection, CollectionType, IItem, ManagerAPI, IItemExecuteAction, IItemExecuteContext } from '@sap-devx/guided-development-types';
-import { bas, IExecuteAction } from '@sap-devx/bas-platform-types';
+import { bas, IExecuteAction } from '@sap-devx/app-studio-toolkit-types';
 // @ts-ignore
 import * as datauri from "datauri";
 
@@ -200,7 +200,7 @@ function removeBakeCollection(dirPath: string): void {
 export async function activate(context: vscode.ExtensionContext) {
     extensionPath = context.extensionPath;
 
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.app-studio-toolkit")?.exports;
     basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
         initActions(basAPI);
         createFileSystemWatcher("**/bake.json", managerAPI);

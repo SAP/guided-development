@@ -1,7 +1,7 @@
 import { AppEvents } from "./app-events";
 import { Contributors } from './contributors';
 import { ICollection, IItem } from './types';
-import { bas, IAction } from "@sap-devx/bas-platform-types";
+import { bas, IAction } from "@sap-devx/app-studio-toolkit-types";
 
 export class VSCodeEvents implements AppEvents {
   basAPI: any;
