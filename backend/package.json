@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.16", 
+	"version": "0.0.18",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -116,7 +116,7 @@
 		"lint:fix": "eslint . --ext .ts,.tsx --cache --fix"
 	},
 	"dependencies": {
-		"@sap-devx/bas-platform-types": "0.0.10",
+		"@sap-devx/app-studio-toolkit-types": "0.0.1",
 		"@sap-devx/webview-rpc": "^0.2.2",
 		"@sap-devx/yeoman-ui-types": "0.0.1",
 		"@vscode-logging/logger": "1.2.1",
@@ -165,7 +165,7 @@
 		"cz-conventional-changelog": "3.3.0",
 		"@commitlint/cli": "11.0.0",
 		"@commitlint/config-conventional": "11.0.0",
-		"husky": "4.3.0"
+		"husky": "4.3.8"
 	},
 	"husky": {
 		"hooks": {
@@ -183,6 +183,6 @@
 		]
 	},
 	"extensionDependencies": [
-		"SAPOSS.bas-platform"
+		"SAPOSS.app-studio-toolkit"
 	]
 }
