@@ -10,7 +10,7 @@ import { CollectionType } from "../types";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
 
-import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 import * as api from "../api";
 
