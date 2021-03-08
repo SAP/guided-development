@@ -3,7 +3,7 @@ import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
 import { Contributors } from "../src/contributors";
-import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType } from "@sap-devx/bas-platform-types";
+import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType } from "@sap-devx/app-studio-toolkit-types";
 
 import { VSCodeEvents } from "../src/vscode-events";
 import { CollectionType, ICollection, IItem } from "../src/types";

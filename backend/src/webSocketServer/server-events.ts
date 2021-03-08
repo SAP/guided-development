@@ -1,4 +1,4 @@
-import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 import { AppEvents } from "../app-events";
 import { ICollection, IItem } from '../types';
 
