@@ -10,7 +10,7 @@ import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
 import { IItem, ICollection, CollectionType, IItemExecuteContext, IItemCommandContext, IItemFileContext, IItemSnippetContext } from "../src/types";
 import { IInternalCollection, IInternalItem } from "./Collection";
-import { ActionType, CommandActionParams, ExecuteActionParams, FileActionParams, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+import { ActionType, CommandActionParams, ExecuteActionParams, FileActionParams, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 const testVscode = {
     extensions: {
@@ -195,6 +195,36 @@ describe('guidedDevelopment unit test', () => {
             const foundSubItem = guidedDevelopment["getItem"](fqid1);
             expect(foundSubItem.fqid).to.equal(fqid1);
         });
+
+        it("subItem doen't contain fqid or item doesn't exist", async () => {
+            const fqid1 = "extName1.extPublisher1.id1";
+            const item1: IInternalItem = {
+                id: "id1",
+                description: "description1",
+                title: "title1",
+                labels: []
+            };
+            const fqid2 = "extName1.extPublisher1.id2";
+            const item2: IInternalItem = {
+                id: "id2",
+                fqid: fqid2,
+                description: "description2",
+                title: "title2",
+                labels: [],
+                items: [item1]
+            };
+            const collection1: IInternalCollection = {
+                id: "id1",
+                title: "title1",
+                description: "description1",
+                itemIds: [],
+                type: CollectionType.Platform,
+                items: [item2]
+            };
+            await guidedDevelopment["setCollections"]([collection1]);
+            const foundItem = guidedDevelopment["getItem"](fqid1);
+            expect(foundItem).to.be.undefined;
+        });
     });
 
     describe("onFrontendReady", () => {
@@ -209,7 +239,6 @@ describe('guidedDevelopment unit test', () => {
                 id: "id2",
                 items: [{
                     description: "description1",
-                    fqid: "extName1.extPublisher1.id1",
                     id: "id1",
                     labels: [],
                     title: "title1"

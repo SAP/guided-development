@@ -2,7 +2,7 @@
 	"name": "vscode-snippet-food-contrib",
 	"displayName": "vscode-snippet-food-contrib",
 	"description": "",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "saposs",
 	"engines": {
 		"vscode": "^1.44.2"
@@ -14,7 +14,7 @@
 	},
 	"extensionDependencies": [
 		"saposs.code-snippet",
-		"SAPOSS.bas-platform"
+		"SAPOSS.app-studio-toolkit"
 	],
 	"BASContributes": {
 		"guided-development": {}
@@ -22,9 +22,7 @@
 	"categories": [
 		"Other"
 	],
-	"activationEvents": [
-		"*"
-	],
+	"activationEvents": [],
 	"main": "./out/extension.js",
 	"contributes": {
 		"commands": [],
@@ -39,13 +37,13 @@
 		"package": "vsce package ."
 	},
 	"dependencies": {
+		"@sap-devx/app-studio-toolkit-types": "0.0.1",
 		"@sap-devx/code-snippet-types": "0.0.6",
-		"@sap-devx/bas-platform-types": "0.0.10",
-		"@sap-devx/guided-development-types": "0.0.12",
-		"datauri": "^2.0.0",
-		"lodash": "^4.17.15",
+		"@sap-devx/guided-development-types": "0.0.13",
 		"comment-json": "2.1.0",
-		"fs-extra": "7.0.1"
+		"datauri": "^2.0.0",
+		"fs-extra": "7.0.1",
+		"lodash": "^4.17.15"
 	},
 	"devDependencies": {
 		"@types/lodash": "^4.14.150",

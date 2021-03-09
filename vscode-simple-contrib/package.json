@@ -2,7 +2,7 @@
 	"name": "vscode-simple-contrib",
 	"displayName": "vscode-simple-contrib",
 	"description": "",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"publisher": "SAPOSS",
 	"engines": {
 		"vscode": "^1.44.2"
@@ -17,7 +17,6 @@
 	],
 	"main": "./out/extension.js",
 	"activationEvents": [
-		"*"
 	],
 	"BASContributes": {
 		"guided-development": {}
@@ -35,10 +34,10 @@
 		"vsce": "^1.69.0"
 	},
 	"extensionDependencies": [
-		"SAPOSS.bas-platform"
+		"SAPOSS.app-studio-toolkit"
 	],
 	"dependencies": {
-		"@sap-devx/bas-platform-types": "0.0.10",
-		"@sap-devx/guided-development-types": "0.0.12"
+		"@sap-devx/app-studio-toolkit-types": "0.0.1",
+		"@sap-devx/guided-development-types": "0.0.13"
 	}
 }

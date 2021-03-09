@@ -3,7 +3,7 @@ import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
 import { Contributors } from "../src/contributors";
-import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType } from "@sap-devx/bas-platform-types";
+import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType } from "@sap-devx/app-studio-toolkit-types";
 
 import { VSCodeEvents } from "../src/vscode-events";
 import { CollectionType, ICollection, IItem } from "../src/types";
@@ -88,6 +88,13 @@ const mockBasAPI: typeof bas = {
         CommandAction: MockCommandAction,
         FileAction: MockFileAction
     }
+}
+
+const mockBasAPINoAction: typeof bas = {
+    getExtensionAPI: <T>(extensionId: string): Promise<T> => {
+        return Promise.resolve(undefined);
+    },
+    actions: undefined
 }
 
 describe('vscode-events unit test', () => {
@@ -246,6 +253,50 @@ describe('vscode-events unit test', () => {
         });
     });
     describe("performAction - on failure", () => {
+        it("BasAPI does not have action", () => {
+            commandsMock.expects("executeCommand").never();
+            const commandAction: ICommandAction = new MockCommandAction();
+            commandAction.name = "workbench.action.openGlobalSettings";
+            const item: IItem = {
+                id: "open-command",
+                title: "Open Command  - Global Settings",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    action: undefined
+                },
+                labels: [
+                    {"Project Name": "cap1"},
+                    {"Project Type": "CAP"},
+                    {"Project Path": "/home/user/projects/cap1"}
+                ]
+            }
+            events.setBasAPI(mockBasAPINoAction);
+            return events.performAction(item.action1.action);
+        });
+
+        it("BasAPI is undefined", () => {
+            commandsMock.expects("executeCommand").never();
+            const commandAction: ICommandAction = new MockCommandAction();
+            commandAction.name = "workbench.action.openGlobalSettings";
+            const item: IItem = {
+                id: "open-command",
+                title: "Open Command  - Global Settings",
+                description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
+                action1: {
+                    name: "Open",
+                    action: undefined
+                },
+                labels: [
+                    {"Project Name": "cap1"},
+                    {"Project Type": "CAP"},
+                    {"Project Path": "/home/user/projects/cap1"}
+                ]
+            }
+            events.setBasAPI(undefined);
+            return events.performAction(item.action1.action);
+        });
+
         it("action or actionType does not exist", () => {
             commandsMock.expects("executeCommand").never();
             const commandAction: ICommandAction = new MockCommandAction();

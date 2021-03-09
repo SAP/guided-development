@@ -5,7 +5,7 @@ import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
 import { ItemAction, ItemContext, IItemCommandContext, IItemExecuteContext, IItemFileContext, IItemSnippetContext } from "./types";
-import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 export class GuidedDevelopment {
 
@@ -37,7 +37,7 @@ export class GuidedDevelopment {
 
   public setCollections(collections: Array<IInternalCollection>) {
     this.collections = collections;
-    const response: any = this.rpc.invoke("showCollections", [this.collections]);
+    this.rpc.invoke("showCollections", [this.collections]);
   }
 
   private getItem(itemFqid: string): IInternalItem {

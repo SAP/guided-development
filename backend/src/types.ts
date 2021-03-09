@@ -1,5 +1,5 @@
-import { ActionType, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction,
-         CommandActionParams, ExecuteActionParams, SnippetActionParams, FileActionParams } from "@sap-devx/bas-platform-types";
+import { IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction,
+         CommandActionParams, ExecuteActionParams, SnippetActionParams, FileActionParams } from "@sap-devx/app-studio-toolkit-types";
 
 export interface ICollection {
     id: string;

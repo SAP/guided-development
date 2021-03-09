@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.8",
+	"version": "0.0.18",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -15,7 +15,7 @@
 	"bugs": {
 		"url": "https://github.com/SAP/guided-development/issues"
 	},
-	"icon": "Wizard_logo.png",
+	"icon": "icon.png",
 	"engines": {
 		"vscode": "^1.39.2"
 	},
@@ -53,7 +53,8 @@
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "loadGuidedDevelopment"
+					"command": "loadGuidedDevelopment",
+					"when": "false"
 				},
 				{
 					"command": "guidedDevelopment.toggleOutput",
@@ -115,30 +116,30 @@
 		"lint:fix": "eslint . --ext .ts,.tsx --cache --fix"
 	},
 	"dependencies": {
-		"@sap-devx/bas-platform-types": "0.0.10",
+		"@sap-devx/app-studio-toolkit-types": "0.0.1",
 		"@sap-devx/webview-rpc": "^0.2.2",
 		"@sap-devx/yeoman-ui-types": "0.0.1",
-		"@vscode-logging/logger": "1.1.0",
+		"@vscode-logging/logger": "1.2.1",
 		"chalk": "^4.0.0",
-		"datauri": "^2.0.0",
+		"datauri": "^3.0.0",
 		"fs-extra": "^8.1.0",
 		"humanize-string": "^1.0.2",
 		"lodash": "^4.17.15",
 		"object-hash": "^2.0.3",
 		"strip-ansi": "^6.0.0",
-		"titleize": "^1.0.1",
+		"titleize": "^2.1.0",
 		"ws": "^7.2.5"
 	},
 	"devDependencies": {
 		"@types/chai": "^4.2.9",
-		"@types/fs-extra": "^8.1.0",
-		"@types/inquirer": "^6.5.0",
+		"@types/fs-extra": "^9.0.6",
+		"@types/inquirer": "^7.3.1",
 		"@types/lodash": "^4.14.150",
 		"@types/mocha": "^5.2.7",
 		"@types/node": "^10.17.21",
 		"@types/object-hash": "^1.3.1",
-		"@types/sinon": "^7.5.0",
-		"@types/ws": "^6.0.3",
+		"@types/sinon": "^9.0.10",
+		"@types/ws": "^7.4.0",
 		"@typescript-eslint/eslint-plugin": "^2.30.0",
 		"@typescript-eslint/parser": "^2.30.0",
 		"bufferutil": "^4.0.1",
@@ -147,12 +148,12 @@
 		"eslint": "^6.8.0",
 		"eslint-config-prettier": "^6.11.0",
 		"mocha": "^6.2.2",
-		"nyc": "^14.1.1",
+		"nyc": "^15.1.0",
 		"prettier": "^2.0.5",
 		"sinon": "^9.2.1",
 		"string-replace-loader": "^2.1.1",
 		"ts-loader": "^6.2.1",
-		"ts-node": "^8.9.1",
+		"ts-node": "^9.1.1",
 		"typescript": "^3.9.7",
 		"utf-8-validate": "^5.0.2",
 		"vsce": "^1.73.0",
@@ -160,28 +161,28 @@
 		"webpack": "^4.43.0",
 		"webpack-cli": "^3.3.11",
 		"lcov-result-merger": "3.1.0",
-                "coveralls": "2.11.16",
-    		"cz-conventional-changelog": "3.3.0",
- 		"@commitlint/cli": "11.0.0",
-  		"@commitlint/config-conventional": "11.0.0",
-  		"husky": "4.3.0"
+		"coveralls": "2.11.16",
+		"cz-conventional-changelog": "3.3.0",
+		"@commitlint/cli": "11.0.0",
+		"@commitlint/config-conventional": "11.0.0",
+		"husky": "4.3.8"
 	},
 	"husky": {
-           "hooks": {
-               "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-           }
-        },
-        "config": {
-           "commitizen": {
-               "path": "cz-conventional-changelog"
-           }
-        },
-        "commitlint": {
-           "extends": [
-               "@commitlint/config-conventional"
-           ]
-        },
+		"hooks": {
+			"commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+		}
+	},
+	"config": {
+		"commitizen": {
+			"path": "cz-conventional-changelog"
+		}
+	},
+	"commitlint": {
+		"extends": [
+			"@commitlint/config-conventional"
+		]
+	},
 	"extensionDependencies": [
-		"SAPOSS.bas-platform"
+		"SAPOSS.app-studio-toolkit"
 	]
 }

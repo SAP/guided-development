@@ -1,6 +1,6 @@
 import { ISnippet } from '@sap-devx/code-snippet-types';
 import { ICollection, CollectionType, IItem, ManagerAPI, IItemExecuteAction, IItemExecuteContext } from '@sap-devx/guided-development-types';
-import { bas, IExecuteAction, ISnippetAction, IFileAction } from '@sap-devx/bas-platform-types';
+import { bas, IExecuteAction, ISnippetAction, IFileAction } from '@sap-devx/app-studio-toolkit-types';
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import * as path from 'path';
@@ -174,7 +174,7 @@ function getInitialItems(): Array<IItem> {
 export async function activate(context: vscode.ExtensionContext) {
     extensionPath = context.extensionPath;
     
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.app-studio-toolkit")?.exports;
     basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
         createGuidedDevActions(basAPI);
         createFileSystemWatcher("**/foodq.json", managerAPI);
@@ -309,7 +309,7 @@ async function createCodeSnippetWorkspaceEdit(answers: any, context: any) {
 		address: answers.address,
 		phoneNumber: answers.phoneNumber
 	};
-	configurations['configurations'].push(config)
+	configurations['configurations'].push(config);
 
 	const we = new vscode.WorkspaceEdit();
 	we.createFile(docUri, { ignoreIfExists: true });

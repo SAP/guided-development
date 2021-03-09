@@ -10,7 +10,7 @@ import { CollectionType } from "../types";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
 
-import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/bas-platform-types";
+import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 import * as api from "../api";
 
@@ -116,25 +116,6 @@ function createCollections(): IInternalCollection[] {
     snippetName: "snippet_1",
     context: { uri: "uri" }
   }
-
-  /**
-   * Items
-   */
-  const item1: IInternalItem = {
-    id: "open-command",
-    fqid: "saposs.vscode-contrib2.open-command",
-    title: "Open Global Settings (via command)",
-    description: "It is easy to configure Visual Studio Code to your liking through its various settings.",
-    action1: {
-      name: "Open",
-      action: openViaCommandAction
-    },
-    labels: [
-      { "Project Name": "cap2" },
-      { "Project Path": "/home/user/projects/cap2" },
-      { "Project Type": "CAP" },
-    ],
-  };
 
   /** 
    * Collections

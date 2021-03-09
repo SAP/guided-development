@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import { ICollection, CollectionType, IItem, ManagerAPI } from '@sap-devx/guided-development-types';
-import { ICommandAction, IFileAction, ISnippetAction, bas } from "@sap-devx/bas-platform-types";
+import { ICommandAction, IFileAction, ISnippetAction, bas } from "@sap-devx/app-studio-toolkit-types";
 
 const datauri = require("datauri");
 var path = require('path');
@@ -276,7 +276,7 @@ function getItems(): Array<IItem> {
 
 export async function activate(context: vscode.ExtensionContext) {
     console.log('Congratulations, your extension "vscode-contrib3" is now active!');
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.app-studio-toolkit")?.exports;
 
     extensionPath = context.extensionPath;
 
@@ -287,7 +287,7 @@ export async function activate(context: vscode.ExtensionContext) {
     //  TODO: why actionType exposed ?? --> openSnippetAction.actionType
     openSnippetAction.contributorId = "saposs.vscode-snippet-food-contrib";
     openSnippetAction.snippetName = "snippet_1";
-    openSnippetAction.context = {}
+    openSnippetAction.context = {};
 
     cfDeleteAction = new basAPI.actions.CommandAction();
     cfDeleteAction.name = "cf.target.delete";
