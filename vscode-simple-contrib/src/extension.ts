@@ -1,15 +1,15 @@
 import * as vscode from 'vscode';
-import { bas, ICommandAction } from "@sap-devx/bas-platform-types";
+import { bas, ICommandAction } from "@sap-devx/app-studio-toolkit-types";
 import { ICollection, CollectionType, IItem, ManagerAPI } from "@sap-devx/guided-development-types";
 
 const EXT_ID = "SAPOSS.vscode-simple-contrib";
 
 export async function activate(context: vscode.ExtensionContext) {
     /**
-     * The `bas-platform` extension provides an API for various platform capabilities, including
+     * The `app-studio-toolkit` extension provides an API for various platform capabilities, including
      * the construction of **actions**.
      * 
-     * The `bas-platform` extension is guaranteed to be activated at this stage if you specify it in the `extensionDependencies`
+     * The `app-studio-toolkit` extension is guaranteed to be activated at this stage if you specify it in the `extensionDependencies`
      * section in your `package.json` file.
      * 
      * Also, make sure you include this entry in your `pacakge.json`:
@@ -22,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
      * This indicates to the guided-development manager extension to activate your extension
      * when the user executes the Guided Development command.
      */
-    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.bas-platform")?.exports;
+    const basAPI: typeof bas = vscode.extensions.getExtension("SAPOSS.app-studio-toolkit")?.exports;
 
     /**
      * An action of type **command** enables you to specify any vscode command
