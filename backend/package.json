@@ -119,7 +119,7 @@
 		"@sap-devx/app-studio-toolkit-types": "0.0.1",
 		"@sap-devx/webview-rpc": "^0.2.2",
 		"@sap-devx/yeoman-ui-types": "0.0.1",
-		"@vscode-logging/logger": "1.2.1",
+		"@vscode-logging/logger": "1.2.2",
 		"chalk": "^4.0.0",
 		"datauri": "^3.0.0",
 		"fs-extra": "^8.1.0",
