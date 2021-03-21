@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.0.18",
+	"version": "0.0.19",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -124,7 +124,7 @@
 		"datauri": "^3.0.0",
 		"fs-extra": "^8.1.0",
 		"humanize-string": "^2.1.0",
-		"lodash": "^4.17.15",
+		"lodash": "4.17.21",
 		"object-hash": "^2.0.3",
 		"strip-ansi": "^6.0.0",
 		"titleize": "^2.1.0",

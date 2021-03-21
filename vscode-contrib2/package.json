@@ -32,7 +32,7 @@
 		"@sap-devx/app-studio-toolkit-types": "0.0.1",
 		"@sap-devx/guided-development-types": "0.0.13",
 		"comment-json": "2.1.0",
-		"lodash": "^4.17.15"
+		"lodash": "4.17.21"
 	},
 	"devDependencies": {
 		"@types/comment-json": "1.1.1",
