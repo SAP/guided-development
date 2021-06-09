@@ -110,7 +110,7 @@
 		"webpack-prod": "webpack --mode production",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"package": "npm run webpack && vsce package .",
+		"package": "npm run webpack && vsce package",
 		"test": "nyc mocha -p tsconfig.json --opts ./mocha.opts",
 		"ws:run": "node ./out/src/webSocketServer/index.js",
 		"lint": "eslint . --ext .ts,.tsx --cache",
