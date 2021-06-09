@@ -31,6 +31,7 @@
 		"sap"
 	],
 	"activationEvents": [
+		"*",
 		"onCommand:loadGuidedDevelopment",
 		"onWebviewPanel:guidedDevelopment"
 	],
