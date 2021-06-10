@@ -1,5 +1,5 @@
-import { IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction,
-         CommandActionParams, ExecuteActionParams, SnippetActionParams, FileActionParams } from "@sap-devx/app-studio-toolkit-types";
+import { IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
+import { Uri } from "vscode";
 
 export interface ICollection {
     id: string;
@@ -27,7 +27,7 @@ interface IItemAction {
 }
 
 export interface IItemCommandContext extends IItemContext {
-    params?: CommandActionParams;
+    params?: any[];
 }
 export interface IItemCommandAction extends IItemAction {
     action: ICommandAction;
@@ -35,7 +35,7 @@ export interface IItemCommandAction extends IItemAction {
 }
 
 export interface IItemExecuteContext extends IItemContext {
-    params?: ExecuteActionParams;
+    params?: any[];
 }
 export interface IItemExecuteAction extends IItemAction {
     action: IExecuteAction;
@@ -43,7 +43,7 @@ export interface IItemExecuteAction extends IItemAction {
 }
 
 export interface IItemSnippetContext extends IItemContext {
-    context?: SnippetActionParams;
+    context?: any;
 }
 export interface IItemSnippetAction extends IItemAction {
     action: ISnippetAction;
@@ -51,7 +51,7 @@ export interface IItemSnippetAction extends IItemAction {
 }
 
 export interface IItemFileContext extends IItemContext {
-    uri?: FileActionParams;
+    uri?: Uri;
 }
 export interface IItemFileAction extends IItemAction {
     action: IFileAction;

@@ -3,27 +3,27 @@ import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
 import { Contributors } from "../src/contributors";
-import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType } from "@sap-devx/app-studio-toolkit-types";
+import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType, BasAction } from "@sap-devx/app-studio-toolkit-types";
 
 import { VSCodeEvents } from "../src/vscode-events";
 import { CollectionType, ICollection, IItem } from "../src/types";
 
-function mockPerformAction(action: IAction, options?: any): void {
+function mockPerformAction(action: BasAction, options?: any): void {
     if (action) {
         switch ((action as MockAction).actionType) {
-            case ActionType.Command:
+            case "COMMAND":
                 let commandAction = (action as MockCommandAction);
                 vscode.commands.executeCommand(commandAction.name, commandAction.params);
                 break;
-            case ActionType.Execute:
+            case "EXECUTE":
                 let executeAction = (action as MockExecuteAction);
                 executeAction.executeAction();
                 break;
-            case ActionType.Snippet:
+            case "SNIPPET":
                 let snippetAction = (action as MockSnippetAction);
                 vscode.commands.executeCommand("loadCodeSnippet", { contributorId: snippetAction.contributorId, snippetName: snippetAction.snippetName, context: snippetAction.context });
                 break;
-            case ActionType.File:
+            case "FILE":
                 let fileAction = (action as MockFileAction);
                 vscode.commands.executeCommand('vscode.open', fileAction.uri, { viewColumn: vscode.ViewColumn.Two });
                 break;
@@ -37,10 +37,11 @@ abstract class MockAction implements IAction {
 
 class MockExecuteAction extends MockAction implements IExecuteAction {
     executeAction: () => Thenable<any>;
+    actionType: "EXECUTE";
 
     constructor() {
         super();
-        this.actionType = ActionType.Execute;
+        this.actionType = "EXECUTE";
         this.executeAction = () => { return Promise.resolve() }
     }
 }
@@ -48,31 +49,35 @@ class MockExecuteAction extends MockAction implements IExecuteAction {
 class MockSnippetAction extends MockAction implements ISnippetAction {
     contributorId: string = "";
     snippetName: string = "";
-    context: string = "";
+    context: {};
+    actionType: "SNIPPET";
 
     constructor() {
         super();
-        this.actionType = ActionType.Snippet;
+        this.actionType = "SNIPPET";
     }
 }
 
 class MockCommandAction extends MockAction implements ICommandAction {
     name: string;
     params?: any[];
+    actionType: "COMMAND";
+
 
     constructor() {
         super();
-        this.actionType = ActionType.Command;
+        this.actionType = "COMMAND";
         this.name = "";
     }
 }
 
 class MockFileAction extends MockAction implements IFileAction {
     uri: vscode.Uri;
+    actionType: "FILE";
 
     constructor() {
         super();
-        this.actionType = ActionType.File;
+        this.actionType = "FILE";
         this.uri = vscode.Uri.parse("");
     }
 }
@@ -81,8 +86,11 @@ const mockBasAPI: typeof bas = {
     getExtensionAPI: <T>(extensionId: string): Promise<T> => {
         return Promise.resolve(undefined);
     },
+    getAction: (id: string) => undefined,
+    getParameter: (key: string) => undefined,
+    performAction: <T = void>(action: BasAction, options?: { schedule?: boolean }) => undefined,
     actions: {
-        performAction: mockPerformAction,
+        performAction: <T = void>(action: BasAction, options?: { schedule?: boolean }) => undefined,
         ExecuteAction: MockExecuteAction,
         SnippetAction: MockSnippetAction,
         CommandAction: MockCommandAction,
@@ -94,6 +102,9 @@ const mockBasAPINoAction: typeof bas = {
     getExtensionAPI: <T>(extensionId: string): Promise<T> => {
         return Promise.resolve(undefined);
     },
+    getAction: (id: string) => undefined,
+    getParameter: (key: string) => undefined,
+    performAction: <T = void>(action: BasAction, options?: { schedule?: boolean }) => undefined,
     actions: undefined
 }
 

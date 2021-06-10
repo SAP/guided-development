@@ -5,7 +5,7 @@ import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
 import { ItemAction, ItemContext, IItemCommandContext, IItemExecuteContext, IItemFileContext, IItemSnippetContext } from "./types";
-import { ActionType, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
+import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 export class GuidedDevelopment {
 
@@ -70,25 +70,25 @@ export class GuidedDevelopment {
     if (itemAction) {
       if (context) {
         switch (itemAction.action.actionType) {
-          case ActionType.Command:
+          case "COMMAND":
             let commandActionParameters: any = (context as IItemCommandContext)?.params;
             if (commandActionParameters) {
               (itemAction.action as ICommandAction).params = commandActionParameters;
             }
             break;
-          case ActionType.Execute:
+          case "EXECUTE":
             let executeActionParameters: any = (context as IItemExecuteContext)?.params;
             if (executeActionParameters) {
               (itemAction.action as IExecuteAction).params = executeActionParameters;
             }
             break;
-          case ActionType.File:
+          case "FILE":
             let fileActionUri: any = (context as IItemFileContext)?.uri;
             if (fileActionUri) {
               (itemAction.action as IFileAction).uri = fileActionUri;
             }
             break;
-          case ActionType.Snippet:
+          case "SNIPPET":
             let snippetActionContext: any = (context as IItemSnippetContext)?.context;
             if (snippetActionContext) {
               (itemAction.action as ISnippetAction).context = snippetActionContext;
