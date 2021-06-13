@@ -18,6 +18,7 @@ export class ServerEvents implements AppEvents {
                 console.log(`Mock executing command ${commandAction.name}`);
                 break;
             case "FILE":
+            case "URI":
                 const fileAction: IFileAction = (action as IFileAction);
                 console.log(`Mock opening file ${fileAction.uri.path}`);
                 break;
@@ -26,7 +27,7 @@ export class ServerEvents implements AppEvents {
                 console.log(`Mock running snippet ${snippetAction.snippetName}`);
                 break;
             default:
-                console.log(`Mock executing action of type ${action.actionType}`);
+                console.log(`Invalid actionType Mock executing action`);
         }
         return Promise.resolve();    
     }

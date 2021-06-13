@@ -1,4 +1,4 @@
-import { IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
+import { IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction, IUriAction } from "@sap-devx/app-studio-toolkit-types";
 import { Uri } from "vscode";
 
 export interface ICollection {
@@ -50,23 +50,29 @@ export interface IItemSnippetAction extends IItemAction {
     contexts?: IItemSnippetContext[];
 }
 
-export interface IItemFileContext extends IItemContext {
+export interface IItemUriContext extends IItemContext {
     uri?: Uri;
 }
 export interface IItemFileAction extends IItemAction {
     action: IFileAction;
-    contexts?: IItemFileContext[];
+    contexts?: IItemUriContext[];
+}
+
+export interface IItemUriAction extends IItemAction {
+    action: IUriAction;
+    contexts?: IItemUriContext[];
 }
 
 export type ItemAction = IItemCommandAction |
 IItemExecuteAction |
 IItemSnippetAction |
+IItemUriAction |
 IItemFileAction;
 
 export type ItemContext = IItemCommandContext |
 IItemExecuteContext |
 IItemSnippetContext |
-IItemFileContext;
+IItemUriContext;
 
 export interface IItem {
     id: string;

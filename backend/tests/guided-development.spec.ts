@@ -8,9 +8,9 @@ import { AppEvents } from '../src/app-events';
 import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
-import { IItem, ICollection, CollectionType, IItemExecuteContext, IItemCommandContext, IItemFileContext, IItemSnippetContext } from "../src/types";
+import { IItem, ICollection, CollectionType, IItemExecuteContext, IItemCommandContext, IItemUriContext, IItemSnippetContext } from "../src/types";
 import { IInternalCollection, IInternalItem } from "./Collection";
-import { BasAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
+import { BasAction, ICommandAction, IExecuteAction, IUriAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 const testVscode = {
     extensions: {
@@ -314,7 +314,7 @@ describe('guidedDevelopment unit test', () => {
             context?: any;
             project: string;
         }
-        class testFileItemContext implements IItemFileContext {
+        class testUriItemContext implements IItemUriContext {
             project: string;
             uri?: vscode.Uri;
         }
@@ -334,8 +334,8 @@ describe('guidedDevelopment unit test', () => {
             context: any;
             actionType: "SNIPPET";
         }
-        class testFileItemAction implements IFileAction {
-            actionType: "FILE";
+        class testUriItemAction implements IUriAction {
+            actionType: "URI";
             uri: vscode.Uri;
         }
 
@@ -603,14 +603,14 @@ describe('guidedDevelopment unit test', () => {
             await guidedDevelopment["performAction"](fqid1,1, new testSnippetItemContext());
         });
 
-        it("File, with uri as context", async () => {
-            let context: IItemFileContext;
-            context = new testFileItemContext();
+        it("Uri, with uri as context", async () => {
+            let context: IItemUriContext;
+            context = new testUriItemContext();
             context.uri = vscode.Uri.parse("");
             context.project = "project";
 
-            let action = new testFileItemAction();
-            action.actionType = "FILE";
+            let action = new testUriItemAction();
+            action.actionType = "URI";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
@@ -639,13 +639,13 @@ describe('guidedDevelopment unit test', () => {
             await guidedDevelopment["performAction"](fqid1,1, context);
         });
 
-        it("File, without uri", async () => {
-            let context: IItemFileContext;
-            context = new testFileItemContext();
+        it("Uri, without uri as context", async () => {
+            let context: IItemUriContext;
+            context = new testUriItemContext();
             context.project = "project";
 
-            let action = new testFileItemAction();
-            action.actionType = "FILE";
+            let action = new testUriItemAction();
+            action.actionType = "URI";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {

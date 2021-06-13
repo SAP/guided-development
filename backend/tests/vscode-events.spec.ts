@@ -3,12 +3,13 @@ import { expect } from "chai";
 import * as sinon from "sinon";
 import * as _ from "lodash";
 import { Contributors } from "../src/contributors";
-import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction, bas, IAction, ActionType, BasAction } from "@sap-devx/app-studio-toolkit-types";
+import { ICommandAction, IExecuteAction, IUriAction, IFileAction, ISnippetAction, bas, IAction, ActionType, BasAction } from "@sap-devx/app-studio-toolkit-types";
 
 import { VSCodeEvents } from "../src/vscode-events";
 import { CollectionType, ICollection, IItem } from "../src/types";
 
-function mockPerformAction(action: BasAction, options?: any): void {
+async function mockPerformAction(action: BasAction): Promise<any> {
+    // <T = void>(action: BasAction, options?: { schedule?: boolean }): Thenable<T> {
     if (action) {
         switch ((action as MockAction).actionType) {
             case "COMMAND":
@@ -23,9 +24,10 @@ function mockPerformAction(action: BasAction, options?: any): void {
                 let snippetAction = (action as MockSnippetAction);
                 vscode.commands.executeCommand("loadCodeSnippet", { contributorId: snippetAction.contributorId, snippetName: snippetAction.snippetName, context: snippetAction.context });
                 break;
+            case "URI":
             case "FILE":
-                let fileAction = (action as MockFileAction);
-                vscode.commands.executeCommand('vscode.open', fileAction.uri, { viewColumn: vscode.ViewColumn.Two });
+                let uriAction = (action as MockFileAction);
+                vscode.commands.executeCommand('vscode.open', uriAction.uri, { viewColumn: vscode.ViewColumn.Two });
                 break;
         }
     }
@@ -88,9 +90,9 @@ const mockBasAPI: typeof bas = {
     },
     getAction: (id: string) => undefined,
     getParameter: (key: string) => undefined,
-    performAction: <T = void>(action: BasAction, options?: { schedule?: boolean }) => undefined,
+    performAction: mockPerformAction,
     actions: {
-        performAction: <T = void>(action: BasAction, options?: { schedule?: boolean }) => undefined,
+        performAction: mockPerformAction,
         ExecuteAction: MockExecuteAction,
         SnippetAction: MockSnippetAction,
         CommandAction: MockCommandAction,
@@ -163,11 +165,11 @@ describe('vscode-events unit test', () => {
     });
 
     describe("performAction - on success", () => {
-        it("Command as ActionType", () => {
+        it("Command as ActionType", async () => {
             commandsMock.expects("executeCommand").
-                withExactArgs('workbench.action.openGlobalSettings', undefined).resolves();
+                withExactArgs('workbench.action.openGlobalSettings', []).resolves();
             const commandOpenAction = new MockCommandAction();
-            commandOpenAction.name = "Open";
+            commandOpenAction.params = [];
             commandOpenAction.name = "workbench.action.openGlobalSettings";
 
             const item: IItem = {
@@ -187,12 +189,11 @@ describe('vscode-events unit test', () => {
             }
 
             events.setBasAPI(mockBasAPI);
-            return events.performAction(item.action1.action);
+            await events.performAction(item.action1.action);
         });
         it("Snippet as ActionType", () => {
             commandsMock.expects("executeCommand").
                 withExactArgs("loadCodeSnippet", { contributorId: "saposs.vscode-snippet-food-contrib", snippetName: "snippet_1", context: { uri: "uri" } }).resolves();
-
             const snippetOpenAction: ISnippetAction = new MockSnippetAction();
             snippetOpenAction.contributorId = "saposs.vscode-snippet-food-contrib";
             snippetOpenAction.snippetName = "snippet_1";
@@ -212,9 +213,10 @@ describe('vscode-events unit test', () => {
                     {"Project Path": "/home/user/projects/cap3"}
                 ]
             }
+            events.setBasAPI(mockBasAPI);
             return events.performAction(item.action1.action);
         });
-        it("File as ActionType", () => {
+        it("Uri as ActionType", () => {
             const uri = vscode.Uri.parse("README");
             commandsMock.expects("executeCommand").
                 withExactArgs('vscode.open', uri, { viewColumn: vscode.ViewColumn.Two }).resolves();

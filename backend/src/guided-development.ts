@@ -4,7 +4,7 @@ import { IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from "./app-events";
 import { IInternalItem, IInternalCollection } from "./Collection";
-import { ItemAction, ItemContext, IItemCommandContext, IItemExecuteContext, IItemFileContext, IItemSnippetContext } from "./types";
+import { ItemAction, ItemContext, IItemCommandContext, IItemExecuteContext, IItemUriContext, IItemSnippetContext } from "./types";
 import { ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 export class GuidedDevelopment {
@@ -83,7 +83,8 @@ export class GuidedDevelopment {
             }
             break;
           case "FILE":
-            let fileActionUri: any = (context as IItemFileContext)?.uri;
+          case "URI":
+            let fileActionUri: any = (context as IItemUriContext)?.uri;
             if (fileActionUri) {
               (itemAction.action as IFileAction).uri = fileActionUri;
             }
