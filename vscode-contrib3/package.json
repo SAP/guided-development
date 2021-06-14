@@ -2,7 +2,7 @@
 	"name": "vscode-contrib3",
 	"displayName": "vscode-guided-dev-contrib3",
 	"description": "",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"publisher": "saposs",
 	"engines": {
 		"vscode": "^1.44.2"
@@ -29,8 +29,8 @@
 		"package": "vsce package ."
 	},
 	"dependencies": {
-		"@sap-devx/app-studio-toolkit-types": "0.0.1",
-		"@sap-devx/guided-development-types": "0.0.13",
+		"@sap-devx/app-studio-toolkit-types": "1.0.0",
+		"@sap-devx/guided-development-types": "0.0.14",
 		"comment-json": "2.1.0",
 		"datauri": "^2.0.0",
 		"lodash": "4.17.21"

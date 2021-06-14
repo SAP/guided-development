@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -117,7 +117,6 @@
 		"lint:fix": "eslint . --ext .ts,.tsx --cache --fix"
 	},
 	"dependencies": {
-		"@sap-devx/app-studio-toolkit-types": "0.0.1",
 		"@sap-devx/webview-rpc": "0.3.1",
 		"@sap-devx/yeoman-ui-types": "0.0.1",
 		"@vscode-logging/logger": "1.2.3",
@@ -132,6 +131,7 @@
 		"ws": "7.4.6"
 	},
 	"devDependencies": {
+		"@sap-devx/app-studio-toolkit-types": "1.0.0",
 		"@types/vscode": "^1.46.0",
 		"@types/chai": "^4.2.9",
 		"@types/fs-extra": "^9.0.11",

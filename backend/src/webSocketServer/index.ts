@@ -10,7 +10,7 @@ import { CollectionType } from "../types";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
 
-import { ActionType, ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
+import { ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 import * as api from "../api";
 
@@ -53,7 +53,7 @@ class GuidedDevelopmentWebSocketServer {
         collections[0].itemIds.push("saposs.vscode-contrib1.new");
 
         const openAction: IExecuteAction = {
-          actionType: ActionType.Execute,
+          actionType: "EXECUTE",
           executeAction: () => {
             console.log("workbench.action.openGlobalSettings");
             return Promise.resolve();
@@ -93,7 +93,7 @@ function createCollections(): IInternalCollection[] {
    * Actions
    */
   const myExecuteAction: IExecuteAction = {
-    actionType: ActionType.Execute,
+    actionType: "EXECUTE",
     executeAction: (params?: any[]) => {
       console.log(`Performing execute action with params ${params}`);
       return Promise.resolve();
@@ -101,17 +101,17 @@ function createCollections(): IInternalCollection[] {
   }
 
   const openViaCommandAction: ICommandAction = {
-    actionType: ActionType.Command,
+    actionType: "COMMAND",
     name: "workbench.action.openGlobalSettings"
   };
 
   const showInfoMessageAction: ICommandAction = {
-    actionType: ActionType.Command,
+    actionType: "COMMAND",
     name: "workbench.action.openGlobalSettings"
   };
 
   const snippet1Action: ISnippetAction = {
-    actionType: ActionType.Snippet,
+    actionType: "SNIPPET",
     contributorId: "SAPOSS.vscode-snippet-food-contrib",
     snippetName: "snippet_1",
     context: { uri: "uri" }

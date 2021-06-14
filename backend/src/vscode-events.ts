@@ -1,7 +1,7 @@
 import { AppEvents } from "./app-events";
 import { Contributors } from './contributors';
 import { ICollection, IItem } from './types';
-import { bas, IAction } from "@sap-devx/app-studio-toolkit-types";
+import { bas, BasAction } from "@sap-devx/app-studio-toolkit-types";
 
 export class VSCodeEvents implements AppEvents {
   basAPI: any;
@@ -23,7 +23,7 @@ export class VSCodeEvents implements AppEvents {
     this.basAPI = basAPI;
   }
 
-  public async performAction(action: IAction): Promise<any> {
+  public async performAction(action: BasAction): Promise<any> {
     this.basAPI?.actions?.performAction(action);
   }
 

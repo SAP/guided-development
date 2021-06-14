@@ -1,7 +1,7 @@
 {
   "name": "@sap-devx/guided-development-types",
   "publisher": "SAPOSS",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "author": "",
   "license": "Apache-2.0",
   "description": "An npm package that includes Guided Development declarations",
@@ -18,7 +18,7 @@
     "prepublishOnly": "npm run prep && npm run copy"
   },
   "devDependencies": {
-    "@sap-devx/app-studio-toolkit-types": "0.0.1",
+    "@sap-devx/app-studio-toolkit-types": "1.0.0",
     "ncp": "^2.0.0"
   }
 }

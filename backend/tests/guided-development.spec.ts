@@ -8,9 +8,9 @@ import { AppEvents } from '../src/app-events';
 import { IMethod, IPromiseCallbacks, IRpc } from "@sap-devx/webview-rpc/out.ext/rpc-common";
 import { IChildLogger } from "@vscode-logging/logger";
 import { fail } from "assert";
-import { IItem, ICollection, CollectionType, IItemExecuteContext, IItemCommandContext, IItemFileContext, IItemSnippetContext } from "../src/types";
+import { IItem, ICollection, CollectionType, IItemExecuteContext, IItemCommandContext, IItemUriContext, IItemSnippetContext } from "../src/types";
 import { IInternalCollection, IInternalItem } from "./Collection";
-import { ActionType, CommandActionParams, ExecuteActionParams, FileActionParams, IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
+import { BasAction, ICommandAction, IExecuteAction, IUriAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 const testVscode = {
     extensions: {
@@ -27,7 +27,7 @@ describe('guidedDevelopment unit test', () => {
     let eventMock: any;
 
     class TestEvents implements AppEvents {
-        public performAction(action: IAction): Promise<any> {
+        public performAction(action: BasAction): Promise<any> {
             return;
         }
         public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
@@ -303,40 +303,40 @@ describe('guidedDevelopment unit test', () => {
 
     describe("performAction", () => {
         class testExecuteItemContext implements IItemExecuteContext {
-            params?: ExecuteActionParams;
+            params?: any[];
             project: string;
         }
         class testCommandItemContext implements IItemExecuteContext {
-            params?: ExecuteActionParams;
+            params?: any[];
             project: string;
         }
         class testSnippetItemContext implements IItemSnippetContext {
             context?: any;
             project: string;
         }
-        class testFileItemContext implements IItemFileContext {
+        class testUriItemContext implements IItemUriContext {
             project: string;
             uri?: vscode.Uri;
         }
         class testExecuteItemAction implements IExecuteAction {
-            executeAction: (params?: ExecuteActionParams) => Thenable<any>;
-            params?: ExecuteActionParams;
-            actionType: ActionType;
+            executeAction: (params?: any[]) => Thenable<any>;
+            params?: any[];
+            actionType: "EXECUTE";
         }
         class testCommandItemAction implements ICommandAction {
             name: string;
-            params?: CommandActionParams;
-            actionType: ActionType;
+            params?: any[];
+            actionType: "COMMAND";
         }
         class testSnippetItemAction implements ISnippetAction {
             contributorId: string;
             snippetName: string;
             context: any;
-            actionType: ActionType;
+            actionType: "SNIPPET";
         }
-        class testFileItemAction implements IFileAction {
-            actionType: ActionType;
-            uri: FileActionParams;
+        class testUriItemAction implements IUriAction {
+            actionType: "URI";
+            uri: vscode.Uri;
         }
 
         it("no context", async () => {
@@ -345,7 +345,7 @@ describe('guidedDevelopment unit test', () => {
                 console.log("action");
                 return Promise.resolve();
             };
-            action.actionType = ActionType.Execute;
+            action.actionType = "EXECUTE";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
@@ -385,7 +385,7 @@ describe('guidedDevelopment unit test', () => {
                 console.log("action");
                 return Promise.resolve();
             };
-            action.actionType = ActionType.Execute;
+            action.actionType = "EXECUTE";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
@@ -420,7 +420,7 @@ describe('guidedDevelopment unit test', () => {
                 console.log("workbench.action.openGlobalSettings");
                 return Promise.resolve();
             };
-            action.actionType = ActionType.Execute;
+            action.actionType = "EXECUTE";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
@@ -457,7 +457,7 @@ describe('guidedDevelopment unit test', () => {
 
             let action = new testCommandItemAction();
             action.params = ["param"];
-            action.actionType = ActionType.Command;
+            action.actionType = "COMMAND";
             action.name = "Open"
 
             const fqid1 = "extName1.extPublisher1.id1";
@@ -490,7 +490,7 @@ describe('guidedDevelopment unit test', () => {
         it("command action - without context", async () => {
             let action = new testCommandItemAction();
             action.params = ["param"];
-            action.actionType = ActionType.Command;
+            action.actionType = "COMMAND";
             action.name = "Open"
 
             const fqid1 = "extName1.extPublisher1.id1";
@@ -530,7 +530,7 @@ describe('guidedDevelopment unit test', () => {
             action.snippetName = "snippet";
             action.contributorId = "contributorId";
             action.context = "context";
-            action.actionType = ActionType.Snippet;
+            action.actionType = "SNIPPET";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
@@ -569,7 +569,7 @@ describe('guidedDevelopment unit test', () => {
             action.snippetName = "snippet";
             action.contributorId = "contributorId";
             action.context = "context";
-            action.actionType = ActionType.Snippet;
+            action.actionType = "SNIPPET";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
@@ -603,14 +603,14 @@ describe('guidedDevelopment unit test', () => {
             await guidedDevelopment["performAction"](fqid1,1, new testSnippetItemContext());
         });
 
-        it("File, with uri as context", async () => {
-            let context: IItemFileContext;
-            context = new testFileItemContext();
+        it("Uri, with uri as context", async () => {
+            let context: IItemUriContext;
+            context = new testUriItemContext();
             context.uri = vscode.Uri.parse("");
             context.project = "project";
 
-            let action = new testFileItemAction();
-            action.actionType = ActionType.File;
+            let action = new testUriItemAction();
+            action.actionType = "URI";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
@@ -639,13 +639,13 @@ describe('guidedDevelopment unit test', () => {
             await guidedDevelopment["performAction"](fqid1,1, context);
         });
 
-        it("File, without uri", async () => {
-            let context: IItemFileContext;
-            context = new testFileItemContext();
+        it("Uri, without uri as context", async () => {
+            let context: IItemUriContext;
+            context = new testUriItemContext();
             context.project = "project";
 
-            let action = new testFileItemAction();
-            action.actionType = ActionType.File;
+            let action = new testUriItemAction();
+            action.actionType = "URI";
 
             const fqid1 = "extName1.extPublisher1.id1";
             const item1: IInternalItem = {
