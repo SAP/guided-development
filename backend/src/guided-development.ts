@@ -51,11 +51,31 @@ export class GuidedDevelopment {
             if (subItem.fqid === itemFqid) {
               return subItem;
             }  
+            else if( subItem.items ){
+              const deepSubitem =  this.getDeepSubitem(itemFqid, subItem);
+              if(deepSubitem){
+                return deepSubitem;
+              }
+            }
           }
         }
       }
     }
     // TODO - console log: item does not exist
+  }
+
+  private getDeepSubitem( itemFqId: string, item:IInternalItem ): IInternalItem{
+    
+    if( item.items ){
+      for (const subItem of item.items) {
+        if (subItem.fqid === itemFqId) {
+          return subItem;
+        } else if(subItem.items){
+            return this.getDeepSubitem(itemFqId, subItem);
+        } 
+      }
+    }
+
   }
 
   private async performAction(itemFqid: string, index: number, context?: ItemContext) {
