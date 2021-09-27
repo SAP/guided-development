@@ -16,8 +16,7 @@
 		"Other"
 	],
 	"main": "./out/extension.js",
-	"activationEvents": [
-	],
+	"activationEvents": [],
 	"BASContributes": {
 		"guided-development": {}
 	},
@@ -38,6 +37,6 @@
 	],
 	"dependencies": {
 		"@sap-devx/app-studio-toolkit-types": "1.0.0",
-		"@sap-devx/guided-development-types": "0.0.14"
+		"@sap-devx/guided-development-types": "0.0.13"
 	}
 }

@@ -16,7 +16,7 @@ export async function activate(context: vscode.ExtensionContext) {
      * ```js
      * "BASContributes": {
      *    "guided-development": {}
-	 * }
+     * }
      * ```
      * 
      * This indicates to the guided-development manager extension to activate your extension
@@ -30,9 +30,17 @@ export async function activate(context: vscode.ExtensionContext) {
      * [simple](https://code.visualstudio.com/docs/getstarted/keybindings#_default-keyboard-shortcuts) or
      * [extension-provided commands](https://code.visualstudio.com/api/references/vscode-api#commands)).
      */
-    const myAction: ICommandAction = new basAPI.actions.CommandAction();
-    myAction.name = "workbench.action.showCommands";
-    myAction.params = ["/tmp/x"];
+    const searchAction: ICommandAction = {
+        actionType: "COMMAND",
+        name: "workbench.extensions.search",
+        params: ["SAP"]
+    };
+
+    const gitAction: ICommandAction = {
+        actionType: "COMMAND",
+        name: "workbench.action.showCommands",
+        params: ["git"]
+    };
 
     const itemId: string = "1";
     const myItem: IItem = {
@@ -41,8 +49,12 @@ export async function activate(context: vscode.ExtensionContext) {
         description: "This is an example of a simple item.",
         labels: [],
         action1: {
-            name: "Execute a Command",
-            action: myAction
+            name: "Search for SAP Extensions",
+            action: searchAction
+        },
+        action2: {
+            name: "Show Git Commands",
+            action: gitAction
         }
     }
 
@@ -55,7 +67,7 @@ export async function activate(context: vscode.ExtensionContext) {
     const myCollection: ICollection = {
         id: "a",
         title: "Simple Collection",
-        description: "This is an example of a simple collection.",
+        description: "This is an example of a simple collection with 2 actions.",
         type: CollectionType.Extension,
         itemIds: [`${EXT_ID}.${itemId}`]
     }
@@ -65,6 +77,6 @@ export async function activate(context: vscode.ExtensionContext) {
      * collections and items.
      */
     basAPI.getExtensionAPI<ManagerAPI>("SAPOSS.guided-development").then((managerAPI) => {
-        managerAPI.setData(EXT_ID, [myCollection], [myItem]);        
+        managerAPI.setData(EXT_ID, [myCollection], [myItem]);
     });
 }
