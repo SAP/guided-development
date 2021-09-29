@@ -38,8 +38,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
     const gitAction: ICommandAction = {
         actionType: "COMMAND",
-        name: "workbench.action.showCommands",
-        params: ["git"]
+        name: "workbench.action.showCommands"
     };
 
     const itemId: string = "1";
@@ -53,7 +52,7 @@ export async function activate(context: vscode.ExtensionContext) {
             action: searchAction
         },
         action2: {
-            name: "Show Git Commands",
+            name: "Show Commands",
             action: gitAction
         }
     }
