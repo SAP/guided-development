@@ -128,10 +128,10 @@
 		"object-hash": "2.2.0",
 		"strip-ansi": "^6.0.0",
 		"titleize": "^2.1.0",
-		"ws": "7.4.6"
+		"ws": "7.4.6",
+		"@sap-devx/app-studio-toolkit-types": "1.2.1"
 	},
 	"devDependencies": {
-		"@sap-devx/app-studio-toolkit-types": "1.0.0",
 		"@types/vscode": "^1.46.0",
 		"@types/chai": "^4.2.9",
 		"@types/fs-extra": "^9.0.11",

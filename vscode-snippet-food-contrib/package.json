@@ -39,7 +39,7 @@
 	"dependencies": {
 		"@sap-devx/code-snippet-types": "1.1.3",
 		"@sap-devx/guided-development-types": "0.0.14",
-		"@sap-devx/app-studio-toolkit-types": "1.2.0",
+		"@sap-devx/app-studio-toolkit-types": "1.2.1",
 		"comment-json": "2.1.0",
 		"datauri": "^2.0.0",
 		"fs-extra": "7.0.1",
