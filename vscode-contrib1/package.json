@@ -29,8 +29,8 @@
 		"package": "vsce package ."
 	},
 	"dependencies": {
-		"@sap-devx/app-studio-toolkit-types": "1.0.0",
-		"@sap-devx/guided-development-types": "0.0.14",
+		"@sap-devx/app-studio-toolkit-types": "1.2.0",
+		"@sap-devx/guided-development-types": "0.0.13",
 		"comment-json": "2.1.0",
 		"datauri": "^2.0.0",
 		"lodash": "4.17.21"
