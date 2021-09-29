@@ -89,7 +89,7 @@ const mockBasAPI: typeof bas = {
         return Promise.resolve(undefined);
     },
     getAction: (id: string) => undefined,
-    getParameter: (key: string) => undefined,
+
     performAction: mockPerformAction,
     actions: {
         performAction: mockPerformAction,
@@ -97,7 +97,11 @@ const mockBasAPI: typeof bas = {
         SnippetAction: MockSnippetAction,
         CommandAction: MockCommandAction,
         FileAction: MockFileAction
-    }
+    },
+    isLCAPEnabled: function (): Promise<boolean> {
+        return Promise.resolve(true);
+    },
+    workspaceAPI: undefined
 }
 
 const mockBasAPINoAction: typeof bas = {
@@ -105,9 +109,12 @@ const mockBasAPINoAction: typeof bas = {
         return Promise.resolve(undefined);
     },
     getAction: (id: string) => undefined,
-    getParameter: (key: string) => undefined,
-    performAction: <T = void>(action: BasAction, options?: { schedule?: boolean }) => undefined,
-    actions: undefined
+    performAction: <T = void>(action: BasAction, options?: { schedule?: boolean; }) => undefined,
+    actions: undefined,
+    isLCAPEnabled: function (): Promise<boolean> {
+        return Promise.resolve(true);
+    },
+    workspaceAPI: undefined
 }
 
 describe('vscode-events unit test', () => {
