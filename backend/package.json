@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.1.4",
+	"version": "0.1.5",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -55,7 +55,7 @@
 			"commandPalette": [
 				{
 					"command": "loadGuidedDevelopment",
-					"when": "false"
+					"when": "true"
 				},
 				{
 					"command": "guidedDevelopment.toggleOutput",
