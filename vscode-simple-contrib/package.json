@@ -24,13 +24,13 @@
 		"vscode:prepublish": "npm run compile",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"package": "vsce package ."
+		"package": "vsce package"
 	},
 	"devDependencies": {
 		"@types/node": "^12.11.7",
 		"@types/vscode": "^1.40.0",
 		"typescript": "^3.9.7",
-		"vsce": "^1.69.0"
+		"vsce": "^1.100.1"
 	},
 	"extensionDependencies": [
 		"SAPOSS.app-studio-toolkit"
