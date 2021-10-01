@@ -13,6 +13,9 @@ let guidedDevelopmentPanel: GuidedDevelopmentPanel;
 
 export async function activate(context: vscode.ExtensionContext) {
 	extContext = context;
+	
+	const isInVscode = _.isEmpty(_.get(process, "env.WS_BASE_URL"));
+	await vscode.commands.executeCommand("setContext", "isInVscode", isInVscode);
 
 	try {
 		createExtensionLoggerAndSubscribeToLogSettingsChanges(context);
