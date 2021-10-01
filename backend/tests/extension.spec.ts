@@ -73,23 +73,23 @@ describe('extension unit test', () => {
     });
 
     describe('activate', () => {
-        it("commands registration", () => {
+        it("commands registration", async () => {
             // contributorsMock.expects("getContributors");
             loggerWrapperMock.expects("createExtensionLoggerAndSubscribeToLogSettingsChanges");
             loggerWrapperMock.expects("getLogger").once();
             const res: typeof bas = eventMock.expects("getExtension").withExactArgs("SAPOSS.app-studio-toolkit")?.exports;
             vscodeEventMock.expects("setBasAPI").withExactArgs(res);
-            extension.activate(testContext);
+            await extension.activate(testContext);
             expect(_.size(_.keys(oRegisteredCommands))).to.be.equal(2);
             expect( _.get(oRegisteredCommands, "loadGuidedDevelopment")).to.be.not.undefined;
             expect(_.get(oRegisteredCommands, "guidedDevelopment.toggleOutput")).to.be.not.undefined;
         });
 
-        it("logger failure on extenion activation", () => {
+        it("logger failure on extenion activation", async () => {
             const consoleMock = sandbox.mock(console);
             loggerWrapperMock.expects("createExtensionLoggerAndSubscribeToLogSettingsChanges").throws(new Error("activation error"));
             consoleMock.expects("error").withExactArgs('Extension activation failed due to Logger configuration failure:', "activation error");
-            extension.activate(null);
+            await extension.activate(null);
         });
     });
 
