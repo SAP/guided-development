@@ -31,9 +31,7 @@
 		"sap"
 	],
 	"activationEvents": [
-		"*",
-		"onCommand:loadGuidedDevelopment",
-		"onWebviewPanel:guidedDevelopment"
+		"*"
 	],
 	"main": "./dist/extension",
 	"contributes": {
