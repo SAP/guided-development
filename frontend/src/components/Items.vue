@@ -141,12 +141,7 @@ export default {
 .v-expansion-panel-header {
   text-transform: none;
 }
-.v-expansion-panel--active>.itemColor {
-   background-color: var(--vscode-editorHoverWidget-statusBarBackground, #2c2c2d) !important;
-}
-.v-expansion-panel--active>.subItemColor {
-  background-color: var(--vscode-editorHoverWidget-background, #252526) !important;
-}
+
 .v-expansion-panel-header--active:before {
   opacity: 0 !important;
 }
@@ -155,9 +150,23 @@ export default {
   padding-left: 28px;
   padding-bottom: 8px;
 }
-.itemColor, .subItemColor {
-  background-color: var(--vscode-editor-background, #1e1e1e) !important;
+
+#items-component .v-expansion-panel {
+    margin-top: 3px;
 }
+
+.itemColor {
+  background-color: var(--vscode-sideBar-background, #1e1e1e);
+}
+
+.itemColor .subItemColor {
+  background-color: var(--vscode-activityBar-background, #1e1e1e);
+}
+
+.itemColor .v-btn {
+  margin-right: 0.5rem;
+}
+
 .v-expansion-panel-content__wrap {
   color: var(--vscode-foreground, #cccccc);
   text-transform: none;
