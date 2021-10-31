@@ -129,7 +129,7 @@ jobs: # a collection of steps
  
   deploy:
     docker:
-      - image: cimg/golang:1.13.15
+      - image: cimg/go:1.13
     steps:
       - attach_workspace:
           at: ./dist
