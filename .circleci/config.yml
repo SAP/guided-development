@@ -126,10 +126,10 @@ jobs: # a collection of steps
             - guided-development-*
       - store_test_results: # for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
           path: test-results.xml
-  
+ 
   deploy:
     docker:
-      - image: cimg/golang:1.13
+      - image: cimg/golang:1.13.15
     steps:
       - attach_workspace:
           at: ./dist
