@@ -143,7 +143,7 @@
 		"@typescript-eslint/parser": "^2.30.0",
 		"bufferutil": "^4.0.1",
 		"chai": "^4.2.0",
-		"copy-webpack-plugin": "^5.0.5",
+		"copy-webpack-plugin": "^9.0.1",
 		"eslint": "^7.21.0",
 		"eslint-config-prettier": "^8.1.0",
 		"mocha": "^6.2.2",
