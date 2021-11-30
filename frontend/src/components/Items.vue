@@ -4,7 +4,7 @@
       <template v-for="(contextualItem, index) in contextualItems">
         <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index">
           <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
-              <a style="font-size:14px">{{contextualItem.item.title}}</a>
+              <a class="expansion-panel-title">{{contextualItem.item.title}}</a>
               <div hidden>Item ID: {{contextualItem.item.fqid}}</div>
               <div hidden v-if="contextualItem.context">Project: {{contextualItem.context.project}}</div>
           </v-expansion-panel-header>
@@ -145,8 +145,9 @@ export default {
 .v-expansion-panel-header--active:before {
   opacity: 0 !important;
 }
-.v-application a {
-  color: var(--vscode-foreground, #cccccc) !important;
+.v-application .expansion-panel-title {
+  font-size: 14px;
+  color: var(--vscode-foreground, #cccccc) ;
   padding-left: 28px;
   padding-bottom: 8px;
 }
