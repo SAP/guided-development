@@ -11,18 +11,18 @@ describe('Items.vue', () => {
     });
 
     test('component name', () => {
-        wrapper = initComponent(Items, {items: [], filter: {}, bColorFlag: true}, true)
+        wrapper = initComponent(Items, {items: [], filter: {}, bColorFlag: true, mode: 'single'}, true)
         expect(wrapper.name()).toBe('Items')
     })
 
     test('component props', () => {
-        wrapper = initComponent(Items, {items: [], filter: {}, bColorFlag: true}, true)
-        expect(_.keys(wrapper.props())).toHaveLength(3)
+        wrapper = initComponent(Items, {items: [], filter: {}, bColorFlag: true, mode: 'single'}, true)
+        expect(_.keys(wrapper.props())).toHaveLength(4)
     })
 
     describe('onAction - method', () => {
         test('no items', async () => {
-            wrapper = initComponent(Items, {items: [], filter: new Map(), bColorFlag: true}, true)
+            wrapper = initComponent(Items, {items: [], filter: new Map(), bColorFlag: true, mode: 'single'}, true)
             const contextualItem = {
                 item: {
                     fqid: "fqid"
@@ -51,7 +51,7 @@ describe('Items.vue', () => {
                     { "Project Type": "create-grocery-list" }
                 ]
             };
-            wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true}, true)
+            wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true, mode: 'single'}, true)
             let contextualItem = wrapper.vm.contextualItem;
             wrapper.vm.onAction(contextualItem, 1);
             expect(wrapper.emitted().action).toBeTruthy();
@@ -73,7 +73,7 @@ describe('Items.vue', () => {
                     { "Project Type": "create-grocery-list" }
                 ]
             };
-            wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true}, true)
+            wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true, mode: 'single'}, true)
         
             const res = wrapper.vm.isFiltered("itemId");
             expect(res).toBe(false);
@@ -92,10 +92,49 @@ describe('Items.vue', () => {
             let filter = new Map();
             filter.set("ProjectType", "create2")
 
-            wrapper = initComponent(Items, {items: [item1], filter: filter, bColorFlag: true}, true)
+            wrapper = initComponent(Items, {items: [item1], filter: filter, bColorFlag: true, mode: 'single'}, true)
 
             const res = wrapper.vm.isFiltered("fqid1");
             expect(res).toBe(false);
         })
     })
+
+    describe('onClickPanel - method', () => {
+      test('no items', async () => {
+          wrapper = initComponent(Items, {items: [], filter: new Map(), bColorFlag: true, mode: 'single'}, true)
+          const contextualItem = {
+              item: {
+                  fqid: "fqid"
+              },
+              context: "context"
+              }
+          wrapper.vm.onClickPanel(contextualItem, 0);
+          expect(wrapper.emitted().clickPanel).toBeTruthy();
+      })
+
+      test('item exists', async () => {
+          let item = {
+              id: "id1",
+              fqid: "fqid",
+              title: "title1",
+              description: "description1",
+              action1:  {
+                  name: "name",
+                  action: "action",
+                  contexts: [{
+                      project: "myProj",
+                      context: {}
+                  }]
+              },
+              labels: [
+                  { "Project Type": "create-grocery-list" }
+              ]
+          };
+          wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true, mode: 'single'}, true)
+          let contextualItem = wrapper.vm.contextualItem;
+          wrapper.vm.onAction(contextualItem, 1);
+          expect(wrapper.emitted().action).toBeTruthy();
+      })
+  })
+
 })

@@ -6,17 +6,18 @@
       :height="64"
       :width="64"
       :color="isLoadingColor"
-      background-color="transparent" 
+      background-color="transparent"
       loader="spinner"
     ></loading>
     <div>
-      <v-card-title>{{messages.title}}</v-card-title>
-      <v-card-subtitle>{{messages.description}}</v-card-subtitle>
+      <v-card-title>{{ messages.title }}</v-card-title>
+      <v-card-subtitle>{{ messages.description }}</v-card-subtitle>
     </div>
     <Collections
       v-if="collections"
       :collections="collections"
       @action="onAction"
+      @clickPanel="onClickPanel"
     />
   </v-app>
 </template>
@@ -26,21 +27,19 @@ import Loading from "vue-loading-overlay";
 import Collections from "./components/Collections.vue";
 import { RpcBrowser } from "@sap-devx/webview-rpc/out.browser/rpc-browser";
 import { RpcBrowserWebSockets } from "@sap-devx/webview-rpc/out.browser/rpc-browser-ws";
-
 function initialState() {
   return {
     collections: [],
     rpc: Object,
     messages: {},
-    showBusyIndicator: false,
+    showBusyIndicator: false
   };
 }
-
 export default {
   name: "App",
   components: {
     Collections,
-    Loading
+    Loading,
   },
   data() {
     return initialState();
@@ -54,15 +53,66 @@ export default {
       );
     },
   },
-  watch: {
-  },
+  watch: {},
   methods: {
     async onAction(contextualItem, index) {
       const itemFqid = contextualItem?.item?.fqid;
-      await this.rpc.invoke("performAction", [itemFqid, index, contextualItem.context]);
+      await this.rpc.invoke("performAction", [
+        itemFqid,
+        index,
+        contextualItem.context,
+      ]);
     },
+  getItem(itemFqid) {
+    for (const collection of this.collections) {
+      for (const item of collection.items) {
+        if (item.fqid === itemFqid) {
+          return item;
+        }
+        if (item.items) {
+          for (const subItem of item.items) {
+            if (subItem.fqid === itemFqid) {
+              return subItem;
+            }  
+            else if( subItem.items ){
+              const deepSubitem =  this.getDeepSubitem(itemFqid, subItem);
+              if(deepSubitem){
+                return deepSubitem;
+              }
+            }
+          }
+        }
+      }
+    }
+    // TODO - console log: item does not exist
+  },
+ getDeepSubitem( itemFqId, item ){
+    if( item.items ){
+      for (const subItem of item.items) {
+        if (subItem.fqid === itemFqId) {
+          return subItem;
+        } else if(subItem.items){
+            return this.getDeepSubitem(itemFqId, subItem);
+        } 
+      }
+    }
+  },
+  onClickPanel() {
+    //to do: change state
+ },
     async showCollections(collections) {
       this.collections = collections;
+    },
+    changeItemsState(changedItems) {
+      for(let i=0; i < changedItems.length; i++){
+        const tarItem = this.getItem(changedItems[i].fqid);
+        const itement = changedItems[i];
+        const changedItemC = { ...itement};
+        delete changedItemC.fqid;
+        Object.keys(changedItemC).forEach((key) => {
+          tarItem[key] = changedItemC[key];
+        });
+      }
     },
     isInVsCode() {
       return typeof acquireVsCodeApi !== "undefined";
@@ -84,18 +134,15 @@ export default {
       }
     },
     initRpc() {
-      const functions = [
-        "showCollections",
-      ];
+      const functions = ["showCollections", "changeItemsState"];
       for (const funcName of functions) {
         this.rpc.registerMethod({
           func: this[funcName],
           thisArg: this,
-          name: funcName
+          name: funcName,
         });
       }
-
-      this.rpcIsReady(); 
+      this.rpcIsReady();
     },
     async rpcIsReady() {
       await this.setState();
@@ -105,12 +152,11 @@ export default {
       const dataObj = initialState();
       dataObj.rpc = this.rpc;
       Object.assign(this.$data, dataObj);
-
       this.rpcIsReady();
     },
     async setState() {
       this.messages = await this.rpc.invoke("getState");
-    }
+    },
   },
   created() {
     this.setupRpc();
@@ -118,7 +164,6 @@ export default {
 };
 </script>
 <style scoped>
-
 @import "./../node_modules/vue-loading-overlay/dist/vue-loading.css";
 .left-col {
   background-color: var(--vscode-editorWidget-background, #252526);
@@ -134,19 +179,19 @@ export default {
   padding: 0 !important;
 }
 .bottom-buttons-col {
-  border-top: 2px solid  var(--vscode-editorWidget-background, #252526);
+  border-top: 2px solid var(--vscode-editorWidget-background, #252526);
   padding-right: 25px;
 }
 .bottom-buttons-col > .v-btn:not(:last-child) {
-    margin-right: 10px !important;
+  margin-right: 10px !important;
 }
 .v-card__title {
   color: var(--vscode-foreground, #cccccc);
-  margin-bottom:16px;
-  font-size:32px;
+  margin-bottom: 16px;
+  font-size: 32px;
 }
 .v-card__subtitle {
-  margin-left:4px;
+  margin-left: 4px;
 }
 .vld-parent {
   overflow-y: auto;

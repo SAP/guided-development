@@ -22,7 +22,9 @@
             :items="collection.items"
             :filter="filter"
             :bColorFlag="true"
+            :mode="collection.mode"
             @action="onAction"
+            @clickPanel="onClickPanel"
           />
         </div>
       </v-col>
@@ -68,6 +70,9 @@ export default {
       this.filter.set(labelObj.key, labelObj.value);
       // cloning is required to trigger watch in Items.vue:
       this.filter = new Map(this.filter);
+    },
+    onClickPanel(contextualItem, index) {
+      this.$emit("clickPanel", contextualItem, index);
     },
     /**
      * This method is required for the filter by label feature:

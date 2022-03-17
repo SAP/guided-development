@@ -7,6 +7,7 @@ export interface ICollection {
     description: string;
     type: CollectionType;
     itemIds: Array<string>;
+    mode?: 'single' | 'multiple';
 }
 
 export enum CollectionType {
@@ -82,6 +83,8 @@ export interface IItem {
     action1?: ItemAction;
     action2?: ItemAction;
     itemIds?: Array<string>;
+    activeState?: boolean;
+    readState?: ReadState;
     // not using Map because it does not serialize using JSON
     labels: {[key:string]:string}[];
 }
@@ -90,6 +93,14 @@ export interface IImage {
     image: string;
     note: string;
 }
+
+
+export enum ReadState {
+    READ="READ",
+    UNREAD="UNREAD",
+    WAIT="WAIT"
+}
+
 
 export type ManagerAPI = {
     setData: (extensionId: string, collections: ICollection[], items: IItem[]) => void;

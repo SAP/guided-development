@@ -33,6 +33,7 @@ describe('App.vue', () => {
     wrapper.vm.initRpc();
     
     expect(registerMethodSpy).toHaveBeenCalledWith({func: wrapper.vm.showCollections, thisArg: wrapper.vm, name: 'showCollections'})
+    expect(registerMethodSpy).toHaveBeenCalledWith({func: wrapper.vm.changeItemsState, thisArg: wrapper.vm, name: 'changeItemsState'})
     expect(invokeSpy).toHaveBeenCalledWith("getState")
 
     invokeSpy.mockRestore()
@@ -57,6 +58,11 @@ describe('App.vue', () => {
     wrapper = initComponent(App)
     wrapper.vm.showCollections("collection");
     expect(wrapper.vm.collections).toEqual("collection");
+  })
+
+  it('changeItemsState - method', () => {
+    wrapper = initComponent(App)
+    wrapper.vm.changeItemsState([{fqid:'fqid'}]);
   })
 
   it('onAction - method', () => {
