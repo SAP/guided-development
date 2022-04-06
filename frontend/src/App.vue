@@ -6,7 +6,7 @@
       :height="64"
       :width="64"
       :color="isLoadingColor"
-      background-color="transparent" 
+      background-color="transparent"
       loader="spinner"
     ></loading>
     <div>
@@ -40,7 +40,7 @@ export default {
   name: "App",
   components: {
     Collections,
-    Loading
+    Loading,
   },
   data() {
     return initialState();
@@ -61,9 +61,29 @@ export default {
       const itemFqid = contextualItem?.item?.fqid;
       await this.rpc.invoke("performAction", [itemFqid, index, contextualItem.context]);
     },
+
+    getItemByFqid(fqid) {
+      let items = [];
+      this.collections.forEach(col => {
+        items = items.concat(col.items);
+      });
+      const flatten = [];
+      let itemnode;
+      while (items.length > 0) {
+        itemnode = items.shift();
+        flatten.push(itemnode);
+        if (!itemnode.items) continue;
+        itemnode.items.forEach(item => {
+          items.push(item);
+        });
+      }
+      return flatten.find(item => item.fqid === fqid);
+    },
+
     async showCollections(collections) {
       this.collections = collections;
     },
+
     isInVsCode() {
       return typeof acquireVsCodeApi !== "undefined";
     },
@@ -83,10 +103,17 @@ export default {
         };
       }
     },
+    changeItemsState(changedItems) {
+      changedItems.forEach(itement => {
+        const tarItem = this.getItemByFqid(itement.fqid);
+        if (!tarItem) {
+          return;
+        }
+        Object.assign(tarItem, itement);
+      });
+    },
     initRpc() {
-      const functions = [
-        "showCollections",
-      ];
+      const functions = ["showCollections", "changeItemsState"];
       for (const funcName of functions) {
         this.rpc.registerMethod({
           func: this[funcName],
@@ -95,7 +122,7 @@ export default {
         });
       }
 
-      this.rpcIsReady(); 
+      this.rpcIsReady();
     },
     async rpcIsReady() {
       await this.setState();
@@ -118,7 +145,6 @@ export default {
 };
 </script>
 <style scoped>
-
 @import "./../node_modules/vue-loading-overlay/dist/vue-loading.css";
 .left-col {
   background-color: var(--vscode-editorWidget-background, #252526);
@@ -134,7 +160,7 @@ export default {
   padding: 0 !important;
 }
 .bottom-buttons-col {
-  border-top: 2px solid  var(--vscode-editorWidget-background, #252526);
+  border-top: 2px solid var(--vscode-editorWidget-background, #252526);
   padding-right: 25px;
 }
 .bottom-buttons-col > .v-btn:not(:last-child) {
@@ -142,11 +168,11 @@ export default {
 }
 .v-card__title {
   color: var(--vscode-foreground, #cccccc);
-  margin-bottom:16px;
-  font-size:32px;
+  margin-bottom: 16px;
+  font-size: 32px;
 }
 .v-card__subtitle {
-  margin-left:4px;
+  margin-left: 4px;
 }
 .vld-parent {
   overflow-y: auto;
