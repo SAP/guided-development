@@ -10,14 +10,13 @@
       loader="spinner"
     ></loading>
     <div>
-      <v-card-title>{{ messages.title }}</v-card-title>
-      <v-card-subtitle>{{ messages.description }}</v-card-subtitle>
+      <v-card-title>{{messages.title}}</v-card-title>
+      <v-card-subtitle>{{messages.description}}</v-card-subtitle>
     </div>
     <Collections
       v-if="collections"
       :collections="collections"
       @action="onAction"
-      @clickPanel="onClickPanel"
     />
   </v-app>
 </template>
@@ -27,14 +26,16 @@ import Loading from "vue-loading-overlay";
 import Collections from "./components/Collections.vue";
 import { RpcBrowser } from "@sap-devx/webview-rpc/out.browser/rpc-browser";
 import { RpcBrowserWebSockets } from "@sap-devx/webview-rpc/out.browser/rpc-browser-ws";
+
 function initialState() {
   return {
     collections: [],
     rpc: Object,
     messages: {},
-    showBusyIndicator: false
+    showBusyIndicator: false,
   };
 }
+
 export default {
   name: "App",
   components: {
@@ -53,7 +54,8 @@ export default {
       );
     },
   },
-  watch: {},
+  watch: {
+  },
   methods: {
     async onAction(contextualItem, index) {
       const itemFqid = contextualItem?.item?.fqid;
@@ -63,57 +65,29 @@ export default {
         contextualItem.context,
       ]);
     },
-  getItem(itemFqid) {
-    for (const collection of this.collections) {
-      for (const item of collection.items) {
-        if (item.fqid === itemFqid) {
-          return item;
-        }
-        if (item.items) {
-          for (const subItem of item.items) {
-            if (subItem.fqid === itemFqid) {
-              return subItem;
-            }  
-            else if( subItem.items ){
-              const deepSubitem =  this.getDeepSubitem(itemFqid, subItem);
-              if(deepSubitem){
-                return deepSubitem;
-              }
-            }
-          }
-        }
+
+    getItemByFqid(fqid) {
+      let items = [];
+      this.collections.forEach(col => {
+        items = items.concat(col.items);
+      });
+      const flatten = [];
+      let itemnode;
+      while (items.length > 0) {
+        itemnode = items.shift();
+        flatten.push(itemnode);
+        if (!itemnode.items) continue;
+        itemnode.items.forEach(item => {
+          items.push(item);
+        });
       }
-    }
-    // TODO - console log: item does not exist
-  },
- getDeepSubitem( itemFqId, item ){
-    if( item.items ){
-      for (const subItem of item.items) {
-        if (subItem.fqid === itemFqId) {
-          return subItem;
-        } else if(subItem.items){
-            return this.getDeepSubitem(itemFqId, subItem);
-        } 
-      }
-    }
-  },
-  onClickPanel() {
-    //to do: change state
- },
+      return flatten.find(item => item.fqid === fqid);
+    },
+
     async showCollections(collections) {
       this.collections = collections;
     },
-    changeItemsState(changedItems) {
-      for(let i=0; i < changedItems.length; i++){
-        const tarItem = this.getItem(changedItems[i].fqid);
-        const itement = changedItems[i];
-        const changedItemC = { ...itement};
-        delete changedItemC.fqid;
-        Object.keys(changedItemC).forEach((key) => {
-          tarItem[key] = changedItemC[key];
-        });
-      }
-    },
+
     isInVsCode() {
       return typeof acquireVsCodeApi !== "undefined";
     },
@@ -133,6 +107,15 @@ export default {
         };
       }
     },
+    changeItemsState(changedItems) {
+      changedItems.forEach(itement => {
+        const tarItem = this.getItemByFqid(itement.fqid);
+        if (!tarItem) {
+          return;
+        }
+        Object.assign(tarItem, itement);
+      });
+    },
     initRpc() {
       const functions = ["showCollections", "changeItemsState"];
       for (const funcName of functions) {
@@ -142,6 +125,7 @@ export default {
           name: funcName,
         });
       }
+
       this.rpcIsReady();
     },
     async rpcIsReady() {
@@ -152,6 +136,7 @@ export default {
       const dataObj = initialState();
       dataObj.rpc = this.rpc;
       Object.assign(this.$data, dataObj);
+
       this.rpcIsReady();
     },
     async setState() {
@@ -183,7 +168,7 @@ export default {
   padding-right: 25px;
 }
 .bottom-buttons-col > .v-btn:not(:last-child) {
-  margin-right: 10px !important;
+    margin-right: 10px !important;
 }
 .v-card__title {
   color: var(--vscode-foreground, #cccccc);
