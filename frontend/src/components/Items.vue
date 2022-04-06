@@ -1,6 +1,6 @@
 <template>
   <div id="items-component">
-    <v-expansion-panels dark focusable :multiple="mode !== 'single' ? true : false" v-model="expandedPanels">
+    <v-expansion-panels dark focusable :multiple="mode === 'single'" v-model="expandedPanels">
       <template v-for="(contextualItem, index) in contextualItems">
         <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index" v-bind:class="getClass(contextualItem.item)">
           <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}"  @click.stop="onClickPanel(contextualItem, index)">
@@ -78,9 +78,6 @@ export default {
     isFiltered(itemFqid) {
       return this.filteredItems.has(itemFqid);
     },
-   onClickPanel(contextualItem, index) {
-      this.$emit("clickPanel", contextualItem, index);
-    },
     getClass(item) {
       return {
         readItemStyle: item.readState === "READ",
@@ -93,8 +90,7 @@ export default {
       const result = [];
       for (const item of this.items) {
         if (item.action1) {
-          if (item.action1.contexts) {
-            // multiple contexts -- duplicate item
+          if (item.action1.contexts) { // multiple contexts -- duplicate item
             for (const context of item.action1.contexts) {
               result.push({ item, context });
             }
@@ -142,38 +138,7 @@ export default {
       },
       immediate: true,
     },
-    items: {
-      handler: function () {
-        if (
-          this.items.some((item) => item.hasOwnProperty("activeState")) &&
-          this.mode === 'single'
-        ) {
-          let activeItem = null;
-          for (let i = 0; i < this.items.length; i++) {
-            const item = this.items[i];
-            if (item.activeState) {
-              activeItem = i;
-              break;
-            }
-          }
-          this.expandedPanels = activeItem;
-        }
-      },
-      deep: true,
-      immediate: true,
-    },
-  },
-  updated() {
-    if (
-      this.items.some((item) => item.hasOwnProperty("activeState")) &&
-      this.mode === 'single'
-    ) {
-      this.items.forEach((i) => (i.activeState = false));
-      if (typeof this.expandedPanels === "number") {
-        this.items[this.expandedPanels].activeState = true;
-      }
-    }
-  },
+  }
 };
 </script>
 <style>
