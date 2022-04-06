@@ -59,11 +59,7 @@ export default {
   methods: {
     async onAction(contextualItem, index) {
       const itemFqid = contextualItem?.item?.fqid;
-      await this.rpc.invoke("performAction", [
-        itemFqid,
-        index,
-        contextualItem.context,
-      ]);
+      await this.rpc.invoke("performAction", [itemFqid, index, contextualItem.context]);
     },
 
     getItemByFqid(fqid) {
@@ -122,7 +118,7 @@ export default {
         this.rpc.registerMethod({
           func: this[funcName],
           thisArg: this,
-          name: funcName,
+          name: funcName
         });
       }
 
@@ -141,7 +137,7 @@ export default {
     },
     async setState() {
       this.messages = await this.rpc.invoke("getState");
-    },
+    }
   },
   created() {
     this.setupRpc();
