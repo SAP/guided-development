@@ -32,12 +32,11 @@
               <v-row>
                 <v-col style="margin-left: 20px">
                   <Items
-                    v-if="contextualItem.item.items"
-                    :items="contextualItem.item.items"
-                    :filter="filter"
-                    :bColorFlag="!bColorFlag"
-                    :mode="mode"
-                    @action="onAction"
+                      v-if="contextualItem.item.items"
+                      :items="contextualItem.item.items"
+                      :filter="filter"
+                      :bColorFlag="!bColorFlag"
+                      @action="onAction"
                   />
                   <v-list-item-subtitle class="py-1" v-if="contextualItem.item.action1 && contextualItem.item.action1.title && !contextualItem.item.items">{{contextualItem.item.action1.title}}</v-list-item-subtitle>
                   <v-btn small v-if="contextualItem.item.action1 && !contextualItem.item.items" @click="onAction(contextualItem, 1)">{{contextualItem.item.action1.name}}</v-btn>
