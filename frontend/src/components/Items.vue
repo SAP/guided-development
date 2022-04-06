@@ -3,7 +3,7 @@
     <v-expansion-panels dark focusable :multiple="mode === 'single'" v-model="expandedPanels">
       <template v-for="(contextualItem, index) in contextualItems">
         <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index" v-bind:class="getClass(contextualItem.item)">
-          <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}"  @click.stop="onClickPanel(contextualItem, index)">
+          <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
               <a class="expansion-panel-title">{{contextualItem.item.title}}</a>
               <div hidden>Item ID: {{contextualItem.item.fqid}}</div>
               <div hidden v-if="contextualItem.context">Project: {{contextualItem.context.project}}</div>
@@ -38,7 +38,6 @@
                     :bColorFlag="!bColorFlag"
                     :mode="mode"
                     @action="onAction"
-                    @clickPanel="onClickPanel"
                   />
                   <v-list-item-subtitle class="py-1" v-if="contextualItem.item.action1 && contextualItem.item.action1.title && !contextualItem.item.items">{{contextualItem.item.action1.title}}</v-list-item-subtitle>
                   <v-btn small v-if="contextualItem.item.action1 && !contextualItem.item.items" @click="onAction(contextualItem, 1)">{{contextualItem.item.action1.name}}</v-btn>
