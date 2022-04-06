@@ -1,8 +1,8 @@
 <template>
   <div id="items-component">
-    <v-expansion-panels dark focusable multiple>
+    <v-expansion-panels dark focusable :multiple="mode === 'single'" v-model="expandedPanels">
       <template v-for="(contextualItem, index) in contextualItems">
-        <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index">
+        <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index" v-bind:class="getClass(contextualItem.item)">
           <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
               <a class="expansion-panel-title">{{contextualItem.item.title}}</a>
               <div hidden>Item ID: {{contextualItem.item.fqid}}</div>
@@ -57,16 +57,17 @@ import ImageDlg from "./ImageDlg.vue";
 
 export default {
   components: {
-    ImageDlg
+    ImageDlg,
   },
   name: "Items",
   data() {
     return {
       imageDialog: false,
-      filteredItems: new Set()
+      filteredItems: new Set(),
+      expandedPanels: null,
     };
   },
-  props: ["items", "filter", "bColorFlag"],
+  props: ["items", "filter", "bColorFlag", "mode"],
   methods: {
     onAction(contextualItem, index) {
       // fire 'action' event
@@ -75,25 +76,33 @@ export default {
     isFiltered(itemFqid) {
       return this.filteredItems.has(itemFqid);
     },
+    getClass(item) {
+      return {
+        readItemStyle: item.readState === "READ",
+        unreadItemStyle: item.readState === "UNREAD" || item.readState === "WAIT"
+      };
+    },
   },
   computed: {
-    contextualItems: function() {
+    contextualItems: function () {
       const result = [];
       for (const item of this.items) {
         if (item.action1) {
           if (item.action1.contexts) { // multiple contexts -- duplicate item
             for (const context of item.action1.contexts) {
-              result.push({item, context});
+              result.push({ item, context });
             }
-          } else { // no contexts -- show item only once
-            result.push({item, context: undefined});
+          } else {
+            // no contexts -- show item only once
+            result.push({ item, context: undefined });
           }
-        } else { // no actions -- probably has subitems
-            result.push({item, context: undefined});
+        } else {
+          // no actions -- probably has subitems
+          result.push({ item, context: undefined });
         }
       }
       return result;
-    }
+    },
   },
   watch: {
     filter: {
@@ -127,13 +136,12 @@ export default {
       },
       immediate: true,
     },
-  },
+  }
 };
 </script>
-
 <style>
 .v-expansion-panel::before {
-   box-shadow: none !important;
+  box-shadow: none !important;
 }
 .v-expansion-panel {
   box-shadow: none;
@@ -147,13 +155,13 @@ export default {
 }
 .v-application .expansion-panel-title {
   font-size: 14px;
-  color: var(--vscode-foreground, #cccccc) ;
+  color: var(--vscode-foreground, #cccccc);
   padding-left: 28px;
   padding-bottom: 8px;
 }
 
 #items-component .v-expansion-panel {
-    margin-top: 3px;
+  margin-top: 3px;
 }
 
 .itemColor {
@@ -180,5 +188,17 @@ export default {
 }
 .v-card.v-sheet {
   background-color: var(--vscode-editor-background, #1e1e1e);
+}
+
+.v-expansion-panel.readItemStyle {
+  border-left: 4px solid var(--vscode-charts-purple, #925ace) !important;
+}
+.v-expansion-panel.unreadItemStyle {
+  border-left: 4px solid var(--vscode-charts-blue, #0a6ed1) !important;
+}
+
+
+.v-application .v-expansion-panel-header .expansion-panel-title {
+  padding-bottom: 0;
 }
 </style>

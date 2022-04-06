@@ -22,6 +22,7 @@
             :items="collection.items"
             :filter="filter"
             :bColorFlag="true"
+            :mode="collection.mode"
             @action="onAction"
           />
         </div>

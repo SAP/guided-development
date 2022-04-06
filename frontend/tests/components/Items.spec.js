@@ -16,8 +16,8 @@ describe('Items.vue', () => {
     })
 
     test('component props', () => {
-        wrapper = initComponent(Items, {items: [], filter: {}, bColorFlag: true}, true)
-        expect(_.keys(wrapper.props())).toHaveLength(3)
+        wrapper = initComponent(Items, {items: [], filter: {}, bColorFlag: true, mode: 'single'}, true)
+        expect(_.keys(wrapper.props())).toHaveLength(4)
     })
 
     describe('onAction - method', () => {
