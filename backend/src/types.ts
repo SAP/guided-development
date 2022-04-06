@@ -94,13 +94,7 @@ export interface IImage {
     note: string;
 }
 
-
-export enum ReadState {
-    READ="READ",
-    UNREAD="UNREAD",
-    WAIT="WAIT"
-}
-
+export type ReadState = "READ" | "UNREAD" | "WAIT";
 
 export type ManagerAPI = {
     setData: (extensionId: string, collections: ICollection[], items: IItem[]) => void;
