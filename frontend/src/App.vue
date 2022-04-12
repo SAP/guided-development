@@ -63,18 +63,17 @@ export default {
     },
 
     getItemByFqid(fqid) {
-      let items = [];
+      let rootLevelItems = [];
       this.collections.forEach(col => {
-        items = items.concat(col.items);
+        rootLevelItems = rootLevelItems.concat(col.items);
       });
       const flatten = [];
-      let itemnode;
-      while (items.length > 0) {
-        itemnode = items.shift();
-        flatten.push(itemnode);
-        if (!itemnode.items) continue;
-        itemnode.items.forEach(item => {
-          items.push(item);
+      while (rootLevelItems.length > 0) {
+        let itemNode = rootLevelItems.shift();
+        flatten.push(itemNode);
+        if (!itemNode.items) continue;
+        itemNode.items.forEach(item => {
+          rootLevelItems.push(item);
         });
       }
       return flatten.find(item => item.fqid === fqid);
@@ -104,12 +103,12 @@ export default {
       }
     },
     changeItemsState(changedItems) {
-      changedItems.forEach(itement => {
-        const tarItem = this.getItemByFqid(itement.fqid);
+      changedItems.forEach(itemEntity => {
+        const tarItem = this.getItemByFqid(itemEntity.fqid);
         if (!tarItem) {
           return;
         }
-        Object.assign(tarItem, itement);
+        Object.assign(tarItem, itemEntity);
       });
     },
     initRpc() {
