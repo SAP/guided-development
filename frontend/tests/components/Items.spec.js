@@ -58,7 +58,7 @@ describe('Items.vue', () => {
         })
     })
 
-    describe("get style based on items' readState", () => {
+    describe("get expansionPanelClass based on the item's readState", () => {
         test('item with read readState',  () => {
             let item = {
                 id: "id1",
@@ -71,9 +71,9 @@ describe('Items.vue', () => {
                 ]
             };
             wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true}, true)
-            const res = wrapper.vm.getStyleForReadState(item);
-            expect(res.readItemStyle).toBeTruthy();
-            expect(res.unreadItemStyle).toBeFalsy();
+            const expansionPanelClass = wrapper.vm.getExpansionPanelClass(item);
+            expect(expansionPanelClass.readItemStyle).toBeTruthy();
+            expect(expansionPanelClass.unreadItemStyle).toBeFalsy();
 
         })
 
@@ -89,9 +89,9 @@ describe('Items.vue', () => {
                 ]
             };
             wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true}, true)
-            const res = wrapper.vm.getStyleForReadState(item);
-            expect(res.unreadItemStyle).toBeTruthy();
-            expect(res.readItemStyle).toBeFalsy();
+            const expansionPanelClass = wrapper.vm.getExpansionPanelClass(item);
+            expect(expansionPanelClass.unreadItemStyle).toBeTruthy();
+            expect(expansionPanelClass.readItemStyle).toBeFalsy();
         })
 
         test('item with wait readState',  () => {
@@ -106,9 +106,9 @@ describe('Items.vue', () => {
                 ]
             };
             wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true}, true)
-            const res = wrapper.vm.getStyleForReadState(item);
-            expect(res.unreadItemStyle).toBeTruthy();
-            expect(res.readItemStyle).toBeFalsy();  
+            const expansionPanelClass = wrapper.vm.getExpansionPanelClass(item);
+            expect(expansionPanelClass.unreadItemStyle).toBeTruthy();
+            expect(expansionPanelClass.readItemStyle).toBeFalsy();  
         })
     })
 
