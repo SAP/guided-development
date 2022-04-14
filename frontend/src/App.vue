@@ -102,13 +102,13 @@ export default {
         };
       }
     },
-    changeItemsState(changedItems) {
-      changedItems.forEach(itemEntity => {
-        const tarItem = this.getItemByFqid(itemEntity.fqid);
-        if (!tarItem) {
+    changeItemsState(stateChangedItems) {
+      stateChangedItems.forEach(stateChangedItem => {
+        const targetItemToOverwrite = this.getItemByFqid(stateChangedItem.fqid);
+        if (!targetItemToOverwrite) {
           return;
         }
-        Object.assign(tarItem, itemEntity);
+        Object.assign(targetItemToOverwrite, stateChangedItem);
       });
     },
     initRpc() {
