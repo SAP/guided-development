@@ -97,23 +97,23 @@ describe('App.vue', () => {
 
   it("change exist item's state", () => {
     wrapper = initComponent(App);
-    const fqid1 = "extName1.extPublisher1.id1";
-    const item1 = {
-        id: "id1",
-        fqid: fqid1,
-        description: "description1",
-        title: "title1",
+    const secondNestedLevelItemFqid = "extName1.extPublisher1.secondNestedLevelItem";
+    const secondNestedLevelItem = {
+        id: "secondNestedLevelItem",
+        fqid: secondNestedLevelItemFqid,
+        description: "secondNestedLevelItemDescription",
+        title: "secondNestedLevelItemTitle",
         readState: "UNREAD",
         labels: []
     };
-    const fqid2 = "extName1.extPublisher1.id2";
-    const item2 = {
-        id: "id2",
-        fqid: fqid2,
-        description: "description2",
-        title: "title2",
+    const topLevelItemFqid = "extName1.extPublisher1.topLevelItem";
+    const topLevelItem = {
+        id: "topLevelItem",
+        fqid: topLevelItemFqid,
+        description: "topLevelItemDescription",
+        title: "topLevelItemTitle",
         labels: [],
-        items: [item1]
+        items: [secondNestedLevelItem]
     };
     const collection1 = {
         id: "id1",
@@ -121,14 +121,14 @@ describe('App.vue', () => {
         description: "description1",
         itemIds: [],
         type: 0,
-        items: [item2]
+        items: [topLevelItem]
     };
     wrapper = initComponent(App);
     wrapper.vm.showCollections([collection1]);
-    const tarItem = wrapper.vm.getItemByFqid(fqid1);
-    expect(tarItem.readState).toEqual("UNREAD");
-    wrapper.vm.changeItemsState([{fqid:fqid1, readState: "READ"}]);
-    expect(tarItem.readState).toEqual("READ");
+    const targetItem = wrapper.vm.getItemByFqid(secondNestedLevelItemFqid);
+    expect(targetItem.readState).toEqual("UNREAD");
+    wrapper.vm.changeItemsState([{fqid:secondNestedLevelItemFqid, readState: "READ"}]);
+    expect(targetItem.readState).toEqual("READ");
   }) 
 
   it('find an item not exists', () => {
@@ -151,18 +151,19 @@ describe('App.vue', () => {
     wrapper = initComponent(App);
     wrapper.vm.showCollections([collection1]);
     const notExistsItemFqid = "extName1.extPublisher1.null";
-    const tarItem = wrapper.vm.getItemByFqid(notExistsItemFqid);
-    expect(tarItem).toBeFalsy();
+    const targetItem = wrapper.vm.getItemByFqid(notExistsItemFqid);
+    expect(targetItem).toBeFalsy();
   })
 
   it('find an item at root level', () => {
-    const fqid1 = "extName1.extPublisher1.id1";
-    const item1 = {
-        id: "id1",
-        fqid: fqid1,
-        description: "description1",
-        title: "title1",
-        labels: []
+    const topLevelItemFqid = "extName1.extPublisher1.topLevelItem";
+    const topLevelItem = {
+        id: "topLevelItem",
+        fqid: topLevelItemFqid,
+        description: "topLevelItemDescription",
+        title: "topLevelItemTitle",
+        labels: [],
+        items: []
     };
     const collection1 = {
         id: "id1",
@@ -170,85 +171,88 @@ describe('App.vue', () => {
         description: "description1",
         itemIds: [],
         type: 0,
-        items: [item1]
+        items: [topLevelItem]
     };
     wrapper = initComponent(App);
     wrapper.vm.showCollections([collection1]);
-    const tarItem = wrapper.vm.getItemByFqid(fqid1);
-    expect(tarItem.title).toEqual("title1")
+    const targetItem = wrapper.vm.getItemByFqid(topLevelItemFqid);
+    expect(targetItem.title).toEqual("topLevelItemTitle")
   })
 
   it('find an item at second level', () => {
-    const fqid1 = "extName1.extPublisher1.id1";
-    const item1 = {
-        id: "id1",
-        fqid: fqid1,
-        description: "description1",
-        title: "title1",
+    const secondNestedLevelItemFqid = "extName1.extPublisher1.secondNestedLevelItem";
+    const secondNestedLevelItem = {
+        id: "secondNestedLevelItem",
+        fqid: secondNestedLevelItemFqid,
+        description: "secondNestedLevelItemDescription",
+        title: "secondNestedLevelItemTitle",
+        readState: "UNREAD",
         labels: []
     };
-    const fqid2 = "extName1.extPublisher1.id2";
-    const item2 = {
-        id: "id2",
-        fqid: fqid2,
-        description: "description2",
-        title: "title2",
+    const topLevelItemFqid = "extName1.extPublisher1.topLevelItem";
+    const topLevelItem = {
+        id: "topLevelItem",
+        fqid: topLevelItemFqid,
+        description: "topLevelItemDescription",
+        title: "topLevelItemTitle",
         labels: [],
-        items: [item1]
+        items: [secondNestedLevelItem]
     };
     const collection1 = {
         id: "id1",
-        title: "colTitle1",
+        title: "title1",
         description: "description1",
         itemIds: [],
         type: 0,
-        items: [item2]
+        items: [topLevelItem]
     };
     wrapper = initComponent(App);
     wrapper.vm.showCollections([collection1]);
-    const tarItem = wrapper.vm.getItemByFqid(fqid1);
-    expect(tarItem.title).toEqual("title1")
+    const targetItem = wrapper.vm.getItemByFqid(secondNestedLevelItemFqid);
+    expect(targetItem.title).toEqual("secondNestedLevelItemTitle")
   })
   
   it('find an item at third level', () => {
-    const fqid1 = "extName1.extPublisher1.id1";
-    const item1 = {
-        id: "id1",
-        fqid: fqid1,
-        description: "description1",
-        title: "title1",
-        labels: []
-    };
-    const fqid2 = "extName1.extPublisher1.id2";
-    const item2 = {
-        id: "id2",
-        fqid: fqid2,
-        description: "description2",
-        title: "title2",
+    const thirdNestedLevelItemFqid = "extName1.extPublisher1.thirdNestedLevelItem";
+    const thirdNestedLevelItem = {
+        id: "thirdNestedLevelItem",
+        fqid: thirdNestedLevelItemFqid,
+        description: "thirdNestedLevelItemDescription",
+        title: "thirdNestedLevelItemTitle",
         labels: [],
-        items: [item1]
+        items: []
     };
-    const fqid3 = "extName1.extPublisher1.id3";
-    const item3 = {
-        id: "id3",
-        fqid: fqid3,
-        description: "description3",
-        title: "title3",
+
+    const secondNestedLevelItemFqid = "extName1.extPublisher1.secondNestedLevelItem";
+    const secondNestedLevelItem = {
+        id: "secondNestedLevelItem",
+        fqid: secondNestedLevelItemFqid,
+        description: "secondNestedLevelItemDescription",
+        title: "secondNestedLevelItemTitle",
         labels: [],
-        items: [item2]
+        items: [thirdNestedLevelItem]
+    };
+    const topLevelItemFqid = "extName1.extPublisher1.topLevelItem";
+    const topLevelItem = {
+        id: "topLevelItem",
+        fqid: topLevelItemFqid,
+        description: "topLevelItemDescription",
+        title: "topLevelItemTitle",
+        labels: [],
+        items: [secondNestedLevelItem]
     };
     const collection1 = {
         id: "id1",
-        title: "colTitle1",
+        title: "title1",
         description: "description1",
         itemIds: [],
         type: 0,
-        items: [item3]
+        items: [topLevelItem]
     };
     wrapper = initComponent(App);
     wrapper.vm.showCollections([collection1]);
-    const tarItem = wrapper.vm.getItemByFqid(fqid1);
-    expect(tarItem.title).toEqual("title1")
+    const targetItem = wrapper.vm.getItemByFqid(thirdNestedLevelItemFqid);
+    expect(targetItem.title).toEqual("thirdNestedLevelItemTitle")
   })
 
   it('find an item of multiple collections', () => {
@@ -260,24 +264,23 @@ describe('App.vue', () => {
         title: "title1",
         labels: []
     };
-    const fqid2 = "extName1.extPublisher1.id2";
-    const item2 = {
-        id: "id2",
-        fqid: fqid2,
-        description: "description2",
-        title: "title2",
-        labels: [],
-        items: []
+    const secondNestedLevelItemFqid = "extName1.extPublisher1.secondNestedLevelItem";
+    const secondNestedLevelItem = {
+        id: "secondNestedLevelItem",
+        fqid: secondNestedLevelItemFqid,
+        description: "secondNestedLevelItemDescription",
+        title: "secondNestedLevelItemTitle",
+        readState: "UNREAD",
+        labels: []
     };
-    
-    const fqid3 = "extName1.extPublisher1.id3";
-    const item3 = {
-        id: "id3",
-        fqid: fqid3,
-        description: "description3",
-        title: "title3",
+    const topLevelItemFqid = "extName1.extPublisher1.topLevelItem";
+    const topLevelItem = {
+        id: "topLevelItem",
+        fqid: topLevelItemFqid,
+        description: "topLevelItemDescription",
+        title: "topLevelItemTitle",
         labels: [],
-        items: [item2]
+        items: [secondNestedLevelItem]
     };
     const collection1 = {
         id: "id1",
@@ -293,12 +296,12 @@ describe('App.vue', () => {
         description: "colDescription2",
         itemIds: [],
         type: 0,
-        items: [item3]
+        items: [topLevelItem]
     };
     wrapper = initComponent(App);
     wrapper.vm.showCollections([collection1, collection2]);
-    const tarItem = wrapper.vm.getItemByFqid(fqid2);
-    expect(tarItem.title).toEqual("title2")
+    const targetItem = wrapper.vm.getItemByFqid(secondNestedLevelItemFqid);
+    expect(targetItem.title).toEqual("secondNestedLevelItemTitle")
   })
   
   
