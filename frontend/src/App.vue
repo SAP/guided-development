@@ -61,20 +61,19 @@ export default {
       const itemFqid = contextualItem?.item?.fqid;
       await this.rpc.invoke("performAction", [itemFqid, index, contextualItem.context]);
     },
-
+    
     getItemByFqid(fqid) {
       let rootLevelItems = [];
       this.collections.forEach(col => {
-        rootLevelItems = rootLevelItems.concat(col.items);
+        rootLevelItems.push(...col.items)
       });
       const flatten = [];
       while (rootLevelItems.length > 0) {
         let itemNode = rootLevelItems.shift();
         flatten.push(itemNode);
-        if (!itemNode.items) continue;
-        itemNode.items.forEach(item => {
-          rootLevelItems.push(item);
-        });
+        if (Array.isArray(itemNode.items)) {
+          rootLevelItems.push(...itemNode.items);
+        }
       }
       return flatten.find(item => item.fqid === fqid);
     },
