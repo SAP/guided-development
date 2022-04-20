@@ -58,6 +58,60 @@ describe('Items.vue', () => {
         })
     })
 
+    describe("get expansionPanelClass based on the item's readState", () => {
+        test('item with read readState',  () => {
+            let item = {
+                id: "id1",
+                fqid: "fqid",
+                title: "title1",
+                description: "description1",
+                readState: 'READ',
+                labels: [
+                    { "Project Type": "create-grocery-list" }
+                ]
+            };
+            wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true}, true)
+            const expansionPanelClass = wrapper.vm.getExpansionPanelClass(item);
+            expect(expansionPanelClass.readItemStyle).toBeTruthy();
+            expect(expansionPanelClass.unreadItemStyle).toBeFalsy();
+
+        })
+
+        test('item with unread readState',  () => {
+            let item = {
+                id: "id1",
+                fqid: "fqid",
+                title: "title1",
+                description: "description1",
+                readState: 'UNREAD',
+                labels: [
+                    { "Project Type": "create-grocery-list" }
+                ]
+            };
+            wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true}, true)
+            const expansionPanelClass = wrapper.vm.getExpansionPanelClass(item);
+            expect(expansionPanelClass.unreadItemStyle).toBeTruthy();
+            expect(expansionPanelClass.readItemStyle).toBeFalsy();
+        })
+
+        test('item with wait readState',  () => {
+            let item = {
+                id: "id1",
+                fqid: "fqid",
+                title: "title1",
+                description: "description1",
+                readState: 'WAIT',
+                labels: [
+                    { "Project Type": "create-grocery-list" }
+                ]
+            };
+            wrapper = initComponent(Items, {items: [item], filter: new Map(), bColorFlag: true}, true)
+            const expansionPanelClass = wrapper.vm.getExpansionPanelClass(item);
+            expect(expansionPanelClass.unreadItemStyle).toBeTruthy();
+            expect(expansionPanelClass.readItemStyle).toBeFalsy();  
+        })
+    })
+
     describe('isFiltered - method', () => {
         test('no filter', async () => {
             let item = {

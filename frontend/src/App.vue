@@ -61,21 +61,19 @@ export default {
       const itemFqid = contextualItem?.item?.fqid;
       await this.rpc.invoke("performAction", [itemFqid, index, contextualItem.context]);
     },
-
+    
     getItemByFqid(fqid) {
-      let items = [];
+      let rootLevelItems = [];
       this.collections.forEach(col => {
-        items = items.concat(col.items);
+        rootLevelItems.push(...col.items)
       });
       const flatten = [];
-      let itemnode;
-      while (items.length > 0) {
-        itemnode = items.shift();
-        flatten.push(itemnode);
-        if (!itemnode.items) continue;
-        itemnode.items.forEach(item => {
-          items.push(item);
-        });
+      while (rootLevelItems.length > 0) {
+        let itemNode = rootLevelItems.shift();
+        flatten.push(itemNode);
+        if (Array.isArray(itemNode.items)) {
+          rootLevelItems.push(...itemNode.items);
+        }
       }
       return flatten.find(item => item.fqid === fqid);
     },
@@ -103,13 +101,13 @@ export default {
         };
       }
     },
-    changeItemsState(changedItems) {
-      changedItems.forEach(itement => {
-        const tarItem = this.getItemByFqid(itement.fqid);
-        if (!tarItem) {
+    changeItemsState(stateChangedItems) {
+      stateChangedItems.forEach(stateChangedItem => {
+        const targetItemToOverwrite = this.getItemByFqid(stateChangedItem.fqid);
+        if (!targetItemToOverwrite) {
           return;
         }
-        Object.assign(tarItem, itement);
+        Object.assign(targetItemToOverwrite, stateChangedItem);
       });
     },
     initRpc() {

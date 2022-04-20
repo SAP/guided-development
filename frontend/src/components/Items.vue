@@ -2,7 +2,7 @@
   <div id="items-component">
     <v-expansion-panels dark focusable :multiple="mode === 'single'" v-model="expandedPanels">
       <template v-for="(contextualItem, index) in contextualItems">
-        <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index" v-bind:class="getClass(contextualItem.item)">
+        <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index" v-bind:class="getExpansionPanelClass(contextualItem.item)">
           <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
               <a class="expansion-panel-title">{{contextualItem.item.title}}</a>
               <div hidden>Item ID: {{contextualItem.item.fqid}}</div>
@@ -76,7 +76,7 @@ export default {
     isFiltered(itemFqid) {
       return this.filteredItems.has(itemFqid);
     },
-    getClass(item) {
+    getExpansionPanelClass(item) {
       return {
         readItemStyle: item.readState === "READ",
         unreadItemStyle: item.readState === "UNREAD" || item.readState === "WAIT"
