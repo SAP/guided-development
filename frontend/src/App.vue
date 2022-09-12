@@ -144,6 +144,10 @@ export default {
 </script>
 <style scoped>
 @import "./../node_modules/vue-loading-overlay/dist/vue-loading.css";
+
+body.vscode-light {
+   --vscode-activityBar-background: #ececec;
+}
 .left-col {
   background-color: var(--vscode-editorWidget-background, #252526);
 }
