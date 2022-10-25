@@ -4,6 +4,13 @@ body {
   background-color: var(--vscode-editor-background, #1e1e1e);
   overflow: hidden !important;
 }
+
+body[data-vscode-theme-name="Light (Visual Studio)"],
+body[data-vscode-theme-name="Light+ (default light)"],
+body[data-vscode-theme-name="Vanilla"] {
+  --vscode-activityBar-background: #ececec;
+}
+
 #app {
   height: 100%;
   color: var(--vscode-foreground, #cccccc); 
