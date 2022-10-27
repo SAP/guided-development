@@ -124,13 +124,14 @@ jobs: # a collection of steps
  
   deploy:
     docker:
-      - image: cimg/go:1.13
+      - image: cimg/go:1.17
     steps:
       - attach_workspace:
           at: ./dist
       - run:
           name: "Publish Release on GitHub"
           command: |
+            echo 'export GOPATH=~/go' >> $BASH_ENV
             go get github.com/tcnksm/ghr
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} ${CIRCLE_TAG} ./dist/ 
 
