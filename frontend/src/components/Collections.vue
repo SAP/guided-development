@@ -15,8 +15,8 @@
     <v-row>
       <v-col cols="12">
         <div v-for="(collection, index) in collections" :key="index"><br>
-          <v-card-title class="prompt-title">{{collection.title}}</v-card-title>
-          <v-card-subtitle class="prompt-subtitle">{{collection.description}}</v-card-subtitle>
+          <v-card-title v-if="!uiOptions || !uiOptions.renderType" class="prompt-title">{{collection.title}}</v-card-title>
+          <v-card-subtitle v-if="!uiOptions || !uiOptions.renderType" class="prompt-subtitle">{{collection.description}}</v-card-subtitle>
           <Items
             v-if="collection.items"
             :items="collection.items"
@@ -48,7 +48,7 @@ export default {
       filter: new Map()
     }
   },
-  props: ["collections"],
+  props: ["collections", "uiOptions"],
   watch: {
     "collections": {
       handler: function() {
@@ -80,19 +80,21 @@ export default {
       this.labels = new Map();
       if (this.collections) {
         for (const collection of this.collections) {
-          for (const item of collection.items) {
-            if (item.labels) {
-              for (const labelObj of item.labels) {
-                const key = Object.keys(labelObj)[0];
-                const val = Object.values(labelObj)[0];
-                let label = this.labels.get(key);
-                if (label) {
-                  label.set(val, {text:val, value:JSON.stringify({key:key,value:val})});
-                } else {
-                  label = new Map();
-                  label.set(FILTER_ALL, {text:"<All>", value:JSON.stringify({key:key,value:FILTER_ALL})});
-                  label.set(val, {text:val, value:JSON.stringify({key:key,value:val})});
-                  this.labels.set(key, label);
+          if (collection.items){
+            for (const item of collection.items) {
+              if (item.labels) {
+                for (const labelObj of item.labels) {
+                  const key = Object.keys(labelObj)[0];
+                  const val = Object.values(labelObj)[0];
+                  let label = this.labels.get(key);
+                  if (label) {
+                    label.set(val, {text:val, value:JSON.stringify({key:key,value:val})});
+                  } else {
+                    label = new Map();
+                    label.set(FILTER_ALL, {text:"<All>", value:JSON.stringify({key:key,value:FILTER_ALL})});
+                    label.set(val, {text:val, value:JSON.stringify({key:key,value:val})});
+                    this.labels.set(key, label);
+                  }
                 }
               }
             }

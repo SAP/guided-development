@@ -7,7 +7,10 @@ const testVscode = {
     extensions: {
         all: new Array()
     },
-    Extension: <any>[]
+    Extension: <any>[],
+    commands: {
+        executeCommand: () => Promise.resolve()
+    }
 };
 
 mockVscode(testVscode, "src/contributors.ts");
@@ -53,6 +56,7 @@ describe('Contributors unit test', () => {
         it("No Contributors", () => {
             Contributors.getInstance().init();
             expect(Contributors.getInstance().getCollections()).to.have.length(0);
+            expect(Contributors.getInstance().getCollectionsInfo()).to.have.length(0);
         });
 
         it("Contributor exists", () => {
@@ -87,6 +91,7 @@ describe('Contributors unit test', () => {
             };
             Contributors.getInstance().setData(extensionId, [collection1], [item1, item2]);
             expect(Contributors.getInstance().getCollections()).to.have.length(1);
+            expect(Contributors.getInstance().getCollectionsInfo()).to.have.length(1);
             expect(Contributors.getInstance()["collectionsMap"]).to.have.keys("extid");
         });
 
@@ -126,6 +131,7 @@ describe('Contributors unit test', () => {
             expect(itemsMap.get(fqid2.toLocaleLowerCase()).id).to.equal(itemId2);
 
             expect(Contributors.getInstance().getCollections()).to.have.length(1);
+            expect(Contributors.getInstance().getCollectionsInfo()).to.have.length(1);
         });
     });
 

@@ -38,6 +38,21 @@ export class Contributors {
         return _.sortBy(collections, ['type']);
     }
 
+    public getCollectionsInfo(): Array<any> {
+        const collections: Array<any> = [];
+        for (const extensionId of this.collectionsMap.keys()) {
+            this.collectionsMap.get(extensionId).forEach(collection => {
+                collections.push({
+                    extensionId: extensionId,
+                    "id": collection.id,
+                    "title": collection.title,
+                    "description": collection.description
+                });
+           });
+        }
+        return collections;
+    }
+
     private static activateExtension(extension: vscode.Extension<any>): void {
         if (!extension.isActive) {
             try {
@@ -66,6 +81,7 @@ export class Contributors {
         if (this.onChangedCallback) {
             this.onChangedCallback.call(this.onChangedCallbackThis, this.getCollections());
         }
+        vscode.commands.executeCommand('guidedDevelopment.refreshCenter');
     }
 
     public init() {

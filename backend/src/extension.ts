@@ -8,6 +8,8 @@ import { VSCodeEvents } from "./vscode-events";
 import { bas } from '@sap-devx/app-studio-toolkit-types';
 import { setSetData, managerApi } from "./api";
 
+import GuideViewProvider from './center/guideViewProvider';
+
 let extContext: vscode.ExtensionContext;
 let guidedDevelopmentPanel: GuidedDevelopmentPanel;
 
@@ -33,6 +35,12 @@ export async function activate(context: vscode.ExtensionContext) {
 	vscodeEvents.setBasAPI(basAPI);
 
 	setSetData(vscodeEvents, vscodeEvents.setData);
+
+	const guideProvider = new GuideViewProvider(context.extensionUri);
+	context.subscriptions.push(
+		vscode.window.registerWebviewViewProvider(GuideViewProvider.viewType, guideProvider));
+	registerAndSubscribeCommand('guidedDevelopment.refreshCenter', guideProvider.refreshData.bind(guideProvider));
+
 	return managerApi;
 }
 
