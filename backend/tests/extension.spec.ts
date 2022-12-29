@@ -8,6 +8,7 @@ import { VSCodeEvents } from "../src/vscode-events";
 import { bas } from '@sap-devx/app-studio-toolkit-types';
 
 const oRegisteredCommands = {};
+const oRegisteredWebviewViewProviders = {};
 const testVscode = {
     workspace: {
         getConfiguration: () => true
@@ -17,7 +18,8 @@ const testVscode = {
         executeCommand: () => Promise.resolve()
     },
     window: {
-        registerWebviewPanelSerializer: () => true
+        registerWebviewPanelSerializer: () => true,
+        registerWebviewViewProvider: (id: string, provider: any) => { _.set(oRegisteredWebviewViewProviders, id, provider); return Promise.resolve(oRegisteredWebviewViewProviders);}
     },
     extensions: {
         getExtension:(path: string) => Promise.resolve()

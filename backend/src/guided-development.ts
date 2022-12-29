@@ -14,9 +14,10 @@ export class GuidedDevelopment {
   private readonly appEvents: AppEvents;
   private readonly outputChannel: AppLog;
   private readonly logger: IChildLogger;
+  private readonly uiOptions: any;
   private collections: Array<IInternalCollection>;
 
-  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[]) {
+  constructor(rpc: IRpc, appEvents: AppEvents, outputChannel: AppLog, logger: IChildLogger, messages: any, collections: IInternalCollection[], uiOptions?: any) {
     this.rpc = rpc;
     if (!this.rpc) {
       throw new Error("rpc must be set");
@@ -33,11 +34,12 @@ export class GuidedDevelopment {
 
     this.collections = collections;
     this.messages = messages;
+    this.uiOptions = uiOptions;
   }
 
   public setCollections(collections: Array<IInternalCollection>) {
     this.collections = collections;
-    this.rpc.invoke("showCollections", [this.collections]);
+    this.rpc.invoke("showCollections", [this.collections, this.uiOptions]);
   }
 
   private getItem(itemFqid: string): IInternalItem {
@@ -137,7 +139,7 @@ export class GuidedDevelopment {
 
   private async onFrontendReady() {
     try {
-      await this.rpc.invoke("showCollections", [this.collections]);
+      await this.rpc.invoke("showCollections", [this.collections, this.uiOptions]);
     } catch (error) {
       this.logError(error);
     }

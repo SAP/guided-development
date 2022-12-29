@@ -34,7 +34,7 @@ export abstract class AbstractWebviewPanel {
 
 	public loadWebviewPanel(state?: any) {
 		if (this.webViewPanel && _.isEmpty(state)) {
-			this.webViewPanel.reveal();
+			this.webViewPanel.reveal(undefined, true);
 		} else {
 			this.disposeWebviewPanel();
 			const webViewPanel = this.createWebviewPanel();
@@ -46,7 +46,10 @@ export abstract class AbstractWebviewPanel {
 		return vscode.window.createWebviewPanel(
 			this.viewType,
 			this.viewTitle,
-			vscode.ViewColumn.One,
+			{
+				viewColumn: vscode.ViewColumn.One,
+				preserveFocus: true
+			},
 			{
 				// Enable javascript in the webview
 				enableScripts: true,

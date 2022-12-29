@@ -15,17 +15,45 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public static GUIDED_DEVELOPMENT = "Guided Development";
 
 	private static channel: vscode.OutputChannel;
+	private uiOptions: any;
 
 	public toggleOutput() {
 		this.outputChannel.showOutput();
 	}
 
+	public loadWebviewPanel(uiOptions?: any) {
+		if (this.webViewPanel && JSON.stringify(uiOptions)===JSON.stringify(this.uiOptions)) {
+			this.webViewPanel.reveal(undefined, true);
+		} else {
+			super.loadWebviewPanel(uiOptions);
+		}
+	}
+
 	public setWebviewPanel(webViewPanel: vscode.WebviewPanel, uiOptions?: any) {
 		super.setWebviewPanel(webViewPanel);
+		if (uiOptions) {
+			this.uiOptions = uiOptions;
+		}
 
 		this.collections = Contributors.getInstance().getCollections();
 
 		this.messages = backendMessages;
+		let renderCollections: IInternalCollection[] = [];
+		if (this.uiOptions && this.uiOptions.renderType) {
+			this.messages = {
+				channelName: "GuidedDev",
+				title: this.uiOptions.title,
+				description: this.uiOptions.description,
+				noResponse: "No response received."
+			};
+			this.collections.forEach(element => {
+				if (this.uiOptions.renderType === "collection" && element.id === this.uiOptions.id) {
+					renderCollections.push(element);
+				}
+			});
+		} else {
+			renderCollections = this.collections;
+		}
 
 		const rpc = new RpcExtension(this.webViewPanel.webview);
 		this.outputChannel = new OutputChannelLog(this.messages.channelName);
@@ -35,7 +63,8 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 			this.outputChannel, 
 			this.logger,
 			this.messages,
-			this.collections
+			renderCollections,
+			this.uiOptions
 		);
 		Contributors.getInstance().registerOnChangedCallback(this.guidedDevelopment, this.guidedDevelopment.setCollections);
 

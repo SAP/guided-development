@@ -290,7 +290,7 @@ describe('guidedDevelopment unit test', () => {
             }],
             title: "title1",
             type: 0
-            }]]);
+            }], undefined]);
             await guidedDevelopment["onFrontendReady"]();
         });
         

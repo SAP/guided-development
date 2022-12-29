@@ -47,8 +47,32 @@
 					"light": "./resources/images/icons/console_light.svg",
 					"dark": "./resources/images/icons/console_dark.svg"
 				}
+			},
+			{
+				"command": "guidedDevelopment.refreshCenter",
+				"category": "Guide Center",
+				"title": "Refresh"
 			}
 		],
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "guideCenterActivityBar",
+					"title": "GUIDED DEVELOPMENT CENTER",
+					"icon": "resources/images/icons/center.svg"
+				}
+			]
+		},
+		"views": {
+			"guideCenterActivityBar": [
+				{
+					"id": "guide.sapAllGuidesViewSection",
+					"name": "All Guides",
+					"contextualTitle": "All Guides View contextualTitle",
+					"type": "webview"
+				}
+			]
+		},
 		"menus": {
 			"commandPalette": [
 				{
@@ -56,6 +80,10 @@
 				},
 				{
 					"command": "guidedDevelopment.toggleOutput",
+					"when": "false"
+				},
+				{
+					"command": "guidedDevelopment.refreshCenter",
 					"when": "false"
 				}
 			],

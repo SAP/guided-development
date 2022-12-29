@@ -16,6 +16,7 @@
     <Collections
       v-if="collections"
       :collections="collections"
+      :uiOptions="uiOptions"
       @action="onAction"
     />
   </v-app>
@@ -78,8 +79,20 @@ export default {
       return flatten.find(item => item.fqid === fqid);
     },
 
-    async showCollections(collections) {
-      this.collections = collections;
+    async showCollections(collections, uiOptions) {
+      this.uiOptions = uiOptions || {};
+      window.vscode?.setState(this.uiOptions);
+      let renderCollections = [];
+      if (this.uiOptions && this.uiOptions.renderType) {
+        collections.forEach(element => {
+          if (this.uiOptions.renderType === "collection" && element.id === this.uiOptions.id) {
+            renderCollections.push(element);
+          }
+        });
+      } else {
+        renderCollections = collections;
+      }
+      this.collections = renderCollections;
     },
 
     isInVsCode() {
@@ -167,10 +180,11 @@ export default {
 .v-card__title {
   color: var(--vscode-foreground, #cccccc);
   margin-bottom: 16px;
-  font-size: 32px;
+  font-size: 26px;
 }
 .v-card__subtitle {
   margin-left: 4px;
+  border-bottom: 1px solid hsla(0,0%,53.3%,.45);
 }
 .vld-parent {
   overflow-y: auto;

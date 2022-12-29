@@ -17,7 +17,7 @@ describe('ICollection.vue', () => {
 
     test('component props', () => {
         wrapper = initComponent(Collections, {collections: []}, true)
-        expect(_.keys(wrapper.props())).toHaveLength(1)
+        expect(_.keys(wrapper.props())).toHaveLength(2)
     })
 
     test('onAction - method', async () => {
