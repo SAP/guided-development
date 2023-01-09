@@ -85,4 +85,6 @@
     function onGuideClicked(guide) {
         vscode.postMessage({ type: 'guideSelected', value: {renderType: guide.type?guide.type:"collection", extensionId: guide.extensionId, id: guide.id, title: guide.title, description: guide.description} });
     }
+
+    vscode.postMessage({ type: 'onInitialized', value: {guides: guides} });
 }());
