@@ -14,7 +14,7 @@
       <v-card-subtitle>{{messages.description}}</v-card-subtitle>
     </div>
     <Collections
-      v-if="collections"
+      v-if="collections && uiOptions && uiOptions.renderType"
       :collections="collections"
       :uiOptions="uiOptions"
       @action="onAction"

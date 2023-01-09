@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import * as _ from 'lodash';
 import { Contributors } from '../contributors';
 export default class GuideViewProvider implements vscode.WebviewViewProvider {
 
@@ -35,12 +36,18 @@ export default class GuideViewProvider implements vscode.WebviewViewProvider {
 						vscode.commands.executeCommand('loadGuidedDevelopment', data.value);
 						break;
 					}
+				case 'onInitialized':
+					{
+						this.refreshData(data.value.guides);
+						break;
+					}
 			}
-		});
+		}, this);
 	}
 
-	public refreshData() {
+	public refreshData(currentGuides?: any[]) {
 		let collections = Contributors.getInstance().getCollectionsInfo();
+		if (currentGuides && _.isEqual(currentGuides, collections)) return;
 		if (this._view) {
 			this._view.webview.postMessage({type: 'refreshData', data: {items: collections}});
 		}

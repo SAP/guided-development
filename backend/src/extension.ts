@@ -38,7 +38,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	const guideProvider = new GuideViewProvider(context.extensionUri);
 	context.subscriptions.push(
-		vscode.window.registerWebviewViewProvider(GuideViewProvider.viewType, guideProvider));
+		vscode.window.registerWebviewViewProvider(GuideViewProvider.viewType, guideProvider, {webviewOptions: {retainContextWhenHidden: true}}));
 	registerAndSubscribeCommand('guidedDevelopment.refreshCenter', guideProvider.refreshData.bind(guideProvider));
 
 	return managerApi;
