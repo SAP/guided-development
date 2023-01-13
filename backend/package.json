@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.2.4",
+	"version": "0.2.5",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -58,7 +58,7 @@
 			"activitybar": [
 				{
 					"id": "guideCenterActivityBar",
-					"title": "GUIDED DEVELOPMENT CENTER",
+					"title": "Guide Center",
 					"icon": "resources/images/icons/center.svg"
 				}
 			]
@@ -67,7 +67,7 @@
 			"guideCenterActivityBar": [
 				{
 					"id": "guide.sapAllGuidesViewSection",
-					"name": "All Guides",
+					"name": "",
 					"contextualTitle": "All Guides View contextualTitle",
 					"type": "webview"
 				}
