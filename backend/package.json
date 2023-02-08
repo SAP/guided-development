@@ -76,7 +76,8 @@
 		"menus": {
 			"commandPalette": [
 				{
-					"command": "loadGuidedDevelopment"
+					"command": "loadGuidedDevelopment",
+					"when": "false"
 				},
 				{
 					"command": "guidedDevelopment.toggleOutput",
