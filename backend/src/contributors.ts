@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import * as _ from 'lodash';
 import { IInternalItem, IInternalCollection } from "./Collection";
-import { IItem, ICollection } from './types';
+import { IItem, ICollection, ITurotial, IconList } from './types';
 
 export class Contributors {
     private onChangedCallback: (collections: Array<IInternalCollection>) => void;
@@ -20,12 +20,14 @@ export class Contributors {
     }
 
     private constructor() {
+        this.tutorialsMap = new Map();
         this.collectionsMap = new Map();
         this.itemsMap = new Map();
     }
 
     private static contributors: Contributors;
 
+    private tutorialsMap: Map<string, Array<any>>;
     private collectionsMap: Map<string, Array<IInternalCollection>>;
     private itemsMap: Map<string, IInternalItem>;
 
@@ -42,15 +44,70 @@ export class Contributors {
         const collections: Array<any> = [];
         for (const extensionId of this.collectionsMap.keys()) {
             this.collectionsMap.get(extensionId).forEach(collection => {
+                let iconInfo = IconList[collection.additionalInfo?.iconCode] || {};
                 collections.push({
                     extensionId: extensionId,
                     "id": collection.id,
                     "title": collection.title,
-                    "description": collection.description
+                    "description": collection.description,
+                    "additionalInfo": collection.additionalInfo? {...collection.additionalInfo, ...iconInfo} : undefined
                 });
            });
         }
         return collections;
+    }
+
+    public getCollectionsInfoOfTutorial(extensionId:string, tutorial:any): Array<any> {
+        const collections: Array<any> = [];
+        tutorial.collections.forEach((collection:any) => {
+            let iconInfo = IconList[collection.additionalInfo?.iconCode] || {};
+            collections.push({
+                extensionId: extensionId,
+                "id": collection.id,
+                "title": collection.title,
+                "description": collection.description,
+                "additionalInfo": {...collection.additionalInfo, ...iconInfo, tutorialName: tutorial.name, tutorialLink: tutorial.link}
+            });
+        });
+        return collections;
+    }
+
+    public getGroupInfo(): Array<any> {
+        const data: Array<any> = this.getTutorialsInfo();
+        const standaloneGuides = {
+            "id": '_standalone',
+            "name": 'Guides',
+            "description": '',
+            "link": '',
+            "linktext": '',
+            "icon": '',
+            "collections": this.getCollectionsInfo().filter((item) => {
+                return !item.additionalInfo || item.additionalInfo.isStandalone;
+            })
+        };
+        data.push(standaloneGuides);
+
+        return data;
+    }
+
+    public getTutorialsInfo(): Array<any> {
+        const tutorials: Array<any> = [];
+        let that = this;
+        for (const extensionId of this.tutorialsMap.keys()) {
+            this.tutorialsMap.get(extensionId).forEach(tutorial => {
+                tutorials.push({
+                    extensionId: extensionId,
+                    "id": tutorial.id,
+                    "name": tutorial.name,
+                    "description": tutorial.description,
+                    "link": tutorial.link,
+                    "linktext": tutorial.linktext,
+                    "icon": tutorial.icon,
+                    "collections": that.getCollectionsInfoOfTutorial(extensionId, tutorial)
+                });
+           });
+        }
+        return tutorials;
     }
 
     private static activateExtension(extension: vscode.Extension<any>): void {
@@ -73,11 +130,13 @@ export class Contributors {
         }
     }
 
-    public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
+    public setData(extensionId: string, collections: ICollection[], items: IItem[], tutorials?: ITurotial[]): void {
         const extensionIdLower: string = extensionId.toLocaleLowerCase();
+        this.addTutorials(extensionIdLower, tutorials ? tutorials : []);
         this.addCollections(extensionIdLower, collections as IInternalCollection[]);
         this.addItems(extensionIdLower, items);
         this.initCollectionItems();
+        this.initTutorialCollections();
         if (this.onChangedCallback) {
             this.onChangedCallback.call(this.onChangedCallbackThis, this.getCollections());
         }
@@ -106,6 +165,19 @@ export class Contributors {
         this.collectionsMap.set(extensionId, collections);
     }
 
+    private addTutorials(extensionId: string, tutorials: Array<any>) {
+        this.tutorialsMap.set(extensionId, tutorials);
+    }
+
+    private initTutorialCollections() {
+        for (const tutorials of this.tutorialsMap.values()) {
+            for (const tutorial of tutorials) {
+                // TODO: handle duplicates?
+                tutorial.collections = this.getCollectionsOfTutorial(tutorial);
+            }
+        }
+    }
+
     private initCollectionItems() {
         for (const collections of this.collectionsMap.values()) {
             for (const collection of collections) {
@@ -114,6 +186,30 @@ export class Contributors {
                 collection.items = this.getItems(collection);
             }
         }
+    }
+
+    private findCollction(collectionIdLower: string): IInternalCollection {
+        let result = null;
+        for (const extensionId of this.collectionsMap.keys()) {
+            if (collectionIdLower.startsWith(extensionId)) {
+                result = this.collectionsMap.get(extensionId).find((collection) => `${extensionId}.${collection.id.toLocaleLowerCase()}` === collectionIdLower);
+            }
+        }
+        return result;
+    }
+    private getCollectionsOfTutorial(tutorial: any): IInternalCollection[] {
+        const result: IInternalCollection[] = [];
+
+        for (const collectionId of tutorial.collectionIds) {
+            const collection = this.findCollction(collectionId.toLocaleLowerCase());
+            if (collection) {
+                result.push(collection);
+            } else {
+                console.error(`Could not find collection id ${collectionId}`)
+            }
+        }
+
+        return result;
     }
 
     private getItems(collection: IInternalCollection): IInternalItem[] {

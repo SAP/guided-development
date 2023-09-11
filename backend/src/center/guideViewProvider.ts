@@ -38,7 +38,7 @@ export default class GuideViewProvider implements vscode.WebviewViewProvider {
 					}
 				case 'onInitialized':
 					{
-						this.refreshData(data.value.guides);
+						this.refreshData(data.value.tutorials);
 						break;
 					}
 			}
@@ -46,10 +46,11 @@ export default class GuideViewProvider implements vscode.WebviewViewProvider {
 	}
 
 	public refreshData(currentGuides?: any[]) {
-		let collections = Contributors.getInstance().getCollectionsInfo();
-		if (currentGuides && _.isEqual(currentGuides, collections)) return;
+		let tutorials = Contributors.getInstance().getGroupInfo();
+		if (currentGuides && _.isEqual(currentGuides, tutorials)) return;
+
 		if (this._view) {
-			this._view.webview.postMessage({type: 'refreshData', data: {items: collections}});
+			this._view.webview.postMessage({type: 'refreshData', data: {items: tutorials}});
 		}
 	}
 
@@ -57,6 +58,7 @@ export default class GuideViewProvider implements vscode.WebviewViewProvider {
 		// Get the local path to main script and stylesheet run in the webview, then convert it to a uri we can use in the webview.
 		const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'resources', 'center', 'main.js'));
 		const styleMainUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'resources', 'center', 'main.css'));
+		const codeIconStyleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'resources', 'center', 'codicon.css'));
 
 		// Use a nonce to only allow a specific script to be run.
 		const nonce = getNonce();
@@ -71,6 +73,7 @@ export default class GuideViewProvider implements vscode.WebviewViewProvider {
 				<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 				<link href="${styleMainUri}" rel="stylesheet">
+				<link rel="stylesheet" href="${codeIconStyleUri}">
 
 				<title>Guide List</title>
 			</head>

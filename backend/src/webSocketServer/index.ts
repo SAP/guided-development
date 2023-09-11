@@ -6,13 +6,22 @@ import { ServerLog } from './server-log';
 import backendMessages from "../messages";
 import { IChildLogger } from "@vscode-logging/logger";
 import { AppEvents } from '../app-events';
-import { CollectionType } from "../types";
+import { CollectionType, IconCode } from "../types";
 import { IInternalItem, IInternalCollection } from "../Collection";
 import { ServerEvents } from './server-events';
 
 import { ICommandAction, IExecuteAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 
 import * as api from "../api";
+
+const collectionAdditionalInfo = {
+  tool: 'BAS CDS Modeler',
+  projectName: "Test",
+  isStandalone: false,
+  estimatedTime: "5 mins",
+  longDescription: 'This guide is part of the <a href="">Golden Path</a> and is recommended because of your current project configuration.',
+  iconCode: IconCode.Star
+};
 
 class GuidedDevelopmentWebSocketServer {
   private rpc: RpcExtensionWebSockets | undefined;
@@ -46,7 +55,9 @@ class GuidedDevelopmentWebSocketServer {
       const logger: AppLog = new ServerLog(this.rpc);
       const childLogger = { debug: () => '', error: () => '', fatal: () => '', warn: () => '', info: () => '', trace: () => '', getChildLogger: () => { return {} as IChildLogger; } };
       const collections = createCollections();
-      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, backendMessages, collections);
+      const guide = collections[0];
+      const uiOptions = {renderType: "collection", extensionId: '', id: guide.id, title: guide.title, description: guide.description, additionalInfo: guide.additionalInfo};
+      this.guidedDevelopment = new GuidedDevelopment(this.rpc, this.appEvents, logger, childLogger as IChildLogger, {...backendMessages, collectionAdditionalInfo}, collections, uiOptions);
 
       // demonstrate updating of items (mimics contributors calling the onChange callback)
       setTimeout(() => {
@@ -130,6 +141,7 @@ function createCollections(): IInternalCollection[] {
       "saposs.vscode-contrib1.open",
       "saposs.vscode-contrib2.clone"
     ],
+    additionalInfo: collectionAdditionalInfo,
     items: [
       {
         id: "open",
@@ -138,7 +150,7 @@ function createCollections(): IInternalCollection[] {
         description: `It is easy to configure Visual Studio Code to your liking through its various settings. Example of composite a hyperlink into description: <a href="https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax">Github Basic Formating Sintax</a>`,
         image: {
           image: getImage(),
-          note: "image note of new item"
+          note: ""
         },
         action1: {
           name: "Execute",

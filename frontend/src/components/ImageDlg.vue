@@ -4,6 +4,7 @@
       <v-icon style="position:absolute;bottom:0px;right:0px" @click="imageDialog = true">search</v-icon>
     </v-img>
     <v-card-text
+      v-if="!image.noPrefix"
       align="left"
       class="mt-4 pb-0"
       style="font-size: 14px; padding-left: 0px"
@@ -17,7 +18,7 @@
     >
     <v-dialog
       v-model="imageDialog"
-      max-width="40%"
+      max-width="70%"
     >
       <v-card align="center" height="100%">
         <v-img

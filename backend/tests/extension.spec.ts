@@ -85,6 +85,7 @@ describe('extension unit test', () => {
             expect(_.size(_.keys(oRegisteredCommands))).to.be.equal(2);
             expect( _.get(oRegisteredCommands, "loadGuidedDevelopment")).to.be.not.undefined;
             expect(_.get(oRegisteredCommands, "guidedDevelopment.toggleOutput")).to.be.not.undefined;
+            expect( _.get(oRegisteredCommands, "guidedDevelopment.refreshCenter")).to.be.not.undefined;
         });
 
         it("logger failure on extenion activation", async () => {

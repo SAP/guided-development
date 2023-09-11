@@ -9,9 +9,36 @@
       background-color="transparent"
       loader="spinner"
     ></loading>
-    <div>
+    <div v-if="!messages.collectionadditionalinfo">
       <v-card-title>{{messages.title}}</v-card-title>
       <v-card-subtitle>{{messages.description}}</v-card-subtitle>
+    </div>
+    <div v-if="messages.collectionadditionalinfo">
+      <v-card-title>{{messages.title}}
+        <div v-if="messages.collectionadditionalinfo.iconName" border size="x-small" class="text-none rounded guide-icon">
+          <span :class="'title_icon codicon codicon-'+messages.collectionadditionalinfo.iconName"></span>
+          <span class="title_icon_text">{{messages.collectionadditionalinfo.iconLabel}}</span>
+        </div>
+      </v-card-title>
+      <v-card-subtitle>
+        <div class="d-flex" justify-start mb-6>
+          <span class="ma-2 pa-2 subtitle_text">
+            {{messages.collectionadditionalinfo.tool}}
+          </span>
+          <v-divider vertical class="guide-divider ma-2 pa-2"></v-divider>
+          <span class="ma-2 pa-2 subtitle_text">
+            <img class="subtitle_text_img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjMiIGhlaWdodD0iMTkiIHZpZXdCb3g9IjAgMCAyMyAxOSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTYuNTIgMS43Nkw3LjI0IDAuOTZIMTAuMjhMMTEgMS43NlYxOC4yNEwxMC4yOCAxOC45Nkg3LjI0TDYuNTIgMTguMjRWMS43NlpNOC4wNCAyLjQ4VjE3LjUySDkuNDhWMi40OEg4LjA0Wk0xMi43NiAzLjA0TDEzLjI0IDIuMDhMMTYuMDQgMS4wNEwxNyAxLjQ0TDIyLjYgMTYuOTZMMjIuMiAxNy45MkwxOS40IDE4Ljk2TDE4LjQ0IDE4LjU2TDEyLjc2IDMuMDRaTTE0LjQ0IDMuMkwxOS41NiAxNy4yOEwyMSAxNi44TDE1LjggMi43MkwxNC40NCAzLjJaTTAuNTIgMS43NkwxLjI0IDAuOTZINC4yOEw1IDEuNzZWMTguMjRMNC4yOCAxOC45NkgxLjI0TDAuNTIgMTguMjRWMS43NlpNMi4wNCAyLjQ4VjE3LjUySDMuNDhWMi40OEgyLjA0WiIgZmlsbD0idmFyKC0tdnNjb2RlLWlucHV0LWJhY2tncm91bmQpIi8+Cjwvc3ZnPg==" alt="Custom Icon" />{{messages.collectionadditionalinfo.estimatedTime}}
+          </span>
+          <v-divider v-if="messages.collectionadditionalinfo.projectName" vertical class="guide-divider ma-2 pa-2"></v-divider>
+          <span v-if="messages.collectionadditionalinfo.projectName" class="ma-2 pa-2 subtitle_text">
+            Project: {{messages.collectionadditionalinfo.projectName}}
+          </span>
+        </div>
+        <v-card-text class="subtitle_text">{{messages.description}}</v-card-text>
+        <v-card-text class="subtitle_text">
+          <span v-html="messages.collectionadditionalinfo.longDescription"></span>
+        </v-card-text>
+      </v-card-subtitle>
     </div>
     <Collections
       v-if="collections && uiOptions && uiOptions.renderType"
@@ -34,6 +61,7 @@ function initialState() {
     rpc: Object,
     messages: {},
     showBusyIndicator: false,
+    uiOptions: {},
   };
 }
 
@@ -190,5 +218,46 @@ export default {
   overflow-y: auto;
   margin: 0px;
   height: calc(100% - 4rem);
+}
+.guide-icon {
+  margin-left:10px !important;
+  height: 19px;
+  background: var(--vscode-extensionButton-prominentBackground) !important;
+  display: flex;
+  padding: 1px 4px;
+  align-items: center;
+  gap: 3px;
+}
+.pa-2.guide-divider {
+  border-color: var(--vscode-disabledForeground, #cccccc) !important;
+  margin-top: 0px !important;
+  padding-left: 0px !important;
+  margin-left: 0px !important;
+}
+.subtitle_text {
+  padding-left: 0px !important;
+  padding-top: 0px !important;
+  margin: 0px !important;
+}
+.pa-2.subtitle_text {
+  padding-left: 0px !important;
+  padding-top: 0px !important;
+  margin: 0px !important;
+}
+.subtitle_text_img {
+  -webkit-mask: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2IiBmaWxsPSJub25lIj4KPHBhdGggZD0iTTcgOVY1SDhWOEwxMiA4VjlIN1oiIGZpbGw9IiM0MjQyNDIiLz4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik04IDE1QzExLjg2NiAxNSAxNSAxMS44NjYgMTUgOEMxNSA0LjEzNDAxIDExLjg2NiAxIDggMUM0LjEzNDAxIDEgMSA0LjEzNDAxIDEgOEMxIDExLjg2NiA0LjEzNDAxIDE1IDggMTVaTTggMTRDMTEuMzEzNyAxNCAxNCAxMS4zMTM3IDE0IDhDMTQgNC42ODYyOSAxMS4zMTM3IDIgOCAyQzQuNjg2MjkgMiAyIDQuNjg2MjkgMiA4QzIgMTEuMzEzNyA0LjY4NjI5IDE0IDggMTRaIiBmaWxsPSIjNDI0MjQyIi8+Cjwvc3ZnPg==) 50% 50% /16px no-repeat;
+  background: var(--vscode-input-foreground);
+  vertical-align: middle;
+  padding-right: 5px;
+  margin-top: -2px;
+}
+.title_icon_text {
+  color: var(--vscode-foreground);
+  color: #eaecee;
+  font-size: 14px;
+}
+.title_icon {
+  color: var(--vscode-foreground);
+  color: #eaecee;
 }
 </style>

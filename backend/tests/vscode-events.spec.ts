@@ -355,7 +355,7 @@ describe('vscode-events unit test', () => {
                 type: CollectionType.Platform,
             };
 
-            contributorsMock.expects("setData").withExactArgs("extensionId", [collection1], [item1]);
+            contributorsMock.expects("setData").withExactArgs("extensionId", [collection1], [item1], undefined);
             events.setData("extensionId", [collection1], [item1]);
         });
     });
