@@ -1,6 +1,27 @@
 import { IAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction, IUriAction } from "@sap-devx/app-studio-toolkit-types";
 import { Uri } from "vscode";
 
+export enum IconCode {
+    Star = 'star'
+}
+
+interface IconInfo {
+    iconName: string;
+    iconLabel: string;
+}
+
+export const IconList: Record<string, IconInfo> = {
+    star: {iconName: 'star', iconLabel: 'Recommended'}
+};
+
+export interface IAdditionalInfo {
+    tool?: string;
+    isStandalone: boolean;
+    estimatedTime: string;
+    projectName?: string;
+    longDescription: string;
+    iconCode?: IconCode;
+}
 export interface ICollection {
     id: string;
     title: string;
@@ -8,6 +29,17 @@ export interface ICollection {
     type: CollectionType;
     itemIds: Array<string>;
     mode?: 'single' | 'multiple';
+    additionalInfo?: IAdditionalInfo;
+}
+
+export interface ITurotial {
+    id: string;
+    name: string;
+    link: string;
+    linktext: string;
+    description: string;
+    collectionIds: Array<string>;
+    icon: string;
 }
 
 export enum CollectionType {
@@ -92,10 +124,11 @@ export interface IItem {
 export interface IImage {
     image: string;
     note: string;
+    noPrefix?: boolean;
 }
 
 export type ReadState = "READ" | "UNREAD" | "WAIT";
 
 export type ManagerAPI = {
-    setData: (extensionId: string, collections: ICollection[], items: IItem[]) => void;
+    setData: (extensionId: string, collections: ICollection[], items: IItem[], tutorials?: ITurotial[]) => void;
 }

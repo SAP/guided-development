@@ -1,6 +1,6 @@
 import { BasAction, ICommandAction, IExecuteAction, IFileAction, ISnippetAction } from "@sap-devx/app-studio-toolkit-types";
 import { AppEvents } from "../app-events";
-import { ICollection, IItem } from '../types';
+import { ICollection, IItem, ITurotial } from '../types';
 
 export class ServerEvents implements AppEvents {
     public async performAction(action: BasAction): Promise<any> {
@@ -32,7 +32,7 @@ export class ServerEvents implements AppEvents {
         return Promise.resolve();    
     }
 
-    setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
+    setData(extensionId: string, collections: ICollection[], items: IItem[], tutorials?: ITurotial[]): void {
         console.log("setData...................");
     }
 }

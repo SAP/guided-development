@@ -10,6 +10,7 @@ import { VSCodeEvents } from '../vscode-events';
 import { AbstractWebviewPanel } from './AbstractWebviewPanel';
 import { Contributors } from "../contributors";
 import { IInternalCollection } from "../Collection";
+import { IconList } from '../types';
 
 export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 	public static GUIDED_DEVELOPMENT = "Guided Development";
@@ -44,10 +45,17 @@ export class GuidedDevelopmentPanel extends AbstractWebviewPanel {
 				channelName: "GuidedDev",
 				title: this.uiOptions.title,
 				description: this.uiOptions.description,
-				noResponse: "No response received."
+				noResponse: "No response received.",
+				collectionadditionalinfo: this.uiOptions.additionalInfo
 			};
 			this.collections.forEach(element => {
 				if (this.uiOptions.renderType === "collection" && element.id === this.uiOptions.id) {
+					this.messages.collectionadditionalinfo = element.additionalInfo;
+					let iconInfo = IconList[this.messages.collectionadditionalinfo?.iconCode];
+					if (iconInfo && iconInfo.iconName) {
+						this.messages.collectionadditionalinfo.iconName = iconInfo.iconName;
+						this.messages.collectionadditionalinfo.iconLabel = iconInfo.iconLabel;
+					}
 					renderCollections.push(element);
 				}
 			});

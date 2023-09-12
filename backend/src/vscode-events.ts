@@ -1,6 +1,6 @@
 import { AppEvents } from "./app-events";
 import { Contributors } from './contributors';
-import { ICollection, IItem } from './types';
+import { ICollection, IItem, ITurotial } from './types';
 import { bas, BasAction } from "@sap-devx/app-studio-toolkit-types";
 
 export class VSCodeEvents implements AppEvents {
@@ -27,7 +27,7 @@ export class VSCodeEvents implements AppEvents {
     this.basAPI?.actions?.performAction(action);
   }
 
-  public setData(extensionId: string, collections: ICollection[], items: IItem[]): void {
-    Contributors.getInstance().setData(extensionId, collections, items);
+  public setData(extensionId: string, collections: ICollection[], items: IItem[], tutorials?: ITurotial[]): void {
+    Contributors.getInstance().setData(extensionId, collections, items, tutorials);
   }
 }
