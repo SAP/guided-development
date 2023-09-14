@@ -14,8 +14,9 @@
       align="left"
       class="pa-0 ma-0"
       style="font-size: 12px; padding-left: 0px"
-      >{{ image.note }}</v-card-text
-    >
+      >
+      <span v-html="image.note"></span>
+    </v-card-text>
     <v-dialog
       v-model="imageDialog"
       max-width="70%"

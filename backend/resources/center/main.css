@@ -11,11 +11,12 @@ body {
 .guide-item {
   width: 100%;
   display: flex;
-  border: 0px solid transparent;
+  border: 1px solid transparent;
   flex-direction: column;
   padding-top: 8px;
   padding-bottom: 8px;
   color: var(--vscode-foreground);
+  box-sizing: border-box;
 }
 .guide-item:hover {
   background: var(--vscode-list-hoverBackground);
@@ -131,11 +132,12 @@ body {
 .tutorial-item {
   width: 100%;
   display: flex;
-  border: 0px solid transparent;
+  border: 1px solid transparent;
   flex-direction: column;
   padding-top: 8px;
   padding-bottom: 8px;
   color: var(--vscode-foreground);
+  box-sizing: border-box;
 }
 .tutorial-header {
   width: 100%;
@@ -153,14 +155,13 @@ body {
   flex: 1;
   width: 100%;
   border: none;
-  padding: 0 0.6em;
+  padding: 0 10px 0 20px;
   font-weight: 700;
   white-space: nowrap;
   text-overflow: ellipsis;
   overflow: hidden;
   font-size: 13px;
   line-height: 1.4em;
-  margin-left: 10px;
 }
 .tutorial-link {
   text-decoration: none;
