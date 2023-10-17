@@ -26,9 +26,9 @@ default-build: &default-build
         command: npm run test
 
 jobs: # a collection of steps
-  build-and-test-node12:
+  build-and-test-node14:
     docker:
-      - image: cimg/node:12.22
+      - image: cimg/node:14.17
     <<: *default-build
 
   compliance:
@@ -44,7 +44,7 @@ jobs: # a collection of steps
             ~/.local/bin/reuse lint
   build-and-test:
     docker:
-      - image: cimg/node:14.17
+      - image: cimg/node:16.19
     working_directory: ~/repo
     steps:
       - checkout
