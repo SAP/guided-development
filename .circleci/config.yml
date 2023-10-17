@@ -26,7 +26,7 @@ default-build: &default-build
         command: npm run test
 
 jobs: # a collection of steps
-  build-and-test-node14:
+  build-and-test-node12:
     docker:
       - image: cimg/node:14.17
     <<: *default-build
