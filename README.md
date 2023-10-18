@@ -10,6 +10,7 @@
 
 ![](screenshot.png)
 
+
 ## Description
 This extension allows developers to add generic code pieces to their project and provide wizard-like experience with minor development efforts.
 The repository contains three main packages:
