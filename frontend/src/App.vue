@@ -1,12 +1,12 @@
 <template>
   <v-app id="app" class="vld-parent">
     <loading
-      :active.sync="showBusyIndicator"
-      :is-full-page="true"
-      :height="64"
-      :width="64"
+      :active="showBusyIndicator"
+      :isFullPage="true"
+      :height=64
+      :width=64
       :color="isLoadingColor"
-      background-color="transparent"
+      backgroundColor="transparent"
       loader="spinner"
     ></loading>
     <div v-if="!messages.collectionadditionalinfo">
@@ -184,7 +184,7 @@ export default {
 };
 </script>
 <style scoped>
-@import "./../node_modules/vue-loading-overlay/dist/vue-loading.css";
+@import "./../node_modules/vue-loading-overlay/dist/css/index.css";
 .left-col {
   background-color: var(--vscode-editorWidget-background, #252526);
 }
@@ -205,14 +205,19 @@ export default {
 .bottom-buttons-col > .v-btn:not(:last-child) {
     margin-right: 10px !important;
 }
-.v-card__title {
+.v-card-title {
   color: var(--vscode-foreground, #cccccc);
   margin-bottom: 16px;
   font-size: 26px;
+  padding: 16px;
+  line-height: 2rem;
 }
-.v-card__subtitle {
+.v-card-subtitle {
   margin-left: 4px;
   border-bottom: 1px solid hsla(0,0%,53.3%,.45);
+  margin-top: -16px;
+  padding-bottom: 16px;
+  opacity: unset;
 }
 .vld-parent {
   overflow-y: auto;
