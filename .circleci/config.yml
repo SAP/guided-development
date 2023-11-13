@@ -96,22 +96,10 @@ jobs: # a collection of steps
           name: merge frontend and backend coverage
           command: ./backend/node_modules/.bin/lcov-result-merger './backend/reports/coverage/lco*.info' './backend/reports/coverage/lcov_merged.info'
       - run:
-          command: cat ./backend/reports/coverage/lcov.info | ./backend/node_modules/.bin/coveralls
+          command: cat ./backend/reports/coverage/lcov_merged.info | ./backend/node_modules/.bin/coveralls
           environment:
             COVERALLS_SERVICE_NAME: circle-ci
-            COVERALLS_GIT_BRANCH: ${CIRCLE_BRANCH}
-      - store_artifacts: # special step to save test results as as artifact
-          path: backend/reports/coverage
-          destination: all-coverage
-      - store_artifacts: # special step to save test results as as artifact
-          path: backend/node_modules/.bin
-          destination: coveralls
-      - run:
-          name: temp111
-          command:  |
-            ls -la ./backend/node_modules/.bin/
-            echo $COVERALLS_SERVICE_NAME
-            echo $COVERALLS_GIT_BRANCH
+            COVERALLS_GIT_BRANCH: ${CIRCLE_BRANCH}   
       - run:
           name: Define environment variable with lastest commit's message
           command: |
