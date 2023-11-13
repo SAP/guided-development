@@ -107,6 +107,11 @@ jobs: # a collection of steps
           path: backend/node_modules/.bin
           destination: coveralls
       - run:
+          name: temp111
+          command:  |
+            ls ./backend/node_modules/.bin/
+            npm list coveralls
+      - run:
           name: Define environment variable with lastest commit's message
           command: |
             echo 'export COMMIT_MESSAGE=$(git log -1 --pretty=format:"%s")' >> $BASH_ENV
