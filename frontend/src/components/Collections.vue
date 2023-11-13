@@ -107,15 +107,15 @@ export default {
 </script>
 
 <style>
-.container {
+.v-container {
   margin-right: 0px !important;
   margin-left: 0px !important;
 }
-.v-card__title {
+.v-card-title {
   margin-bottom:8px;
   font-size:20px
 }
-.v-card__subtitle {
+.v-card-subtitle {
   margin-left:-16px;
   font-size:14px;
 }

@@ -3,12 +3,12 @@
     <v-expansion-panels dark focusable :multiple="mode === 'single'" v-model="expandedPanels">
       <template v-for="(contextualItem, index) in contextualItems">
         <v-expansion-panel v-if="isFiltered(contextualItem.item.fqid)" :key="index" v-bind:class="getExpansionPanelClass(contextualItem.item)">
-          <v-expansion-panel-header v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
+          <v-expansion-panel-title v-bind:class="{ 'pa-5':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
               <a class="expansion-panel-title">{{contextualItem.item.title}}</a>
               <div hidden>Item ID: {{contextualItem.item.fqid}}</div>
               <div hidden v-if="contextualItem.context">Project: {{contextualItem.context.project}}</div>
-          </v-expansion-panel-header>
-          <v-expansion-panel-content v-bind:class="{'headline':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
+          </v-expansion-panel-title>
+          <v-expansion-panel-text v-bind:class="{'headline':true, 'itemColor':bColorFlag, 'subItemColor':!bColorFlag}">
             <v-container>
               <v-row>
                 <v-col cols="12" sm="6" md="8" style="margin-left:20px">
@@ -39,13 +39,13 @@
                       @action="onAction"
                   />
                   <v-list-item-subtitle class="py-1" v-if="contextualItem.item.action1 && contextualItem.item.action1.title && !contextualItem.item.items">{{contextualItem.item.action1.title}}</v-list-item-subtitle>
-                  <v-btn small v-if="contextualItem.item.action1 && !contextualItem.item.items" @click="onAction(contextualItem, 1)">{{contextualItem.item.action1.name}}</v-btn>
+                  <v-btn size="small" v-if="contextualItem.item.action1 && !contextualItem.item.items" @click="onAction(contextualItem, 1)">{{contextualItem.item.action1.name}}</v-btn>
                   <v-list-item-subtitle class="py-1 mt-4" v-if="contextualItem.item.action2 && contextualItem.item.action2.title && !contextualItem.item.items">{{contextualItem.item.action2.title}}</v-list-item-subtitle>
-                  <v-btn small v-if="contextualItem.item.action2 && !contextualItem.item.items" @click="onAction(contextualItem, 2)">{{contextualItem.item.action2.name}}</v-btn>
+                  <v-btn size="small" v-if="contextualItem.item.action2 && !contextualItem.item.items" @click="onAction(contextualItem, 2)">{{contextualItem.item.action2.name}}</v-btn>
                 </v-col>
               </v-row>
             </v-container>
-          </v-expansion-panel-content>
+          </v-expansion-panel-text>
         </v-expansion-panel>
       </template>
     </v-expansion-panels>
@@ -146,11 +146,11 @@ export default {
 .v-expansion-panel {
   box-shadow: none;
 }
-.v-expansion-panel-header {
+.v-expansion-panel-title {
   text-transform: none;
 }
 
-.v-expansion-panel-header--active:before {
+.v-expansion-panel-title--active:before {
   opacity: 0 !important;
 }
 .v-application .expansion-panel-title {
@@ -166,24 +166,26 @@ export default {
 
 .itemColor {
   background-color: var(--vscode-sideBar-background, #1e1e1e);
+  color: var(--vscode-foreground,#ccc);
 }
 
 .itemColor .subItemColor {
   background-color: var(--vscode-activityBar-background, #1e1e1e);
+  color: var(--vscode-foreground,#ccc);
 }
 
 .itemColor .v-btn {
   margin-right: 0.5rem;
 }
 
-.v-expansion-panel-content__wrap {
+.v-expansion-panel-text__wrap {
   color: var(--vscode-foreground, #cccccc);
   text-transform: none;
 }
-.v-expansion-panel-header__icon {
+.v-expansion-panel-title__icon {
   position: absolute;
 }
-.v-expansion-panel-header__icon .v-icon {
+.v-expansion-panel-title__icon .v-icon {
   color: var(--vscode-foreground, #cccccc) !important;
 }
 .v-card.v-sheet {
@@ -198,7 +200,7 @@ export default {
 }
 
 
-.v-application .v-expansion-panel-header .expansion-panel-title {
+.v-application .v-expansion-panel-title .expansion-panel-title {
   padding-bottom: 0;
 }
 </style>

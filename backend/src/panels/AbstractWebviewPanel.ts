@@ -114,9 +114,12 @@ export abstract class AbstractWebviewPanel {
 
 			// TODO: very fragile: assuming double quotes and src is first attribute
 			// specifically, doesn't work when building vue for development (vue-cli-service build --mode development)
-			indexHtml = indexHtml.replace(/<link href=/g, `<link href=${scriptUri.toString()}`);
 			indexHtml = indexHtml.replace(/<script src=/g, `<script src=${scriptUri.toString()}`);
 			indexHtml = indexHtml.replace(/<img src=/g, `<img src=${scriptUri.toString()}`);
+
+			indexHtml = indexHtml.replace(/<link href="/g, `<link href="${scriptUri.toString()}`);
+			indexHtml = indexHtml.replace(/<script defer="defer" src="/g, `<script defer="defer" src="${scriptUri.toString()}`);
+			indexHtml = indexHtml.replace(/<script defer="defer" type="module" src="/g, `<script defer="defer" type="module" src="${scriptUri.toString()}`);
 		}
 		this.webViewPanel.webview.html = indexHtml;
 	}

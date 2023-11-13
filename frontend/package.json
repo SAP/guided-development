@@ -1,7 +1,7 @@
 {
   "name": "guided-development-frontend",
   "displayName": "Guided Development Frontend",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "publisher": "SAP",
   "license": "Apache 2.0",
   "description": "Frontend for the Guided Development framework",
@@ -16,41 +16,42 @@
   },
   "dependencies": {
     "@mdi/font": "^5.1.45",
-    "@sap-devx/inquirer-gui": "0.2.1",
-    "@sap-devx/inquirer-gui-file-browser-plugin": "0.0.5",
-    "@sap-devx/inquirer-gui-folder-browser-plugin": "0.0.3",
-    "@sap-devx/inquirer-gui-login-plugin": "0.0.4",
-    "@sap-devx/inquirer-gui-tiles-plugin": "0.0.8",
-    "core-js": "2.6.6",
+    "@sap-devx/inquirer-gui": "3.0.0",
+    "@sap-devx/inquirer-gui-file-browser-plugin": "3.0.0",
+    "@sap-devx/inquirer-gui-folder-browser-plugin": "3.0.0",
+    "@sap-devx/inquirer-gui-login-plugin": "3.0.0",
+    "@sap-devx/inquirer-gui-tiles-plugin": "3.0.0",
+    "core-js": "^3.18.3",
     "material-design-icons-iconfont": "^5.0.1",
-    "vue": "^2.6.10",
-    "vue-loading-overlay": "^3.3.0",
-    "vuetify": "^2.2.22"
+    "vue": "^3.3.4",
+    "vue-loading-overlay": "^6.0.3",
+    "vuetify": "^3.3.10"
   },
   "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^6.2.0",
+    "@typescript-eslint/parser": "^6.2.0",
     "@babel/preset-env": "^7.9.5",
-    "@sap-devx/webview-rpc": "^0.2.2",
-    "@vue/cli-plugin-babel": "^3.11.0",
-    "@vue/cli-plugin-eslint": "^3.11.0",
-    "@vue/cli-plugin-unit-jest": "^4.3.1",
-    "@vue/cli-service": "^3.11.0",
-    "@vue/test-utils": "^1.0.0-beta.33",
+    "@sap-devx/webview-rpc": "^0.3.1",
+    "@vue/cli-plugin-babel": "^5.0.0",
+    "@vue/cli-plugin-eslint": "^5.0.0",
+    "@vue/cli-plugin-unit-jest": "~5.0.0",
+    "@vue/cli-service": "^5.0.0",
+    "@vue/test-utils": "^2.4.0",
+    "@vue/vue3-jest": "^27.0.0-alpha.1",
     "babel-eslint": "^10.0.1",
-    "babel-jest": "^24.9.0",
-    "eslint": "^5.16.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "babel-jest": "^27.0.5",
+    "eslint": "^7.32.0",
+    "eslint-plugin-vue": "^8.0.3",
     "husky": "1.2.1",
-    "jest": "^24.9.0",
+    "jest": "^27.0.5",
     "jest-serializer-vue": "^2.0.2",
-    "lint-staged": "^8.1.5",
+    "lint-staged": "^15.0.2",
     "mock-socket": "^9.0.2",
     "sass": "^1.26.3",
     "sass-loader": "^8.0.2",
-    "vue-cli-plugin-vuetify": "^2.0.5",
-    "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.10",
-    "vuetify-loader": "^1.3.0",
-    "webpack": "^4.42.1"
+    "webpack-plugin-vuetify": "^2.0.0",
+    "webpack": "^5.0.0"
   },
   "eslintConfig": {
     "root": true,
@@ -59,13 +60,35 @@
       "jest": true
     },
     "extends": [
-      "plugin:vue/essential",
+      "plugin:vue/vue3-essential",
       "eslint:recommended"
     ],
-    "rules": {},
+    "rules": {
+      "vue/multi-word-component-names": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
-    }
+    },
+    "overrides": [
+      {
+        "files": [
+          "**/__tests__/*.{j,t}s?(x)",
+          "**/tests/unit/**/*.spec.{j,t}s?(x)"
+        ],
+        "env": {
+          "jest": true
+        }
+      },
+      {
+        "files": [
+          "**/__tests__/*.{j,t}s?(x)",
+          "**/tests/unit/**/*.spec.{j,t}s?(x)"
+        ],
+        "env": {
+          "jest": true
+        }
+      }
+    ]
   },
   "postcss": {
     "plugins": {
