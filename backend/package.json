@@ -145,7 +145,7 @@
 	"dependencies": {
 		"@sap-devx/app-studio-toolkit-types": "1.2.1",
 		"@sap-devx/webview-rpc": "0.3.1",
-		"@sap-devx/yeoman-ui-types": "0.0.1",
+		"@sap-devx/yeoman-ui-types": "1.3.1",
 		"@vscode-logging/logger": "1.2.3",
 		"chalk": "^4.0.0",
 		"datauri": "^3.0.0",
