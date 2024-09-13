@@ -44,7 +44,7 @@ jobs: # a collection of steps
             ~/.local/bin/reuse lint
   build-and-test:
     docker:
-      - image: cimg/node:18.17
+      - image: cimg/node:16.19
     working_directory: ~/repo
     steps:
       - checkout
@@ -139,7 +139,6 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-      - build-and-test-node12
       - compliance
       - build-and-test:
           filters:
