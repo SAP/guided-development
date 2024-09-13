@@ -139,7 +139,6 @@ workflows:
   version: 2
   test-deploy:
     jobs:
-      - build-and-test-node12
       - compliance
       - build-and-test:
           filters:
