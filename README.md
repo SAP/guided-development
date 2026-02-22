@@ -29,7 +29,7 @@ To test run the framework you only need to build and install the backend package
     ```bash
     cd backend
     ```
-* To install, compile and prepare the static resources run the following commands:
+* To install, compile and prepare the static resources, run the following commands:
     ```bash
     npm run backend
     npm run frontend
