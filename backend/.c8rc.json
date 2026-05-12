@@ -1,0 +1,22 @@
+{
+  "include": ["out/src/**/*.js"],
+  "exclude": [
+    "out/src/logger/*.js",
+    "out/src/panels/*.js",
+    "out/src/webSocketServer/*.js",
+    "out/src/output-channel-log.js",
+    "out/src/youi-adapter.js",
+    "out/src/center/*.js",
+    "out/src/Collection.js",
+    "out/src/app-events.js",
+    "out/src/app-log.js"
+  ],
+  "reporter": ["lcov", "text"],
+  "all": true,
+  "report-dir": "./reports/coverage",
+  "check-coverage": true,
+  "branches": 74,
+  "lines": 97,
+  "functions": 97,
+  "statements": 97
+}

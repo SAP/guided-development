@@ -1,6 +1,7 @@
 module.exports = {
   verbose: true,
   collectCoverage: true,
+  testEnvironment: 'jsdom',
 
   collectCoverageFrom: [
     "src/**/*.{js,vue}",
@@ -38,10 +39,6 @@ module.exports = {
     "^.+\\.mjs$": "<rootDir>/node_modules/babel-jest",
   },
 
-  snapshotSerializers: [
-    "<rootDir>/node_modules/jest-serializer-vue"
-  ],
-
   coverageThreshold: {
     "global": {
       "branches": 17,
@@ -49,7 +46,5 @@ module.exports = {
       "lines": 32,
       "statements": 32
     }
-  },
-
-  preset: '@vue/cli-plugin-unit-jest'
+  }
 }
