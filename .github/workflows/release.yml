@@ -40,7 +40,7 @@ jobs:
         run: npm run webpack-prod
 
       - name: Create .vsix
-        run: cp LICENSE backend/LICENSE && npx vsce package .
+        run: npx vsce package .
         working-directory: backend
 
       - name: Publish GitHub Release
