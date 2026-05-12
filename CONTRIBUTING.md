@@ -30,3 +30,31 @@ Due to legal reasons, contributors will be asked to accept a DCO before they sub
 As artificial intelligence evolves, AI-generated code is becoming valuable for many software projects, including open-source initiatives. While we recognize the potential benefits of incorporating AI-generated content into our open-source projects there a certain requirements that need to be reflected and adhered to when making contributions.
 
 Please see our [guideline for AI-generated code contributions to SAP Open Source Software Projects](https://github.com/SAP/.github/blob/main/CONTRIBUTING_USING_GENAI.md) for these requirements.
+
+## Release Process
+
+Releases are triggered by pushing a version tag. Only maintainers with push access to the repository can do this.
+
+### Steps to release
+
+1. Bump the version in `backend/package.json` and `guided-development-types/package.json` and commit to `master`.
+2. Push a version tag:
+   ```bash
+   git tag v1.2.3
+   git push origin v1.2.3
+   ```
+3. The [Release workflow](https://github.com/SAP/guided-development/actions/workflows/release.yml) starts automatically. You can follow its progress in the **Actions** tab.
+4. Once complete:
+   - A new [GitHub Release](https://github.com/SAP/guided-development/releases) is created with the `.vsix` file attached and auto-generated release notes.
+   - The `guided-development-types` package is published to [npmjs.com](https://www.npmjs.com/package/@sap_oss/guided-development-types).
+
+### One-time setup (first release from a new environment)
+
+Before publishing to npm works, a maintainer must register this repository as a Trusted Publisher on npmjs.com — this only needs to be done once:
+
+1. Go to the `@sap_oss/guided-development-types` package page on npmjs.com → **Settings** → **Automated Publishing**.
+2. Click **Add a Publisher**, select **GitHub Actions**, and fill in:
+   - **Owner**: `SAP`
+   - **Repository**: `guided-development`
+   - **Workflow filename**: `release.yml`
+3. Save. No npm token or secret needs to be added to the GitHub repository.

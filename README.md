@@ -1,10 +1,8 @@
-[![CircleCI](https://circleci.com/gh/SAP/guided-development.svg?style=svg)](https://circleci.com/gh/SAP/guided-development)
+[![CI](https://github.com/SAP/guided-development/actions/workflows/ci.yml/badge.svg)](https://github.com/SAP/guided-development/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/github/SAP/guided-development/badge.svg?branch=master)](https://coveralls.io/github/SAP/guided-development?branch=master)
-[![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/SAP/guided-development.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SAP/guided-development/context:javascript)
 [![Commitizen friendly](https://img.shields.io/badge/commitizen-friendly-brightgreen.svg)](http://commitizen.github.io/cz-cli/)
 ![GitHub license](https://img.shields.io/badge/license-Apache_2.0-blue.svg)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/guided-development)](https://api.reuse.software/info/github.com/SAP/guided-development)
-[![dependentbot](https://api.dependabot.com/badges/status?host=github&repo=SAP/guided-development)](https://dependabot.com/)
 
 # Guided Development
 
@@ -15,11 +13,31 @@ This extension allows developers to add generic code pieces to their project and
 The repository contains three main packages:
 * **Frontend** - The Guided Development as a standalone vue.js application.
 * **Backend** - The backend part. Runs as a VSCode extension or node.js application.
-* **VSCode Guided Development contributor example** - Example guided-development contibutor to show usage.
+* **guided-development-types** - TypeScript type definitions for building your own contributor extensions, published to [npm](https://www.npmjs.com/package/@sap_oss/guided-development-types).
+
+## Sample Contributors
+
+The repository also includes a collection of ready-to-explore sample contributor extensions. They are a great starting point for understanding how to integrate with the Guided Development framework and for building your own contributor.
+
+| Package | What it demonstrates |
+|---|---|
+| [`vscode-simple-contrib`](vscode-simple-contrib/) | The minimal contributor — a single collection with one item. Start here. |
+| [`vscode-contrib1`](vscode-contrib1/) | A richer scenario showing multiple action types and cross-contributor item reuse. |
+| [`vscode-contrib2`](vscode-contrib2/) | A platform-oriented collection, and how one contributor can reference items from another. |
+| [`vscode-contrib3`](vscode-contrib3/) | A full-featured example covering project setup, snippet actions, and deployment workflows. |
+| [`vscode-contrib-cake`](vscode-contrib-cake/) | Dynamic collections — adds or removes guides based on files detected in the workspace. |
+| [`vscode-snippet-food-contrib`](vscode-snippet-food-contrib/) | Combining Guided Development with the code-snippet API for questionnaire-driven workflows. |
+
+Each sample is an independent VSCode extension. To build and run one, `cd` into its folder and run:
+```bash
+npm install
+npm run compile
+```
+Then open the repository in VSCode and launch the extension from the **Run and Debug** panel.
 
 ## Requirements
-* [node.js](https://www.npmjs.com/package/node) version 10 or higher.
-* [VSCode](https://code.visualstudio.com/) 1.39.2 or higher or [Theia](https://www.theia-ide.org/) 0.12 or higher.
+* [node.js](https://www.npmjs.com/package/node) version 22 or higher.
+* [VSCode](https://code.visualstudio.com/) 1.46.0 or higher.
 
 ## Download and Installation
 To test run the framework you only need to build and install the backend package, which will automatically build and run the UI.
