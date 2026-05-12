@@ -1,6 +1,6 @@
 {
 	"name": "guided-development",
-	"version": "0.2.8",
+	"version": "0.2.9",
 	"displayName": "Guided Development",
 	"publisher": "SAPOSS",
 	"author": {
@@ -32,7 +32,7 @@
 		"sap"
 	],
 	"activationEvents": [
-		"*"
+		"onStartupFinished"
 	],
 	"main": "./dist/extension",
 	"contributes": {
@@ -137,7 +137,7 @@
 		"webpack-prod": "webpack --mode production",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"package": "npm run webpack && vsce package",
+		"package": "vsce package",
 		"test": "tsc -p tsconfig.json && c8 mocha",
 		"ws:run": "node ./out/src/webSocketServer/index.js",
 		"lint": "eslint . --ext .ts,.tsx --cache",

@@ -55,8 +55,8 @@ jobs:
         working-directory: backend
         run: npm run webpack-prod
       - name: Create .vsix
+        run: cp LICENSE backend/LICENSE && npx vsce package .
         working-directory: backend
-        run: npx vsce package .
       - name: Test backend
         working-directory: backend
         run: npm run test
