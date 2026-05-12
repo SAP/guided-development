@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+*'
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # required for gh release create
+      id-token: write   # required for npm provenance (OIDC)
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install & build frontend
+        working-directory: frontend
+        run: npm install && npm run build
+
+      - name: Build backend
+        working-directory: backend
+        run: npm run backend
+
+      - name: Copy types artifact
+        run: cp -r backend/out guided-development-types/out
+
+      - name: Copy frontend artifact
+        working-directory: backend
+        run: npm run frontend:copy
+
+      - name: Webpack backend
+        working-directory: backend
+        run: npm run webpack-prod
+
+      - name: Create .vsix
+        run: npx vsce package .
+        working-directory: backend
+
+      - name: Publish GitHub Release
+        run: gh release create "${{ github.ref_name }}" backend/guided-development-*.vsix --title "${{ github.ref_name }}" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Publish npm package
+        working-directory: guided-development-types
+        run: npm publish --provenance --access public

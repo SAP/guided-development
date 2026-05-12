@@ -12,13 +12,12 @@
   },
   "main": "./out/src/types",
   "types": "./out/src/types",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
-    "prep": "npm i && cd ../backend && npm i && npm run compile",
-    "copy": "ncp ../backend/out out",
-    "prepublishOnly": "npm run prep && npm run copy"
   },
   "devDependencies": {
-    "@sap-devx/app-studio-toolkit-types": "1.2.1",
-    "ncp": "^2.0.0"
+    "@sap-devx/app-studio-toolkit-types": "1.2.1"
   }
 }

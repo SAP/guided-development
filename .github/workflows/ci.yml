@@ -1,0 +1,95 @@
+name: CI
+
+on:
+  push:
+    branches: ['master*']
+  pull_request:
+  workflow_dispatch:
+
+env:
+  retention-comment: This comment will be **updated** with the data of the **last successful** build of this PR.
+
+jobs:
+  compliance:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+      - name: REUSE compliance check
+        run: |
+          pip install reuse
+          reuse lint
+
+  build-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['22.x', '24.x']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            backend/node_modules
+            frontend/node_modules
+          key: ${{ runner.os }}-node-${{ matrix.node-version }}-${{ hashFiles('backend/package.json', 'frontend/package.json') }}
+      - name: Install & build frontend
+        working-directory: frontend
+        run: npm install && npm run build
+      - name: Test frontend
+        working-directory: frontend
+        run: npm run test
+      - name: Build backend
+        working-directory: backend
+        run: npm run backend
+      - name: Copy frontend artifact
+        working-directory: backend
+        run: npm run frontend:copy
+      - name: Webpack backend
+        working-directory: backend
+        run: npm run webpack-prod
+      - name: Create .vsix
+        run: npx vsce package .
+        working-directory: backend
+      - name: Test backend
+        working-directory: backend
+        run: npm run test
+      - name: Merge coverage reports
+        run: |
+          cp ./frontend/coverage/lcov.info ./backend/reports/coverage/lcov_frontend.info
+          ./backend/node_modules/.bin/lcov-result-merger './backend/reports/coverage/lco*.info' './backend/reports/coverage/lcov_merged.info'
+      - name: Upload coverage to Coveralls
+        if: matrix.node-version == '24.x'
+        uses: coverallsapp/github-action@v2
+        with:
+          file: backend/reports/coverage/lcov_merged.info
+      - name: Lint commit message
+        if: github.event_name == 'push'
+        working-directory: backend
+        run: echo "${{ github.event.head_commit.message }}" | npx commitlint
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.x'
+      - name: Install backend dependencies
+        working-directory: backend
+        run: npm install
+      - name: Lint backend
+        working-directory: backend
+        run: npm run lint
+      - name: Install frontend dependencies
+        working-directory: frontend
+        run: npm install
+      - name: Lint frontend
+        working-directory: frontend
+        run: npm run lint

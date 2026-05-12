@@ -17,7 +17,8 @@
 	},
 	"icon": "icon.png",
 	"engines": {
-		"vscode": "^1.46.0"
+		"vscode": "^1.46.0",
+		"node": ">=22.0.0"
 	},
 	"categories": [
 		"Other"
@@ -31,7 +32,7 @@
 		"sap"
 	],
 	"activationEvents": [
-		"*"
+		"onStartupFinished"
 	],
 	"main": "./dist/extension",
 	"contributes": {
@@ -136,8 +137,8 @@
 		"webpack-prod": "webpack --mode production",
 		"compile": "tsc -p ./",
 		"watch": "tsc -watch -p ./",
-		"package": "npm run webpack && vsce package",
-		"test": "nyc mocha -p tsconfig.json --opts ./mocha.opts",
+		"package": "vsce package",
+		"test": "tsc -p tsconfig.json && c8 mocha",
 		"ws:run": "node ./out/src/webSocketServer/index.js",
 		"lint": "eslint . --ext .ts,.tsx --cache",
 		"lint:fix": "eslint . --ext .ts,.tsx --cache --fix"
@@ -158,41 +159,38 @@
 		"ws": "7.4.6"
 	},
 	"devDependencies": {
-		"@commitlint/cli": "11.0.0",
-		"@commitlint/config-conventional": "12.0.1",
+		"@commitlint/cli": "^19.0.0",
+		"@commitlint/config-conventional": "^19.0.0",
 		"@types/chai": "^4.2.9",
 		"@types/fs-extra": "^9.0.11",
 		"@types/inquirer": "^7.3.1",
 		"@types/lodash": "^4.14.170",
-		"@types/mocha": "^5.2.7",
-		"@types/node": "^10.17.21",
+		"@types/mocha": "^10.0.0",
+		"@types/node": "^22.0.0",
 		"@types/object-hash": "^2.1.0",
 		"@types/sinon": "^9.0.10",
 		"@types/vscode": "^1.46.0",
 		"@types/ws": "^7.4.4",
 		"@typescript-eslint/eslint-plugin": "^5.4.0",
 		"@typescript-eslint/parser": "^5.4.0",
-		"bufferutil": "^4.0.1",
+		"@vscode/vsce": "^3.0.0",
 		"chai": "^4.2.0",
-		"copy-webpack-plugin": "^5.0.5",
-		"coveralls": "3.1.0",
+		"copy-webpack-plugin": "^12.0.0",
+		"c8": "^10.0.0",
 		"cz-conventional-changelog": "3.3.0",
 		"eslint": "^7.21.0",
 		"eslint-config-prettier": "^8.1.0",
 		"husky": "4.3.8",
 		"lcov-result-merger": "3.1.0",
-		"mocha": "^6.2.2",
-		"nyc": "^15.1.0",
+		"mocha": "^10.0.0",
 		"prettier": "^2.0.5",
 		"sinon": "^9.2.1",
 		"string-replace-loader": "^3.0.1",
-		"ts-loader": "^8.0.17",
-		"ts-node": "^9.1.1",
+		"ts-loader": "^9.0.0",
 		"typescript": "^4.2.3",
 		"utf-8-validate": "^5.0.2",
-		"vsce": "1.88.0",
-		"webpack": "5.38.1",
-		"webpack-cli": "^4.7.2"
+		"webpack": "^5.75.0",
+		"webpack-cli": "^5.0.0"
 	},
 	"husky": {
 		"hooks": {
