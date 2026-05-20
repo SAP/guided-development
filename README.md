@@ -1,3 +1,4 @@
+[![Not Maintained](https://img.shields.io/badge/Maintenance%20Level-Not%20Maintained-yellow.svg)](https://gist.github.com/cheerfulstoic/d107229326a01ff0f333a1d3476e068d)
 [![CircleCI](https://circleci.com/gh/SAP/guided-development.svg?style=svg)](https://circleci.com/gh/SAP/guided-development)
 [![Coverage Status](https://coveralls.io/repos/github/SAP/guided-development/badge.svg?branch=master)](https://coveralls.io/github/SAP/guided-development?branch=master)
 [![Language grade: JavaScript](https://img.shields.io/lgtm/grade/javascript/g/SAP/guided-development.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/SAP/guided-development/context:javascript)
